@@ -3,9 +3,16 @@
 #include "UART.h"
 #include "RTC.h"
 
+#define CURRENT_YEAR 0x07E4
+#define HOUR_MASK 0x1F
+#define MINUTE_MASK 0x3F
+
 /**
  * main.c
  */
+
+volatile uint16_t globalCurrentTime = 0;
+
 void main(void)
 {
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
@@ -17,13 +24,14 @@ void main(void)
 	initUART();
 	initRTC();
 
-	RTCYEAR = 0x2020;                         // Year = 0x2020
+	// These will be replaced by user input
+	RTCYEAR = CURRENT_YEAR;                   // Year = 0x2020
     RTCMON = 0x01;                            // Month = 0x01 = January
-    RTCDAY = 0x02;                            // Day = 0x02 = 2nd
-    RTCDOW = 0x04;                            // Day of week = 0x01 = Thursday
-    RTCHOUR = 0x15;                           // Hour = 0x15
-    RTCMIN = 0x23;                            // Minute = 0x23
-    RTCSEC = 0x45;                            // Seconds = 0x45
+    RTCDAY = 0x0B;                            // Day = 0x02 = 2nd
+    RTCDOW = 0x04;                            // Day of week = 0x04 = Thursday
+    RTCHOUR = 0x11;                           // Hour
+    RTCMIN = 0x0D;                            // Minute
+    RTCSEC = 0x2D;                            // Seconds
 
     RTCCTL1 &= ~(RTCHOLD);                    // Start RTC calendar mode
 
@@ -47,11 +55,20 @@ void main(void)
 
 void RTC_C_IRQHandler(void)
 {
-
+    //Check if the fields are ready to read
     if (RTCCTL0 & RTCTEVIFG)
     {
-        writeDigit(RTCMIN);
-        write_UART(" ");
+        uint16_t currentHour;
+        uint16_t currentMin;
+        currentHour = RTCHOUR & HOUR_MASK;
+        currentMin = RTCMIN & MINUTE_MASK;
+
+        // Convert to decimal value used as an index
+        globalCurrentTime = (currentHour*60) + currentMin;
+
+        // TODO Have function call with current time result to get rid of global variable or keep depending on application
+
+        // Unlock and clear interrupt event
         RTCCTL0_H = RTCKEY_H ;
         RTCCTL0_L &= ~RTCTEVIFG;
         RTCCTL0_H = 0;
