@@ -18,6 +18,7 @@ RTC.obj: /Applications/ti/ccs900/ccs/ccs_base/arm/include/CMSIS/core_cm4.h
 RTC.obj: /Applications/ti/ccs900/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h
 RTC.obj: /Applications/ti/ccs900/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 RTC.obj: /Applications/ti/ccs900/ccs/ccs_base/arm/include/system_msp432p401r.h
+RTC.obj: ../global.h
 
 ../RTC.c: 
 ../RTC.h: 
@@ -37,3 +38,4 @@ RTC.obj: /Applications/ti/ccs900/ccs/ccs_base/arm/include/system_msp432p401r.h
 /Applications/ti/ccs900/ccs/ccs_base/arm/include/CMSIS/cmsis_compiler.h: 
 /Applications/ti/ccs900/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h: 
 /Applications/ti/ccs900/ccs/ccs_base/arm/include/system_msp432p401r.h: 
+../global.h: 

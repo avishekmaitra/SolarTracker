@@ -6,6 +6,10 @@
  */
 #include "RTC.h"
 #include "msp.h"
+#include "global.h"
+
+#define HOUR_MASK 0x1F
+#define MINUTE_MASK 0x3F
 
 void initRTC(void)
 {

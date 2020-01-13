@@ -4,8 +4,6 @@
 #include "RTC.h"
 
 #define CURRENT_YEAR 0x07E4
-#define HOUR_MASK 0x1F
-#define MINUTE_MASK 0x3F
 
 /**
  * main.c

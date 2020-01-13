@@ -1,10 +1,10 @@
 ******************************************************************************
                   TI ARM Linker Unix v18.12.1                  
 ******************************************************************************
->> Linked Mon Jan 13 15:27:48 2020
+>> Linked Mon Jan 13 15:37:57 2020
 
 OUTPUT FILE NAME:   <SolarTracker.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00000b59
+ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00000b89
 
 
 MEMORY CONFIGURATION
@@ -43,13 +43,13 @@ section   page    origin      length       input sections
                   000000e4    000003c0     delay.obj (.text)
                   000004a4    00000334     system_msp432p401r.obj (.text)
                   000007d8    0000013c     UART.obj (.text)
-                  00000914    000000fc     main.obj (.text)
-                  00000a10    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
-                  00000aac    00000068                                   : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  00000b14    00000044                                   : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
-                  00000b58    00000034                                   : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
-                  00000b8c    00000030     RTC.obj (.text)
-                  00000bbc    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
+                  00000914    000000a0     main.obj (.text)
+                  000009b4    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
+                  00000a50    0000008c     RTC.obj (.text)
+                  00000adc    00000068     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  00000b44    00000044                                   : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
+                  00000b88    00000034                                   : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
+                  00000bbc    0000000e                                   : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
                   00000bca    0000000e     startup_msp432p401r_ccs.obj (.text)
                   00000bd8    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
                   00000bdc    00000004                                   : exit.c.obj (.text:abort:abort)
@@ -81,9 +81,9 @@ MODULE SUMMARY
        delay.obj                     960    0         0      
        system_msp432p401r.obj        820    0         8      
        UART.obj                      316    0         0      
-       main.obj                      252    0         4      
        startup_msp432p401r_ccs.obj   14     228       0      
-       RTC.obj                       48     0         0      
+       main.obj                      160    0         4      
+       RTC.obj                       140    0         0      
     +--+-----------------------------+------+---------+---------+
        Total:                        2410   228       12     
                                                              
@@ -158,8 +158,8 @@ address   name
 00000bd7  PORT6_IRQHandler              
 00000bd7  PSS_IRQHandler                
 00000bd7  PendSV_Handler                
-00000981  RTC_C_IRQHandler              
-00000981  RTC_C_IRQHandler              
+00000a73  RTC_C_IRQHandler              
+00000a73  RTC_C_IRQHandler              
 00000bcb  Reset_Handler                 
 00000bd7  SVC_Handler                   
 00000bd7  SysTick_Handler               
@@ -186,21 +186,21 @@ address   name
 00000bfc  __TI_CINIT_Limit              
 00000bec  __TI_Handler_Table_Base       
 00000bf4  __TI_Handler_Table_Limit      
-00000b15  __TI_auto_init_nobinit_nopinit
-00000aad  __TI_decompress_lzss          
+00000b45  __TI_auto_init_nobinit_nopinit
+00000add  __TI_decompress_lzss          
 00000bbd  __TI_decompress_none          
 ffffffff  __TI_pprof_out_hndl           
 ffffffff  __TI_prof_data_size           
 ffffffff  __TI_prof_data_start          
 00000000  __TI_static_base__            
-00000a11  __aeabi_memcpy                
-00000a11  __aeabi_memcpy4               
-00000a11  __aeabi_memcpy8               
+000009b5  __aeabi_memcpy                
+000009b5  __aeabi_memcpy4               
+000009b5  __aeabi_memcpy8               
 ffffffff  __binit__                     
 ffffffff  __c_args__                    
 UNDEFED   __mpu_init                    
 2000fe00  __stack                       
-00000b59  _c_int00_noargs               
+00000b89  _c_int00_noargs               
 UNDEFED   _system_post_cinit            
 00000bd9  _system_pre_init              
 00000bdd  abort                         
@@ -209,12 +209,12 @@ ffffffff  binit
 0000018f  delay_us                      
 00000447  delay_us_48_MHZ               
 20000004  globalCurrentTime             
-00000b8d  initRTC                       
+00000a51  initRTC                       
 000007d9  initUART                      
 00000829  initUARTWriteOnly             
 00000000  interruptVectors              
 00000915  main                          
-00000a11  memcpy                        
+000009b5  memcpy                        
 000008ab  newLine                       
 00000329  set_DCO                       
 00000885  writeDigit                    
@@ -242,16 +242,16 @@ address   name
 000008c9  EUSCIA0_IRQHandler            
 000008c9  EUSCIA0_IRQHandler            
 00000915  main                          
-00000981  RTC_C_IRQHandler              
-00000981  RTC_C_IRQHandler              
-00000a11  __aeabi_memcpy                
-00000a11  __aeabi_memcpy4               
-00000a11  __aeabi_memcpy8               
-00000a11  memcpy                        
-00000aad  __TI_decompress_lzss          
-00000b15  __TI_auto_init_nobinit_nopinit
-00000b59  _c_int00_noargs               
-00000b8d  initRTC                       
+000009b5  __aeabi_memcpy                
+000009b5  __aeabi_memcpy4               
+000009b5  __aeabi_memcpy8               
+000009b5  memcpy                        
+00000a51  initRTC                       
+00000a73  RTC_C_IRQHandler              
+00000a73  RTC_C_IRQHandler              
+00000add  __TI_decompress_lzss          
+00000b45  __TI_auto_init_nobinit_nopinit
+00000b89  _c_int00_noargs               
 00000bbd  __TI_decompress_none          
 00000bcb  Reset_Handler                 
 00000bd7  ADC14_IRQHandler              
