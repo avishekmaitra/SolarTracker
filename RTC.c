@@ -37,6 +37,7 @@ void RTC_C_IRQHandler(void)
         // Convert to decimal value used as an index
         globalCurrentTime = (currentHour*60) + currentMin;
 
+
         // TODO Have function call with current time result to get rid of global variable or keep depending on application
 
         // Unlock and clear interrupt event
