@@ -23,6 +23,19 @@ void initRTC(void)
     // enable RTC time event interrupt every minute
 }
 
+void setRTCYear(uint16_t inputYear)
+{
+    RTCYEAR = inputYear;
+}
+void setRTCMonth(uint8_t inputMonth)
+{
+    RTCMON = inputMonth;
+}
+void startRTC(void)
+{
+    RTCCTL1 &= ~(RTCHOLD);                    // Start RTC calendar mode
+    RTCCTL0_H = 0;                            // Lock the RTC registers
+}
 // RTC interrupt service routine
 void RTC_C_IRQHandler(void)
 {
