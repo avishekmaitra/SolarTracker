@@ -31,30 +31,9 @@ void main(void)
 	initRTC();
 
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
-	uint16_t testYear = 0;
-	uint8_t testMonth = 0;
-	uint8_t testDay = 0;
-	uint8_t testHour = 0;
-	uint8_t testMinute = 0;
-
-	setRTCYear(0x07E4);
-
-	setRTCMonth(0x01);
-
-	setRTCDay(0x1D);
-
-	setRTCHour(0x06);
-
-	setRTCMinute(0x05);
 
 	// MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
 	startRTC();
-
-	testYear = getRTCYear();
-	testMonth = getRTCMonth();
-	testDay = getRTCDay();
-	testHour = getRTCHour();
-	testMinute = getRTCMinute();
 
     SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 

@@ -97,10 +97,7 @@ void RTC_C_IRQHandler(void)
     if (RTCCTL0 & RTCTEVIFG)
     {
         // TODO Have function callback that uses the current time to access an array of angles
-        uint16_t testCurrentTime = 0;
-        uint8_t testMon = 0;
-        testCurrentTime = getCurrentTime();
-        testMon = getRTCMonth();
+
         // Unlock and clear interrupt event
         RTCCTL0_H = RTCKEY_H ;
         RTCCTL0_L &= ~RTCTEVIFG;
