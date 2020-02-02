@@ -3,9 +3,6 @@
 #include "global.h"
 #include <stdint.h>
 
-#define HOUR_MASK 0x1F
-#define MINUTE_MASK 0x3F
-
 // MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 void initRTC(void)
 {
