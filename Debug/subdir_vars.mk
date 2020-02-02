@@ -7,6 +7,7 @@ CMD_SRCS += \
 ../msp432p401r.cmd 
 
 C_SRCS += \
+../LCD.c \
 ../RTC.c \
 ../UART.c \
 ../delay.c \
@@ -15,6 +16,7 @@ C_SRCS += \
 ../system_msp432p401r.c 
 
 C_DEPS += \
+./LCD.d \
 ./RTC.d \
 ./UART.d \
 ./delay.d \
@@ -23,6 +25,7 @@ C_DEPS += \
 ./system_msp432p401r.d 
 
 OBJS += \
+./LCD.obj \
 ./RTC.obj \
 ./UART.obj \
 ./delay.obj \
@@ -31,6 +34,7 @@ OBJS += \
 ./system_msp432p401r.obj 
 
 OBJS__QUOTED += \
+"LCD.obj" \
 "RTC.obj" \
 "UART.obj" \
 "delay.obj" \
@@ -39,6 +43,7 @@ OBJS__QUOTED += \
 "system_msp432p401r.obj" 
 
 C_DEPS__QUOTED += \
+"LCD.d" \
 "RTC.d" \
 "UART.d" \
 "delay.d" \
@@ -47,6 +52,7 @@ C_DEPS__QUOTED += \
 "system_msp432p401r.d" 
 
 C_SRCS__QUOTED += \
+"../LCD.c" \
 "../RTC.c" \
 "../UART.c" \
 "../delay.c" \

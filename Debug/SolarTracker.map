@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker Unix v18.12.1                  
 ******************************************************************************
->> Linked Sun Feb  2 11:30:30 2020
+>> Linked Sun Feb  2 12:17:29 2020
 
 OUTPUT FILE NAME:   <SolarTracker.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00000bd1
@@ -85,7 +85,7 @@ MODULE SUMMARY
     +--+-----------------------------+------+---------+---------+
        Total:                        2534   228       8      
                                                              
-    /Applications/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
+    /Applications/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
        memcpy_t2.asm.obj             156    0         0      
        copy_decompress_lzss.c.obj    104    0         0      
        autoinit.c.obj                68     0         0      
