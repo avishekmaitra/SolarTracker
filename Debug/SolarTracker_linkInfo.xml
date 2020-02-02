@@ -2,7 +2,7 @@
 <link_info>
    <banner>TI ARM Linker Unix v18.12.1.LTS</banner>
    <copyright>Copyright (c) 1996-2018 Texas Instruments Incorporated</copyright>
-   <link_time>0x5e3718d0</link_time>
+   <link_time>0x5e372356</link_time>
    <link_errors>0x0</link_errors>
    <output_file>SolarTracker.out</output_file>
    <entry_point>
@@ -1308,7 +1308,7 @@
          <size>0x20</size>
          <input_file_ref idref="fl-c3"/>
       </object_component>
-      <object_component id="oc-36">
+      <object_component id="oc-37">
          <name>.debug_aranges</name>
          <load_address>0x1d8</load_address>
          <run_address>0x1d8</run_address>
@@ -1420,7 +1420,7 @@
          <size>0x26</size>
          <input_file_ref idref="fl-c3"/>
       </object_component>
-      <object_component id="oc-37">
+      <object_component id="oc-36">
          <name>.debug_pubnames</name>
          <load_address>0x324</load_address>
          <run_address>0x324</run_address>
@@ -1901,7 +1901,7 @@
             <object_component_ref idref="oc-1c"/>
             <object_component_ref idref="oc-16"/>
             <object_component_ref idref="oc-54"/>
-            <object_component_ref idref="oc-36"/>
+            <object_component_ref idref="oc-37"/>
             <object_component_ref idref="oc-e9"/>
             <object_component_ref idref="oc-98"/>
             <object_component_ref idref="oc-dd"/>
@@ -1925,7 +1925,7 @@
             <object_component_ref idref="oc-17"/>
             <object_component_ref idref="oc-28"/>
             <object_component_ref idref="oc-55"/>
-            <object_component_ref idref="oc-37"/>
+            <object_component_ref idref="oc-36"/>
             <object_component_ref idref="oc-ea"/>
             <object_component_ref idref="oc-99"/>
             <object_component_ref idref="oc-de"/>
