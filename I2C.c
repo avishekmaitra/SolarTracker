@@ -61,7 +61,7 @@ uint8_t ReadI2C(uint8_t MemAddress)
     while (!TransmitFlag);                    // Wait for I2C address to transmit
     TransmitFlag = 0;
 
-    EUSCI_B0 -> TXBUF = MemAddress;           // Send the high byte of the memory address
+    EUSCI_B0 -> TXBUF = MemAddress;           // Send the byte of the memory address
 
     while (!TransmitFlag);                    // Wait for the transmit to complete
     TransmitFlag = 0;
