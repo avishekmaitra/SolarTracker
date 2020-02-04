@@ -13,11 +13,12 @@
  * SPONSOR: CALIFORNIA POLYTECHNIC STATE UNVERSITY - ELECTRICAL ENGINEERING DEPARTMENT
  */
 
-#include "msp.h"
 #include "delay.h"
-#include "UART.h"
+#include "I2C.h"
+#include "msp.h"
 #include "RTC.h"
 #include <stdint.h>
+#include "UART.h"
 
 void main(void)
 {
