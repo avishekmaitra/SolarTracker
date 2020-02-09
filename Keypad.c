@@ -21,12 +21,13 @@ void KeypadInit(void)
    P5 -> IE |= (C1|C2|C3|C4);
    P5 -> SEL1 &= ~(C1|C2|C3|C4);
    P5 -> SEL0 &= ~(C1|C2|C3|C4);
+   P2 -> REN = (C1|C2|C3|C4); // use enable resistor
+   P2 -> OUT |= (C1|C2|C3|C4); // sets it high use pull down resistors
 
    P2 -> DIR |= (R0|R1|R2|R3); //rows outputs
    P2 -> SEL1 &= ~(R0|R1|R2|R3);
    P2 -> SEL0 &= ~(R0|R1|R2|R3);
-   P2 -> REN = (R0|R1|R2|R3); // use enable resistor
-   P2 -> OUT |= (R0|R1|R2|R3); // sets it high use pull down resistors
+   P2 -> OUT |= (R0|R1|R2|R3); // sets it high
 
    __enable_irq();
    NVIC -> ISER[5] = 1 << ((PORT5_IRQn) & 31);
