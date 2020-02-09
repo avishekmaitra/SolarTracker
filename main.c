@@ -30,7 +30,7 @@ void main(void)
 
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 	initRTC();
-
+	InitI2C(0x1C);
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
@@ -38,8 +38,10 @@ void main(void)
 
     SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
+
     while (1)
     {
-        __sleep();
+        delay_ms(1000, FREQ_24_MHZ);
+        WriteI2C_SingleByte(0x2A, 0x1A);
     }
 }
