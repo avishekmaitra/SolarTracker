@@ -36,6 +36,7 @@ void main(void)
 	startRTC();
 
     SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+    initUART();
 
     while (1)
     {
