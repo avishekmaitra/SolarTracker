@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #define ResetKey 73
-
+#define time 50
 //pin2
 #define R0 BIT3
 #define R1 BIT4
@@ -17,7 +17,6 @@
 #define C2 BIT1
 #define C3 BIT2
 #define C4 BIT6
-#define I BIT7
 
 void KeypadInit(void);
 void keypad_setkey(void);

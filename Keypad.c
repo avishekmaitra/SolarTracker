@@ -9,36 +9,43 @@
 #include "delay.h"
 #include "msp.h"
 #include <stdint.h>
+#include "UART.h"
 
-uint8_t COL, ROW, key, tempkey;
+static uint8_t key;
 
 void KeypadInit(void)
 {
-   P2->DIR = (R0|R1|R2|R3); //Set P4.0-4.3 direction to input
-   P5->REN = (C1|C2|C3|C4); // use enable resistor
-   P5->OUT &= ~(C1|C2|C3|C4); // pull down
+   P5 -> DIR &= ~(C1|C2|C3|C4); //interrupt Columns inputs
+   P5 -> IES |= (C1|C2|C3|C4);
+   P5 -> IFG &= ~(C1|C2|C3|C4);
+   P5 -> IE |= (C1|C2|C3|C4);
+   P5 -> SEL1 &= ~(C1|C2|C3|C4);
+   P5 -> SEL0 &= ~(C1|C2|C3|C4);
 
-   P5 -> DIR |= I;
-   P5 -> DIR &= ~I;
-   P5 -> IES |= I;
-   P5 -> IFG &= ~I;
-   P5 -> IE |= I;
+   P2 -> DIR |= (R0|R1|R2|R3); //rows outputs
+   P2 -> SEL1 &= ~(R0|R1|R2|R3);
+   P2 -> SEL0 &= ~(R0|R1|R2|R3);
+   P2 -> REN = (R0|R1|R2|R3); // use enable resistor
+   P2 -> OUT |= (R0|R1|R2|R3); // sets it high use pull down resistors
 
    __enable_irq();
    NVIC -> ISER[5] = 1 << ((PORT5_IRQn) & 31);
 }
-void PORT2_IRQHandler(void)
+void PORT5_IRQHandler(void)
 {
-   P2->IFG &= ~BIT7; //clear interrupt flag
+   P5->IFG &= ~(C1|C2|C3|C4); //clear interrupt flag
    keypad_setkey();
 }
 
 void keypad_setkey(void)
 {
-//Multiple if statements that goes through the rows to select the correct key based on //column
+    //set all low
+    P2 -> OUT &= ~(R0|R1|R2|R3);
+    uint8_t COL = 0;
+    //Multiple if statements that goes through the rows to select the correct key based on //column
     P2 -> OUT = R0;
     delay_ms(25, CLK);
-    COL = P5 -> IN &(C1|C2|C3|C4);
+    COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)
     {
         if ((COL & C1) != 0){
@@ -99,82 +106,81 @@ void keypad_setkey(void)
 }
 uint8_t GetKey(void)
 {
-    tempkey = key;
+    uint8_t tempkey = key;
     key = ResetKey;
     return tempkey;
 }
 
 void keypad_testkey(void)
 {
- switch(tempkey) {
+ switch(GetKey()) {
         case 1:
             delay_ms(time, CLK);
-            write_UART('1');
+            write_UART("1");
         break;
         case 2:
             delay_ms(time, CLK);
-            write_UART('2');
+            write_UART("2");
         break;
         case 3:
             delay_ms(time, CLK);
-            write_UART('3');
+            write_UART("3");
         break;
         case 65:
             delay_ms(time, CLK);
-            write_UART('A');
+            write_UART("A");
         break;
         case 4:
             delay_ms(time, CLK);
-            write_UART('4');
+            write_UART("4");
         break;
         case 5:
             delay_ms(time, CLK);
-            write_UART('5');
+            write_UART("5");
         break;
         case 6:
             delay_ms(time, CLK);
-            write_UART('6');
+            write_UART("6");
         break;
         case 66:
             delay_ms(time, CLK);
-            write_UART('B');
+            write_UART("B");
         break;
         case 7:
             delay_ms(time, CLK);
-            write_UART('7');
+            write_UART("7");
         break;
         case 8:
             delay_ms(time, CLK);
-            write_UART('8');
+            write_UART("8");
         break;
         case 9:
             delay_ms(time, CLK);
-            write_UART('9');
+            write_UART("9");
         break;
         case 67:
             delay_ms(time, CLK);
-            write_UART('C')
+            write_UART("C");
         break;
         case 42:
             delay_ms(time, CLK);
-            write_UART('*')
+            write_UART("*");
         break;
         case 0:
             delay_ms(time, CLK);
-            write_UART('0')
+            write_UART("0");
         break;
         case 35:
             delay_ms(time, CLK);
-            write_UART('#')
+            write_UART("#");
         break;
         case 46:
             delay_ms(time, CLK);
-            write_UART('.')
+            write_UART(".");
         break;
         default:
         break;
     }
-}
 }
 
 
