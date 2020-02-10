@@ -1,8 +1,9 @@
 #include "msp.h"
 #include <stdint.h>
-#define ACCEL_ADDRESS 0x1C
+#include "I2C.h"
+#include "delay.h"
 
-uint8_t TransmitFlag = 0;
+static uint16_t TransmitFlag = 0;
 
 void InitI2C(uint8_t DeviceAddress)
 {
@@ -11,24 +12,22 @@ void InitI2C(uint8_t DeviceAddress)
 
     // Enable eUSCIB0 interrupt in NVIC module
     NVIC->ISER[0] = 1 << ((EUSCIB0_IRQn) & 31);
-    __enable_interrupt();
 
     // Configure USCI_B0 for I2C mode
-    EUSCI_B0->CTLW0 |= EUSCI_A_CTLW0_SWRST;   // Software reset enabled
+    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_SWRST;   // Software reset enabled
 
-    EUSCI_B0->CTLW0 = EUSCI_A_CTLW0_SWRST |   // Remain eUSCI in reset mode
+    EUSCI_B0->CTLW0 = EUSCI_B_CTLW0_SWRST |   // Remain eUSCI in reset mode
             EUSCI_B_CTLW0_MODE_3 |            // I2C mode
             EUSCI_B_CTLW0_MST |               // Master mode
             EUSCI_B_CTLW0_SYNC |              // Sync mode
             EUSCI_B_CTLW0_SSEL__SMCLK;        // SMCLK
-            EUSCI_B0->BRW = 30;               // baudrate = SMCLK / 30 = 100kHz
+    EUSCI_B0->BRW = 30;                       // baudrate = SMCLK / 30 = 100kHz
 
     EUSCI_B0->I2CSA = DeviceAddress;          // Slave address
-    EUSCI_B0->CTLW0 &= ~EUSCI_A_CTLW0_SWRST;  // Release eUSCI from reset
+    EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;  // Release eUSCI from reset
 
-    EUSCI_B0->IE |= EUSCI_A_IE_RXIE |         // Enable receive interrupt
-    EUSCI_A_IE_TXIE;
-
+    EUSCI_B0->IE |= EUSCI_B_IE_RXIE |         // Enable receive interrupt
+    EUSCI_B_IE_TXIE;
 }
 
 //Function that writes a single byte to I2C
@@ -153,7 +152,7 @@ uint16_t ReadI2C_MultiByte(uint8_t MemAddress)
 }
 
 
-//I2C ISR
+// I2C ISR
 void EUSCIB0_IRQHandler(void)
 {
     // Transmit

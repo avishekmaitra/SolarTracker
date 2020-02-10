@@ -1,5 +1,6 @@
 #ifndef I2C_H_
 #define I2C_H_
+#define ACCEL_ADDRESS 0x1D
 #include <stdint.h>
 
 void InitI2C(uint8_t DeviceAddress);

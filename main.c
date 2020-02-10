@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include "UART.h"
 
+
 void main(void)
 {
     // stop watchdog timer
@@ -28,20 +29,23 @@ void main(void)
 	// Set clock to 24 MHz
 	set_DCO(FREQ_24_MHZ);
 
+	__enable_irq();
+
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 	initRTC();
-	InitI2C(0x1D);
+
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
 	// startRTC();
 
-    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+    InitI2C(ACCEL_ADDRESS);
 
+    // SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
     while (1)
     {
-        delay_ms(1000, FREQ_24_MHZ);
+        delay_ms(100, FREQ_24_MHZ);
         WriteI2C_SingleByte(0x2A, 0x1A);
     }
 }
