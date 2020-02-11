@@ -17,6 +17,7 @@
 #include "delay.h"
 #include "UART.h"
 #include "RTC.h"
+#include "Keypad.h"
 #include <stdint.h>
 
 void main(void)
@@ -28,18 +29,22 @@ void main(void)
 	set_DCO(FREQ_24_MHZ);
 
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
-	initRTC();
+	//initRTC();
 
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
-	startRTC();
+	//startRTC();
 
-    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+   // SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
     initUART();
+    initUARTWriteOnly();
+
 
     while (1)
     {
-        __sleep();
+        KeypadInit();
+        keypad_setkey();
+        keypad_testkey();
     }
 }

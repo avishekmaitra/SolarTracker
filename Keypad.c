@@ -21,16 +21,18 @@ void KeypadInit(void)
    P5 -> IE |= (C1|C2|C3|C4);
    P5 -> SEL1 &= ~(C1|C2|C3|C4);
    P5 -> SEL0 &= ~(C1|C2|C3|C4);
-   P2 -> REN = (C1|C2|C3|C4); // use enable resistor
-   P2 -> OUT |= (C1|C2|C3|C4); // sets it high use pull down resistors
+   P5 -> REN = (C1|C2|C3|C4); // use enable resistor
+   P5 -> OUT &= ~(C1|C2|C3|C4); //  pull down resistors
 
-   P2 -> DIR |= (R0|R1|R2|R3); //rows outputs
+
+   P2 -> DIR = (R0|R1|R2|R3); //rows outputs
+   /*
    P2 -> SEL1 &= ~(R0|R1|R2|R3);
    P2 -> SEL0 &= ~(R0|R1|R2|R3);
    P2 -> OUT |= (R0|R1|R2|R3); // sets it high
-
+*/
    __enable_irq();
-   NVIC -> ISER[5] = 1 << ((PORT5_IRQn) & 31);
+   NVIC -> ISER[1] = 1 << ((PORT5_IRQn) & 31);
 }
 void PORT5_IRQHandler(void)
 {
@@ -53,7 +55,7 @@ void keypad_setkey(void)
             key = 1; }
         else if ((COL & C2) !=0){
             key = 2;}
-        else if ((COL & C3)!= 0) {
+        else if ((COL & C3) != 0) {
             key = 3; }
         else {
             key = 65;}
@@ -66,9 +68,9 @@ void keypad_setkey(void)
     {
         if ((COL & C1) != 0){
             key = 4; }
-        else if ((COL & C2)!= 0) {
+        else if ((COL & C2) != 0) {
             key = 5; }
-        else if ((COL & C3)!= 0) {
+        else if ((COL & C3) != 0) {
             key = 6; }
         else {
             key = 66;}
@@ -81,9 +83,9 @@ void keypad_setkey(void)
     {
         if ((COL & C1) != 0){
             key = 7; }
-        else if ((COL & C2)!= 0) {
-            key = 8; }
-        else if ((COL & C3)!= 0) {
+        else if ((COL & C2) != 0) {
+            key = 8;}
+        else if ((COL & C3) != 0) {
             key = 9; }
         else {
             key = 67;}
@@ -96,14 +98,14 @@ void keypad_setkey(void)
     {
         if ((COL & C1) != 0){
             key = 42; }
-        else if ((COL & C2)!= 0) {
+        else if ((COL & C2) != 0) {
             key = 0; }
-        else if ((COL & C3)!= 0) {
+        else if ((COL & C3) != 0) {
             key = 35; }
         else {
             key = 46;}
     }
-    key = 73;
+
 }
 uint8_t GetKey(void)
 {

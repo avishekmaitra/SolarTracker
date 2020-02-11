@@ -20,6 +20,7 @@ main.obj: C:/ti/ccs900/ccs/ccs_base/arm/include/system_msp432p401r.h
 main.obj: ../delay.h
 main.obj: ../UART.h
 main.obj: ../RTC.h
+main.obj: ../Keypad.h
 
 ../main.c: 
 C:/ti/ccs900/ccs/ccs_base/arm/include/msp.h: 
@@ -41,3 +42,4 @@ C:/ti/ccs900/ccs/ccs_base/arm/include/system_msp432p401r.h:
 ../delay.h: 
 ../UART.h: 
 ../RTC.h: 
+../Keypad.h: 
