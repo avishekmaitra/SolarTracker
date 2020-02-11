@@ -21,13 +21,15 @@ void InitI2C(uint8_t DeviceAddress)
             EUSCI_B_CTLW0_MST |               // Master mode
             EUSCI_B_CTLW0_SYNC |              // Sync mode
             EUSCI_B_CTLW0_SSEL__SMCLK;        // SMCLK
+    EUSCI_B0->CTLW1 = EUSCI_B_CTLW1_CLTO_1;   // 28ms timeout if communication fails
     EUSCI_B0->BRW = 30;                       // baudrate = SMCLK / 30 = 100kHz
 
     EUSCI_B0->I2CSA = DeviceAddress;          // Slave address
     EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;  // Release eUSCI from reset
 
-    EUSCI_B0->IE |= EUSCI_B_IE_RXIE |         // Enable receive interrupt
-    EUSCI_B_IE_TXIE;
+    EUSCI_B0->IE |= EUSCI_B_IE_RXIE |         // Enable receive,transmit, and err interrupt
+    EUSCI_B_IE_TXIE | EUSCI_B_IE_NACKIE |     // and error checking interrupts
+    EUSCI_B_IE_CLTOIE;
 }
 
 //Function that writes a single byte to I2C
@@ -36,17 +38,17 @@ void WriteI2C_SingleByte(uint8_t MemAddress, uint8_t MemByte)
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TR;          // Set transmit mode (write)
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTT;       // I2C start condition
 
-    while (!TransmitFlag);            // Wait for I2C address to transmit
+    while (!TransmitFlag);                        // Wait for I2C address to transmit
     TransmitFlag = 0;
-    EUSCI_B0 -> TXBUF = MemAddress;   // Send the memory address
+    EUSCI_B0 -> TXBUF = MemAddress;               // Send the memory address
 
-    while (!TransmitFlag);            // Wait for the transmit to complete
+    while (!TransmitFlag);                        // Wait for the transmit to complete
     TransmitFlag = 0;
-    EUSCI_B0 -> TXBUF = MemByte;      // Send the byte to store in ACCEL
+    EUSCI_B0 -> TXBUF = MemByte;                  // Send the byte to store in ACCEL
 
-    while (!TransmitFlag);            // Wait for the transmit to complete
+    while (!TransmitFlag);                        // Wait for the transmit to complete
     TransmitFlag = 0;
-    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTP;   // I2C stop condition
+    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTP;     // I2C stop condition
 }
 
 //Function that reads a single byte from the I2C
@@ -74,7 +76,7 @@ uint8_t ReadI2C_SingleByte(uint8_t MemAddress)
     // set stop bit to trigger after first byte
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTP;
 
-    while (!TransmitFlag);            // Wait to receive a byte
+    while (!TransmitFlag);                    // Wait to receive a byte
     TransmitFlag = 0;
 
     ReceiveByte = EUSCI_B0->RXBUF;
@@ -94,21 +96,21 @@ void WriteI2C_MultiByte(uint8_t MemAddress, uint16_t MemByte)
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TR;          // Set transmit mode (write)
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTT;       // I2C start condition
 
-    while (!TransmitFlag);            // Wait for I2C address to transmit
+    while (!TransmitFlag);                        // Wait for I2C address to transmit
     TransmitFlag = 0;
-    EUSCI_B0 -> TXBUF = MemAddress;   // Send the memory address
+    EUSCI_B0 -> TXBUF = MemAddress;               // Send the memory address
 
-    while (!TransmitFlag);            // Wait for the transmit to complete
+    while (!TransmitFlag);                        // Wait for the transmit to complete
     TransmitFlag = 0;
-    EUSCI_B0 -> TXBUF = HiByte;       // Send the byte to store in ACCEL
+    EUSCI_B0 -> TXBUF = HiByte;                   // Send the byte to store in ACCEL
 
-    while (!TransmitFlag);            // Wait for the transmit to complete
+    while (!TransmitFlag);                        // Wait for the transmit to complete
     TransmitFlag = 0;
-    EUSCI_B0 -> TXBUF = LoByte;       // Send the byte to store in ACCEL
+    EUSCI_B0 -> TXBUF = LoByte;                   // Send the byte to store in ACCEL
 
-    while (!TransmitFlag);            // Wait for the transmit to complete
+    while (!TransmitFlag);                        // Wait for the transmit to complete
     TransmitFlag = 0;
-    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTP;   // I2C stop condition
+    EUSCI_B0 -> CTLW0 |= EUSCI_B_CTLW0_TXSTP;     // I2C stop condition
 }
 
 //Function that reads a single byte from the I2C
@@ -135,14 +137,14 @@ uint16_t ReadI2C_MultiByte(uint8_t MemAddress)
     // Wait for start to be transmitted
     while ((EUSCI_B0->CTLW0 & EUSCI_B_CTLW0_TXSTT));
 
-    while (!TransmitFlag);            // Wait to receive a byte
+    while (!TransmitFlag);                    // Wait to receive a byte
     TransmitFlag = 0;
     HiByte = EUSCI_B0->RXBUF;
 
     // set stop bit to trigger after second byte
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTP;
 
-    while (!TransmitFlag);            // Wait to receive a byte
+    while (!TransmitFlag);                   // Wait to receive a byte
     TransmitFlag = 0;
     LoByte = EUSCI_B0->RXBUF;
 
@@ -163,10 +165,17 @@ void EUSCIB0_IRQHandler(void)
     }
 
     // Receive
-    if(EUSCI_B0->IFG & EUSCI_B_IFG_RXIFG0) // CHECK IF COMPLETE
+    if(EUSCI_B0->IFG & EUSCI_B_IFG_RXIFG0)    // CHECK IF COMPLETE
     {
         EUSCI_B0->IFG &= ~EUSCI_B_IFG_RXIFG0;
         TransmitFlag = 1;
+    }
+
+    // Error has occurred if these flags are set
+    if((EUSCI_B0->IFG & EUSCI_B_IFG_NACKIFG) || (EUSCI_B0->IFG & EUSCI_B_IFG_CLTOIFG))
+    {
+        // TODO Call function to clear LCD and display warning on LCD
+        EUSCI_B0->IFG &= ~(EUSCI_B_IFG_NACKIFG | EUSCI_B_IFG_CLTOIFG);
     }
 }
 

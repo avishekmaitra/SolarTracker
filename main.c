@@ -41,11 +41,10 @@ void main(void)
 
     InitI2C(ACCEL_ADDRESS);
 
-    // SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
     while (1)
     {
-        delay_ms(100, FREQ_24_MHZ);
-        WriteI2C_SingleByte(0x2A, 0x1A);
+        __sleep();
     }
 }

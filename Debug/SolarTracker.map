@@ -1,17 +1,17 @@
 ******************************************************************************
                   TI ARM Linker Unix v18.12.1                  
 ******************************************************************************
->> Linked Sun Feb  9 16:02:07 2020
+>> Linked Mon Feb 10 19:58:02 2020
 
 OUTPUT FILE NAME:   <SolarTracker.out>
-ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00000edd
+ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00000f01
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  MAIN                  00000000   00040000  00000f50  0003f0b0  R  X
+  MAIN                  00000000   00040000  00000f74  0003f08c  R  X
   INFO                  00200000   00004000  00000000  00004000  R  X
   SRAM_CODE             01000000   00010000  00000206  0000fdfa  RW X
   SRAM_DATA             20000000   00010000  00000206  0000fdfa  RW  
@@ -21,10 +21,10 @@ SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    00000f54   00000f54    r-x
+00000000    00000000    00000f74   00000f74    r-x
   00000000    00000000    000000e4   000000e4    r-- .intvecs
-  000000e4    000000e4    00000e50   00000e50    r-x .text
-  00000f38    00000f38    0000001c   0000001c    r-- .cinit
+  000000e4    000000e4    00000e74   00000e74    r-x .text
+  00000f58    00000f58    0000001c   0000001c    r-- .cinit
 20000000    20000000    00000006   00000000    rw-
   20000000    20000000    00000006   00000000    rw- .data
 2000fe00    2000fe00    00000200   00000000    rw-
@@ -39,27 +39,27 @@ section   page    origin      length       input sections
 .intvecs   0    00000000    000000e4     
                   00000000    000000e4     startup_msp432p401r_ccs.obj (.intvecs:retain)
 
-.text      0    000000e4    00000e50     
+.text      0    000000e4    00000e74     
                   000000e4    000003c0     delay.obj (.text)
                   000004a4    00000334     system_msp432p401r.obj (.text)
-                  000007d8    000002d8     I2C.obj (.text)
-                  00000ab0    00000170     RTC.obj (.text)
-                  00000c20    0000013c     UART.obj (.text)
-                  00000d5c    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
-                  00000df8    00000068                                   : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
-                  00000e60    00000044                                   : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
-                  00000ea4    00000038     main.obj (.text)
-                  00000edc    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
-                  00000f10    0000000e                                   : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
-                  00000f1e    0000000e     startup_msp432p401r_ccs.obj (.text)
-                  00000f2c    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
-                  00000f30    00000004                                   : exit.c.obj (.text:abort:abort)
+                  000007d8    000002fc     I2C.obj (.text)
+                  00000ad4    00000170     RTC.obj (.text)
+                  00000c44    0000013c     UART.obj (.text)
+                  00000d80    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.asm.obj (.text)
+                  00000e1c    00000068                                   : copy_decompress_lzss.c.obj (.text:decompress:lzss:__TI_decompress_lzss)
+                  00000e84    00000044                                   : autoinit.c.obj (.text:__TI_auto_init_nobinit_nopinit:__TI_auto_init_nobinit_nopinit)
+                  00000ec8    00000038     main.obj (.text)
+                  00000f00    00000034     rtsv7M4_T_le_v4SPD16_eabi.lib : boot_cortex_m.c.obj (.text:_c_int00_noargs:_c_int00_noargs)
+                  00000f34    0000000e                                   : copy_decompress_none.c.obj (.text:decompress:none:__TI_decompress_none)
+                  00000f42    0000000e     startup_msp432p401r_ccs.obj (.text)
+                  00000f50    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.c.obj (.text:_system_pre_init)
+                  00000f54    00000004                                   : exit.c.obj (.text:abort:abort)
 
-.cinit     0    00000f38    0000001c     
-                  00000f38    0000000a     (.cinit..data.load) [load image, compression = lzss]
-                  00000f42    00000002     --HOLE-- [fill = 0]
-                  00000f44    00000008     (__TI_handler_table)
-                  00000f4c    00000008     (__TI_cinit_table)
+.cinit     0    00000f58    0000001c     
+                  00000f58    0000000a     (.cinit..data.load) [load image, compression = lzss]
+                  00000f62    00000002     --HOLE-- [fill = 0]
+                  00000f64    00000008     (__TI_handler_table)
+                  00000f6c    00000008     (__TI_cinit_table)
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
@@ -81,13 +81,13 @@ MODULE SUMMARY
     ./
        delay.obj                     960    0         0      
        system_msp432p401r.obj        820    0         8      
-       I2C.obj                       728    0         4      
+       I2C.obj                       764    0         4      
        RTC.obj                       368    0         0      
        UART.obj                      316    0         0      
        startup_msp432p401r_ccs.obj   14     228       0      
        main.obj                      56     0         0      
     +--+-----------------------------+------+---------+---------+
-       Total:                        3262   228       12     
+       Total:                        3298   228       12     
                                                              
     /Applications/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/lib/rtsv7M4_T_le_v4SPD16_eabi.lib
        memcpy_t2.asm.obj             156    0         0      
@@ -103,18 +103,18 @@ MODULE SUMMARY
        Stack:                        0      0         1024   
        Linker Generated:             0      26        0      
     +--+-----------------------------+------+---------+---------+
-       Grand Total:                  3664   254       1036   
+       Grand Total:                  3700   254       1036   
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00000f4c records: 1, size/record: 8, table size: 8
-	.data: load addr=00000f38, load size=0000000a bytes, run addr=20000000, run size=00000006 bytes, compression=lzss
+__TI_cinit_table @ 00000f6c records: 1, size/record: 8, table size: 8
+	.data: load addr=00000f58, load size=0000000a bytes, run addr=20000000, run size=00000006 bytes, compression=lzss
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 00000f44 records: 2, size/record: 4, table size: 8
+__TI_handler_table @ 00000f64 records: 2, size/record: 4, table size: 8
 	index: 0, handler: __TI_decompress_lzss
 	index: 1, handler: __TI_decompress_none
 
@@ -123,121 +123,121 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                          
 -------   ----                          
-00000f2b  ADC14_IRQHandler              
-00000f2b  AES256_IRQHandler             
-00000f2b  BusFault_Handler              
-00000f31  C$$EXIT                       
-00000f2b  COMP_E0_IRQHandler            
-00000f2b  COMP_E1_IRQHandler            
-00000f2b  CS_IRQHandler                 
-00000f2b  DMA_ERR_IRQHandler            
-00000f2b  DMA_INT0_IRQHandler           
-00000f2b  DMA_INT1_IRQHandler           
-00000f2b  DMA_INT2_IRQHandler           
-00000f2b  DMA_INT3_IRQHandler           
-00000f2b  DebugMon_Handler              
-00000f2b  Default_Handler               
-00000d11  EUSCIA0_IRQHandler            
-00000d11  EUSCIA0_IRQHandler            
-00000f2b  EUSCIA1_IRQHandler            
-00000f2b  EUSCIA2_IRQHandler            
-00000f2b  EUSCIA3_IRQHandler            
-00000a55  EUSCIB0_IRQHandler            
-00000a55  EUSCIB0_IRQHandler            
-00000f2b  EUSCIB1_IRQHandler            
-00000f2b  EUSCIB2_IRQHandler            
-00000f2b  EUSCIB3_IRQHandler            
-00000f2b  FLCTL_IRQHandler              
-00000f2b  FPU_IRQHandler                
-00000f2b  HardFault_Handler             
+00000f4f  ADC14_IRQHandler              
+00000f4f  AES256_IRQHandler             
+00000f4f  BusFault_Handler              
+00000f55  C$$EXIT                       
+00000f4f  COMP_E0_IRQHandler            
+00000f4f  COMP_E1_IRQHandler            
+00000f4f  CS_IRQHandler                 
+00000f4f  DMA_ERR_IRQHandler            
+00000f4f  DMA_INT0_IRQHandler           
+00000f4f  DMA_INT1_IRQHandler           
+00000f4f  DMA_INT2_IRQHandler           
+00000f4f  DMA_INT3_IRQHandler           
+00000f4f  DebugMon_Handler              
+00000f4f  Default_Handler               
+00000d35  EUSCIA0_IRQHandler            
+00000d35  EUSCIA0_IRQHandler            
+00000f4f  EUSCIA1_IRQHandler            
+00000f4f  EUSCIA2_IRQHandler            
+00000f4f  EUSCIA3_IRQHandler            
+00000a5b  EUSCIB0_IRQHandler            
+00000a5b  EUSCIB0_IRQHandler            
+00000f4f  EUSCIB1_IRQHandler            
+00000f4f  EUSCIB2_IRQHandler            
+00000f4f  EUSCIB3_IRQHandler            
+00000f4f  FLCTL_IRQHandler              
+00000f4f  FPU_IRQHandler                
+00000f4f  HardFault_Handler             
 000007d9  InitI2C                       
-00000f2b  MemManage_Handler             
-00000f2b  NMI_Handler                   
-00000f2b  PCM_IRQHandler                
-00000f2b  PORT1_IRQHandler              
-00000f2b  PORT2_IRQHandler              
-00000f2b  PORT3_IRQHandler              
-00000f2b  PORT4_IRQHandler              
-00000f2b  PORT5_IRQHandler              
-00000f2b  PORT6_IRQHandler              
-00000f2b  PSS_IRQHandler                
-00000f2b  PendSV_Handler                
-00000bd9  RTC_C_IRQHandler              
-00000bd9  RTC_C_IRQHandler              
-000009ab  ReadI2C_MultiByte             
-00000893  ReadI2C_SingleByte            
-00000f1f  Reset_Handler                 
-00000f2b  SVC_Handler                   
-00000f2b  SysTick_Handler               
+00000f4f  MemManage_Handler             
+00000f4f  NMI_Handler                   
+00000f4f  PCM_IRQHandler                
+00000f4f  PORT1_IRQHandler              
+00000f4f  PORT2_IRQHandler              
+00000f4f  PORT3_IRQHandler              
+00000f4f  PORT4_IRQHandler              
+00000f4f  PORT5_IRQHandler              
+00000f4f  PORT6_IRQHandler              
+00000f4f  PSS_IRQHandler                
+00000f4f  PendSV_Handler                
+00000bfd  RTC_C_IRQHandler              
+00000bfd  RTC_C_IRQHandler              
+000009b1  ReadI2C_MultiByte             
+00000899  ReadI2C_SingleByte            
+00000f43  Reset_Handler                 
+00000f4f  SVC_Handler                   
+00000f4f  SysTick_Handler               
 20000000  SystemCoreClock               
 000004a5  SystemCoreClockUpdate         
 0000071d  SystemInit                    
-00000f2b  T32_INT1_IRQHandler           
-00000f2b  T32_INT2_IRQHandler           
-00000f2b  T32_INTC_IRQHandler           
-00000f2b  TA0_0_IRQHandler              
-00000f2b  TA0_N_IRQHandler              
-00000f2b  TA1_0_IRQHandler              
-00000f2b  TA1_N_IRQHandler              
-00000f2b  TA2_0_IRQHandler              
-00000f2b  TA2_N_IRQHandler              
-00000f2b  TA3_0_IRQHandler              
-00000f2b  TA3_N_IRQHandler              
-00000f2b  UsageFault_Handler            
+00000f4f  T32_INT1_IRQHandler           
+00000f4f  T32_INT2_IRQHandler           
+00000f4f  T32_INTC_IRQHandler           
+00000f4f  TA0_0_IRQHandler              
+00000f4f  TA0_N_IRQHandler              
+00000f4f  TA1_0_IRQHandler              
+00000f4f  TA1_N_IRQHandler              
+00000f4f  TA2_0_IRQHandler              
+00000f4f  TA2_N_IRQHandler              
+00000f4f  TA3_0_IRQHandler              
+00000f4f  TA3_N_IRQHandler              
+00000f4f  UsageFault_Handler            
 4000480c  WDTCTL_SYM                    
-00000f2b  WDT_A_IRQHandler              
-00000917  WriteI2C_MultiByte            
-0000082b  WriteI2C_SingleByte           
+00000f4f  WDT_A_IRQHandler              
+0000091d  WriteI2C_MultiByte            
+00000831  WriteI2C_SingleByte           
 20010000  __STACK_END                   
 00000200  __STACK_SIZE                  
-00000f4c  __TI_CINIT_Base               
-00000f54  __TI_CINIT_Limit              
-00000f44  __TI_Handler_Table_Base       
-00000f4c  __TI_Handler_Table_Limit      
-00000e61  __TI_auto_init_nobinit_nopinit
-00000df9  __TI_decompress_lzss          
-00000f11  __TI_decompress_none          
+00000f6c  __TI_CINIT_Base               
+00000f74  __TI_CINIT_Limit              
+00000f64  __TI_Handler_Table_Base       
+00000f6c  __TI_Handler_Table_Limit      
+00000e85  __TI_auto_init_nobinit_nopinit
+00000e1d  __TI_decompress_lzss          
+00000f35  __TI_decompress_none          
 ffffffff  __TI_pprof_out_hndl           
 ffffffff  __TI_prof_data_size           
 ffffffff  __TI_prof_data_start          
 00000000  __TI_static_base__            
-00000d5d  __aeabi_memcpy                
-00000d5d  __aeabi_memcpy4               
-00000d5d  __aeabi_memcpy8               
+00000d81  __aeabi_memcpy                
+00000d81  __aeabi_memcpy4               
+00000d81  __aeabi_memcpy8               
 ffffffff  __binit__                     
 ffffffff  __c_args__                    
 UNDEFED   __mpu_init                    
 2000fe00  __stack                       
-00000edd  _c_int00_noargs               
+00000f01  _c_int00_noargs               
 UNDEFED   _system_post_cinit            
-00000f2d  _system_pre_init              
-00000f31  abort                         
+00000f51  _system_pre_init              
+00000f55  abort                         
 ffffffff  binit                         
 000000e5  delay_ms                      
 0000018f  delay_us                      
 00000447  delay_us_48_MHZ               
-00000bbb  getCurrentTime                
-00000b57  getRTCDay                     
-00000b7f  getRTCHour                    
-00000ba7  getRTCMinute                  
-00000b2f  getRTCMonth                   
-00000b07  getRTCYear                    
-00000ab1  initRTC                       
-00000c21  initUART                      
-00000c71  initUARTWriteOnly             
+00000bdf  getCurrentTime                
+00000b7b  getRTCDay                     
+00000ba3  getRTCHour                    
+00000bcb  getRTCMinute                  
+00000b53  getRTCMonth                   
+00000b2b  getRTCYear                    
+00000ad5  initRTC                       
+00000c45  initUART                      
+00000c95  initUARTWriteOnly             
 00000000  interruptVectors              
-00000ea5  main                          
-00000d5d  memcpy                        
-00000cf3  newLine                       
-00000b43  setRTCDay                     
-00000b6b  setRTCHour                    
-00000b93  setRTCMinute                  
-00000b1b  setRTCMonth                   
-00000af3  setRTCYear                    
+00000ec9  main                          
+00000d81  memcpy                        
+00000d17  newLine                       
+00000b67  setRTCDay                     
+00000b8f  setRTCHour                    
+00000bb7  setRTCMinute                  
+00000b3f  setRTCMonth                   
+00000b17  setRTCYear                    
 00000329  set_DCO                       
-00000ad9  startRTC                      
-00000ccd  writeDigit                    
-00000ca3  write_UART                    
+00000afd  startRTC                      
+00000cf1  writeDigit                    
+00000cc7  write_UART                    
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -254,99 +254,99 @@ address   name
 000004a5  SystemCoreClockUpdate         
 0000071d  SystemInit                    
 000007d9  InitI2C                       
-0000082b  WriteI2C_SingleByte           
-00000893  ReadI2C_SingleByte            
-00000917  WriteI2C_MultiByte            
-000009ab  ReadI2C_MultiByte             
-00000a55  EUSCIB0_IRQHandler            
-00000a55  EUSCIB0_IRQHandler            
-00000ab1  initRTC                       
-00000ad9  startRTC                      
-00000af3  setRTCYear                    
-00000b07  getRTCYear                    
-00000b1b  setRTCMonth                   
-00000b2f  getRTCMonth                   
-00000b43  setRTCDay                     
-00000b57  getRTCDay                     
-00000b6b  setRTCHour                    
-00000b7f  getRTCHour                    
-00000b93  setRTCMinute                  
-00000ba7  getRTCMinute                  
-00000bbb  getCurrentTime                
-00000bd9  RTC_C_IRQHandler              
-00000bd9  RTC_C_IRQHandler              
-00000c21  initUART                      
-00000c71  initUARTWriteOnly             
-00000ca3  write_UART                    
-00000ccd  writeDigit                    
-00000cf3  newLine                       
-00000d11  EUSCIA0_IRQHandler            
-00000d11  EUSCIA0_IRQHandler            
-00000d5d  __aeabi_memcpy                
-00000d5d  __aeabi_memcpy4               
-00000d5d  __aeabi_memcpy8               
-00000d5d  memcpy                        
-00000df9  __TI_decompress_lzss          
-00000e61  __TI_auto_init_nobinit_nopinit
-00000ea5  main                          
-00000edd  _c_int00_noargs               
-00000f11  __TI_decompress_none          
-00000f1f  Reset_Handler                 
-00000f2b  ADC14_IRQHandler              
-00000f2b  AES256_IRQHandler             
-00000f2b  BusFault_Handler              
-00000f2b  COMP_E0_IRQHandler            
-00000f2b  COMP_E1_IRQHandler            
-00000f2b  CS_IRQHandler                 
-00000f2b  DMA_ERR_IRQHandler            
-00000f2b  DMA_INT0_IRQHandler           
-00000f2b  DMA_INT1_IRQHandler           
-00000f2b  DMA_INT2_IRQHandler           
-00000f2b  DMA_INT3_IRQHandler           
-00000f2b  DebugMon_Handler              
-00000f2b  Default_Handler               
-00000f2b  EUSCIA1_IRQHandler            
-00000f2b  EUSCIA2_IRQHandler            
-00000f2b  EUSCIA3_IRQHandler            
-00000f2b  EUSCIB1_IRQHandler            
-00000f2b  EUSCIB2_IRQHandler            
-00000f2b  EUSCIB3_IRQHandler            
-00000f2b  FLCTL_IRQHandler              
-00000f2b  FPU_IRQHandler                
-00000f2b  HardFault_Handler             
-00000f2b  MemManage_Handler             
-00000f2b  NMI_Handler                   
-00000f2b  PCM_IRQHandler                
-00000f2b  PORT1_IRQHandler              
-00000f2b  PORT2_IRQHandler              
-00000f2b  PORT3_IRQHandler              
-00000f2b  PORT4_IRQHandler              
-00000f2b  PORT5_IRQHandler              
-00000f2b  PORT6_IRQHandler              
-00000f2b  PSS_IRQHandler                
-00000f2b  PendSV_Handler                
-00000f2b  SVC_Handler                   
-00000f2b  SysTick_Handler               
-00000f2b  T32_INT1_IRQHandler           
-00000f2b  T32_INT2_IRQHandler           
-00000f2b  T32_INTC_IRQHandler           
-00000f2b  TA0_0_IRQHandler              
-00000f2b  TA0_N_IRQHandler              
-00000f2b  TA1_0_IRQHandler              
-00000f2b  TA1_N_IRQHandler              
-00000f2b  TA2_0_IRQHandler              
-00000f2b  TA2_N_IRQHandler              
-00000f2b  TA3_0_IRQHandler              
-00000f2b  TA3_N_IRQHandler              
-00000f2b  UsageFault_Handler            
-00000f2b  WDT_A_IRQHandler              
-00000f2d  _system_pre_init              
-00000f31  C$$EXIT                       
-00000f31  abort                         
-00000f44  __TI_Handler_Table_Base       
-00000f4c  __TI_CINIT_Base               
-00000f4c  __TI_Handler_Table_Limit      
-00000f54  __TI_CINIT_Limit              
+00000831  WriteI2C_SingleByte           
+00000899  ReadI2C_SingleByte            
+0000091d  WriteI2C_MultiByte            
+000009b1  ReadI2C_MultiByte             
+00000a5b  EUSCIB0_IRQHandler            
+00000a5b  EUSCIB0_IRQHandler            
+00000ad5  initRTC                       
+00000afd  startRTC                      
+00000b17  setRTCYear                    
+00000b2b  getRTCYear                    
+00000b3f  setRTCMonth                   
+00000b53  getRTCMonth                   
+00000b67  setRTCDay                     
+00000b7b  getRTCDay                     
+00000b8f  setRTCHour                    
+00000ba3  getRTCHour                    
+00000bb7  setRTCMinute                  
+00000bcb  getRTCMinute                  
+00000bdf  getCurrentTime                
+00000bfd  RTC_C_IRQHandler              
+00000bfd  RTC_C_IRQHandler              
+00000c45  initUART                      
+00000c95  initUARTWriteOnly             
+00000cc7  write_UART                    
+00000cf1  writeDigit                    
+00000d17  newLine                       
+00000d35  EUSCIA0_IRQHandler            
+00000d35  EUSCIA0_IRQHandler            
+00000d81  __aeabi_memcpy                
+00000d81  __aeabi_memcpy4               
+00000d81  __aeabi_memcpy8               
+00000d81  memcpy                        
+00000e1d  __TI_decompress_lzss          
+00000e85  __TI_auto_init_nobinit_nopinit
+00000ec9  main                          
+00000f01  _c_int00_noargs               
+00000f35  __TI_decompress_none          
+00000f43  Reset_Handler                 
+00000f4f  ADC14_IRQHandler              
+00000f4f  AES256_IRQHandler             
+00000f4f  BusFault_Handler              
+00000f4f  COMP_E0_IRQHandler            
+00000f4f  COMP_E1_IRQHandler            
+00000f4f  CS_IRQHandler                 
+00000f4f  DMA_ERR_IRQHandler            
+00000f4f  DMA_INT0_IRQHandler           
+00000f4f  DMA_INT1_IRQHandler           
+00000f4f  DMA_INT2_IRQHandler           
+00000f4f  DMA_INT3_IRQHandler           
+00000f4f  DebugMon_Handler              
+00000f4f  Default_Handler               
+00000f4f  EUSCIA1_IRQHandler            
+00000f4f  EUSCIA2_IRQHandler            
+00000f4f  EUSCIA3_IRQHandler            
+00000f4f  EUSCIB1_IRQHandler            
+00000f4f  EUSCIB2_IRQHandler            
+00000f4f  EUSCIB3_IRQHandler            
+00000f4f  FLCTL_IRQHandler              
+00000f4f  FPU_IRQHandler                
+00000f4f  HardFault_Handler             
+00000f4f  MemManage_Handler             
+00000f4f  NMI_Handler                   
+00000f4f  PCM_IRQHandler                
+00000f4f  PORT1_IRQHandler              
+00000f4f  PORT2_IRQHandler              
+00000f4f  PORT3_IRQHandler              
+00000f4f  PORT4_IRQHandler              
+00000f4f  PORT5_IRQHandler              
+00000f4f  PORT6_IRQHandler              
+00000f4f  PSS_IRQHandler                
+00000f4f  PendSV_Handler                
+00000f4f  SVC_Handler                   
+00000f4f  SysTick_Handler               
+00000f4f  T32_INT1_IRQHandler           
+00000f4f  T32_INT2_IRQHandler           
+00000f4f  T32_INTC_IRQHandler           
+00000f4f  TA0_0_IRQHandler              
+00000f4f  TA0_N_IRQHandler              
+00000f4f  TA1_0_IRQHandler              
+00000f4f  TA1_N_IRQHandler              
+00000f4f  TA2_0_IRQHandler              
+00000f4f  TA2_N_IRQHandler              
+00000f4f  TA3_0_IRQHandler              
+00000f4f  TA3_N_IRQHandler              
+00000f4f  UsageFault_Handler            
+00000f4f  WDT_A_IRQHandler              
+00000f51  _system_pre_init              
+00000f55  C$$EXIT                       
+00000f55  abort                         
+00000f64  __TI_Handler_Table_Base       
+00000f6c  __TI_CINIT_Base               
+00000f6c  __TI_Handler_Table_Limit      
+00000f74  __TI_CINIT_Limit              
 20000000  SystemCoreClock               
 2000fe00  __stack                       
 20010000  __STACK_END                   
