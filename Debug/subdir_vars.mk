@@ -9,11 +9,8 @@ CMD_SRCS += \
 ../msp432p401r.cmd 
 
 C_SRCS += \
-<<<<<<< HEAD
-../Keypad.c \
-=======
 ../I2C.c \
->>>>>>> master
+../Keypad.c \
 ../RTC.c \
 ../UART.c \
 ../delay.c \
@@ -22,11 +19,8 @@ C_SRCS += \
 ../system_msp432p401r.c 
 
 C_DEPS += \
-<<<<<<< HEAD
-./Keypad.d \
-=======
 ./I2C.d \
->>>>>>> master
+./Keypad.d \
 ./RTC.d \
 ./UART.d \
 ./delay.d \
@@ -35,11 +29,8 @@ C_DEPS += \
 ./system_msp432p401r.d 
 
 OBJS += \
-<<<<<<< HEAD
-./Keypad.obj \
-=======
 ./I2C.obj \
->>>>>>> master
+./Keypad.obj \
 ./RTC.obj \
 ./UART.obj \
 ./delay.obj \
@@ -48,11 +39,8 @@ OBJS += \
 ./system_msp432p401r.obj 
 
 OBJS__QUOTED += \
-<<<<<<< HEAD
-"Keypad.obj" \
-=======
 "I2C.obj" \
->>>>>>> master
+"Keypad.obj" \
 "RTC.obj" \
 "UART.obj" \
 "delay.obj" \
@@ -61,11 +49,8 @@ OBJS__QUOTED += \
 "system_msp432p401r.obj" 
 
 C_DEPS__QUOTED += \
-<<<<<<< HEAD
-"Keypad.d" \
-=======
 "I2C.d" \
->>>>>>> master
+"Keypad.d" \
 "RTC.d" \
 "UART.d" \
 "delay.d" \
@@ -74,11 +59,8 @@ C_DEPS__QUOTED += \
 "system_msp432p401r.d" 
 
 C_SRCS__QUOTED += \
-<<<<<<< HEAD
-"../Keypad.c" \
-=======
 "../I2C.c" \
->>>>>>> master
+"../Keypad.c" \
 "../RTC.c" \
 "../UART.c" \
 "../delay.c" \

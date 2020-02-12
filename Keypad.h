@@ -4,8 +4,8 @@
 #define KEYPAD_H_
 #include <stdint.h>
 
-#define ResetKey 73
-#define time 25
+#define RESETKEY 73
+#define TIME 50
 //pin2
 #define R0 BIT3
 #define R1 BIT4
@@ -18,8 +18,9 @@
 #define C3 BIT2
 #define C4 BIT6
 
-void KeypadInit(void);
+void Keypad_Init(void);
 void keypad_setkey(void);
-uint8_t GetKey(void);
+uint8_t Keypad_GetKey(void);
+void keypad_testkey(void);
 
 #endif /* KEYPAD_H_ */
