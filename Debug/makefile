@@ -10,7 +10,11 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+<<<<<<< HEAD
 "./Keypad.obj" \
+=======
+"./I2C.obj" \
+>>>>>>> master
 "./RTC.obj" \
 "./UART.obj" \
 "./delay.obj" \
@@ -160,8 +164,13 @@ SolarTracker.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
+<<<<<<< HEAD
 	-$(RM) "Keypad.obj" "RTC.obj" "UART.obj" "delay.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" 
 	-$(RM) "Keypad.d" "RTC.d" "UART.d" "delay.d" "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" 
+=======
+	-$(RM) "I2C.obj" "RTC.obj" "UART.obj" "delay.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" 
+	-$(RM) "I2C.d" "RTC.d" "UART.d" "delay.d" "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" 
+>>>>>>> master
 	-@echo 'Finished clean'
 	-@echo ' '
 

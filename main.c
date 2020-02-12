@@ -13,12 +13,13 @@
  * SPONSOR: CALIFORNIA POLYTECHNIC STATE UNVERSITY - ELECTRICAL ENGINEERING DEPARTMENT
  */
 
-#include "msp.h"
 #include "delay.h"
-#include "UART.h"
+#include "I2C.h"
+#include "msp.h"
 #include "RTC.h"
 #include "Keypad.h"
 #include <stdint.h>
+#include "UART.h"
 
 void main(void)
 {
@@ -28,17 +29,26 @@ void main(void)
 	// Set clock to 24 MHz
 	set_DCO(FREQ_24_MHZ);
 
+	__enable_irq();
+
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 	//initRTC();
 
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
+<<<<<<< HEAD
 	// MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
 	//startRTC();
 
    // SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
     initUART();
     initUARTWriteOnly();
+=======
+	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
+	// startRTC();
+
+    InitI2C(ACCEL_ADDRESS);
+>>>>>>> master
 
 
     while (1)
