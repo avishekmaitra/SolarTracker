@@ -22,7 +22,6 @@ void startRTC(void)
 {
     RTCCTL1 &= ~(RTCHOLD);                    // Start RTC calendar mode
     RTCCTL0_H = 0;                            // Lock the RTC registers
-    __enable_interrupt();
     NVIC->ISER[0] = 1 << ((RTC_C_IRQn) & 31);
 }
 
