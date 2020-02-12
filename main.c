@@ -20,7 +20,6 @@
 #include <stdint.h>
 #include "UART.h"
 
-
 void main(void)
 {
     // stop watchdog timer
