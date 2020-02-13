@@ -11,7 +11,7 @@
 #include <stdint.h>
 #include "UART.h"
 
-static uint8_t key;
+static uint8_t key = 100;
 
 void Keypad_Init(void)
 {
@@ -39,15 +39,16 @@ void PORT5_IRQHandler(void)                     //interrupt handler on Port 5
    P5-> IFG &= ~(C1|C2|C3|C4);                  //clear interrupt flag
    keypad_setkey();
    keypad_testkey();
-}
+  }
 
 void keypad_setkey(void)                        //function that checks the rows and columns for which button was pressed
 {
     P2 -> OUT &= ~(R0|R1|R2|R3);                  //set all low
     uint8_t COL = 0;
 
-    P2 -> OUT = R0;
-    delay_ms(50, CLK);
+    P2 -> OUT |= R0;
+    delay_ms(TIME, CLK);
+    COL = 0;
     COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)                               //Multiple if statements that goes through the rows to select the correct key based on column
     {
@@ -67,11 +68,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 65;                           //ASCII "A"
         }
+        P2 -> OUT &= ~R0;
     }
 
-    P2 -> OUT = R1;
-    delay_ms(50, CLK);
-    COL = P5 -> IN &  (C1|C2|C3|C4);
+    P2 -> OUT |= R1;
+    delay_ms(TIME, CLK);
+    COL = 0;
+    COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)
     {
         if ((COL & C1) != 0)
@@ -90,11 +93,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 66;                           //ASCII "B"
         }
+        P2 -> OUT &= ~R1;
     }
 
-    P2 -> OUT = R2;
-    delay_ms(50, CLK);
-    COL = P5 -> IN &(C1|C2|C3|C4);
+    P2 -> OUT |= R2;
+    delay_ms(TIME, CLK);
+    COL = 0;
+    COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)
     {
         if ((COL & C1) != 0)
@@ -113,11 +118,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 67;                           //ASCII "C"
         }
+        P2 -> OUT &= ~R2;
     }
 
-    P2 -> OUT = R3;
-    delay_ms(50, CLK);
-    COL = P5 -> IN &(C1|C2|C3|C4);
+    P2 -> OUT |= R3;
+    delay_ms(TIME, CLK);
+    COL = 0;
+    COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)
     {
         if ((COL & C1) != 0)
@@ -137,7 +144,7 @@ void keypad_setkey(void)                        //function that checks the rows 
             key = 46;                           //ASCII "."
         }
     }
-
+    P2 -> OUT &= ~R3;
 }
 uint8_t Keypad_GetKey(void)                     //function that returns the key value
 {
