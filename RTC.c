@@ -82,7 +82,7 @@ uint8_t RTC_GetMinute(void)
 
 uint16_t RTC_GetCurrentTime(void)
 {
-    uint16_t myTime = (getRTCHour()*60) + getRTCMinute();
+    uint16_t myTime = (RTC_GetHour()*60) + RTC_GetMinute();
     return myTime;
 }
 
@@ -100,6 +100,3 @@ void RTC_C_IRQHandler(void)
         RTCCTL0_H = 0;
     }
 }
-
-
-
