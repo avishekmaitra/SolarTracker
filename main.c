@@ -32,21 +32,16 @@ void main(void)
 	__enable_irq();
 
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
-	initRTC();
+	RTC_Init();
+	I2C_Init(ACCEL_ADDRESS);
+	Keypad_Init();
 
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
-	// MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
-	//startRTC();
-
-
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
-	// startRTC();
+	// RTC_Start();
 
-	InitI2C(ACCEL_ADDRESS);
     SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
-
-    Keypad_Init();
 
     while (1)
     {

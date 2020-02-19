@@ -23,7 +23,6 @@ void Keypad_Init(void)
    P2 -> SEL0 &= ~(R0|R1|R2|R3);
    P2 -> OUT |= (R0|R1|R2|R3);                  // sets it high
 
-
    NVIC -> ISER[1] = 1 << ((PORT5_IRQn) & 31);
 }
 
@@ -111,7 +110,7 @@ void keypad_setkey(void)                        //function that checks the rows 
             key = 67;                           //ASCII "C"
         }
         P2 -> OUT &= ~(R2);
-}
+    }
 
     P2 -> OUT |= R3;
     delay_ms(TIME, CLK);
@@ -135,13 +134,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 46;                           //ASCII "."
         }
-    P2 -> OUT &= ~(R3);
+        P2 -> OUT &= ~(R3);
+    }
 }
-}
+
 uint8_t Keypad_GetKey(void)                     //function that returns the key value
 {
     uint8_t tempkey = key;
     key = RESETKEY;
     return tempkey;
 }
-

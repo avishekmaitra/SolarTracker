@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 // MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
-void initRTC(void)
+void RTC_Init(void)
 {
     // Configure RTC
     RTCCTL0_H = RTCKEY_H ;                  // Unlock RTC key protected registers
@@ -18,69 +18,69 @@ void initRTC(void)
 }
 
 // MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
-void startRTC(void)
+void RTC_Start(void)
 {
     RTCCTL1 &= ~(RTCHOLD);                    // Start RTC calendar mode
     RTCCTL0_H = 0;                            // Lock the RTC registers
     NVIC->ISER[0] = 1 << ((RTC_C_IRQn) & 31);
 }
 
-void setRTCYear(uint16_t inputYear)
+void RTC_SetYear(uint16_t inputYear)
 {
     RTCYEAR = inputYear;
 }
 
-uint16_t getRTCYear(void)
+uint16_t RTC_GetYear(void)
 {
     uint16_t myYear = RTCYEAR;
     return myYear;
 }
 
-void setRTCMonth(uint8_t inputMonth)
+void RTC_SetMonth(uint8_t inputMonth)
 {
     RTCMON = inputMonth;
 }
 
-uint8_t getRTCMonth(void)
+uint8_t RTC_GetMonth(void)
 {
     uint8_t myMonth = RTCMON;
     return myMonth;
 }
 
-void setRTCDay(uint8_t inputDay)
+void RTC_SetDay(uint8_t inputDay)
 {
     RTCDAY = inputDay;
 }
 
-uint8_t getRTCDay(void)
+uint8_t RTC_GetDay(void)
 {
     uint8_t myDay = RTCDAY;
     return myDay;
 }
 
-void setRTCHour(uint8_t inputHour)
+void RTC_SetHour(uint8_t inputHour)
 {
     RTCHOUR = inputHour;
 }
 
-uint8_t getRTCHour(void)
+uint8_t RTC_GetHour(void)
 {
     uint8_t myHour = RTCHOUR;
     return myHour;
 }
 
-void setRTCMinute(uint8_t inputMin)
+void RTC_SetMinute(uint8_t inputMin)
 {
     RTCMIN = inputMin;
 }
 
-uint8_t getRTCMinute(void)
+uint8_t RTC_GetMinute(void)
 {
     uint8_t myMinute = RTCMIN;
     return myMinute;
 }
 
-uint16_t getCurrentTime(void)
+uint16_t RTC_GetCurrentTime(void)
 {
     uint16_t myTime = (getRTCHour()*60) + getRTCMinute();
     return myTime;
