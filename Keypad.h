@@ -6,6 +6,7 @@
 
 #define RESETKEY 73
 #define TIME 30
+
 //pin2
 #define R0 BIT3
 #define R1 BIT4
@@ -21,6 +22,7 @@
 void Keypad_Init(void);
 void keypad_setkey(void);
 uint8_t Keypad_GetKey(void);
-void keypad_testkey(void);
+
+
 
 #endif /* KEYPAD_H_ */

@@ -39,16 +39,13 @@ void main(void)
 	// MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
 	//startRTC();
 
-    //SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
-
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
 	// startRTC();
 
-    InitI2C(ACCEL_ADDRESS);
+	InitI2C(ACCEL_ADDRESS);
+    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
-    initUART();
-    initUARTWriteOnly();
     Keypad_Init();
 
     while (1)
