@@ -34,6 +34,8 @@ void main(void)
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 	RTC_Init();
 	I2C_Init(ACCEL_ADDRESS);
+	initUART();
+	initUARTWriteOnly();
 	Keypad_Init();
 
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME

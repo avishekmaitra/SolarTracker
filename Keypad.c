@@ -5,6 +5,7 @@
 #include "UART.h"
 
 static uint8_t key = 100;
+static uint8_t hitFlag = 0;
 
 void Keypad_Init(void)
 {
@@ -28,8 +29,15 @@ void Keypad_Init(void)
 
 void PORT5_IRQHandler(void)                     //interrupt handler on Port 5
 {
-   P5-> IFG &= ~(C1|C2|C3|C4);                  //clear interrupt flag
-   keypad_setkey();
+   if(P5-> IFG & (C1|C2|C3|C4))
+   {
+       P5-> IFG &= ~(C1|C2|C3|C4);                  //clear interrupt flag
+       if(!hitFlag)
+       {
+           keypad_setkey();
+       }
+       P2 -> OUT |= (R0|R1|R2|R3);
+   }
 }
 
 void keypad_setkey(void)                        //function that checks the rows and columns for which button was pressed
@@ -38,7 +46,7 @@ void keypad_setkey(void)                        //function that checks the rows 
     uint8_t COL = 0;
 
     P2 -> OUT |= R0;
-    delay_ms(TIME, CLK);
+    delay_ms(1, CLK);
     COL = 0;
     COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)                               //Multiple if statements that goes through the rows to select the correct key based on column
@@ -59,11 +67,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 65;                           //ASCII "A"
         }
-        P2 -> OUT &= ~(R0);
+        hitFlag = 1;
+        return;
     }
+    P2 -> OUT &= ~(R0);
 
     P2 -> OUT |= R1;
-    delay_ms(TIME, CLK);
+    delay_ms(1, CLK);
     COL = 0;
     COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)
@@ -84,11 +94,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 66;                           //ASCII "B"
         }
-        P2 -> OUT &= ~(R1);
+        hitFlag = 1;
+        return;
     }
+    P2 -> OUT &= ~(R1);
 
     P2 -> OUT |= R2;
-    delay_ms(TIME, CLK);
+    delay_ms(1, CLK);
     COL = 0;
     COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)
@@ -109,11 +121,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 67;                           //ASCII "C"
         }
-        P2 -> OUT &= ~(R2);
+        hitFlag = 1;
+        return;
     }
+    P2 -> OUT &= ~(R2);
 
     P2 -> OUT |= R3;
-    delay_ms(TIME, CLK);
+    delay_ms(1, CLK);
     COL = 0;
     COL = P5 -> IN & (C1|C2|C3|C4);
     if (COL != 0)
@@ -134,13 +148,144 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 46;                           //ASCII "."
         }
-        P2 -> OUT &= ~(R3);
+        hitFlag = 1;
+        return;
     }
+    P2 -> OUT &= ~(R3);
 }
 
 uint8_t Keypad_GetKey(void)                     //function that returns the key value
 {
     uint8_t tempkey = key;
     key = RESETKEY;
+    hitFlag = 0;
     return tempkey;
+  }
+
+void keypad_testkey(void)                      //test function to write key value to terminal
+{
+    switch(Keypad_GetKey())
+    {
+        case 1:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("1");
+        }
+        break;
+
+        case 2:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("2");
+        }
+        break;
+
+        case 3:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("3");
+        }
+        break;
+
+        case 65:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("A");
+        }
+        break;
+
+        case 4:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("4");
+        }
+        break;
+
+        case 5:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("5");
+        }
+        break;
+
+        case 6:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("6");
+        }
+        break;
+
+        case 66:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("B");
+        }
+        break;
+
+        case 7:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("7");
+        }
+        break;
+
+        case 8:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("8");
+        }
+        break;
+
+        case 9:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("9");
+        }
+        break;
+
+        case 67:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("C");
+        }
+        break;
+
+        case 42:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("*");
+        }
+        break;
+
+        case 0:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("0");
+        }
+        break;
+
+        case 35:
+        {
+            delay_ms(TIME, CLK);
+            write_UART("#");
+        }
+        break;
+
+        case 46:
+        {
+            delay_ms(TIME, CLK);
+            write_UART(".");
+        }
+        break;
+
+        default:
+        {
+            break;
+        }
+     }
 }
+
+
+
+
+

@@ -60,7 +60,7 @@ void initUARTWriteOnly(void)
     // Configure UART
     EUSCI_A0->CTLW0 |= EUSCI_A_CTLW0_SWRST; // Put eUSCI in reset
     EUSCI_A0->CTLW0 = EUSCI_A_CTLW0_SWRST |
-            EUSCI_A_CTLW0_SSEL__SMCLK;      // Configure eUSCI clock source for SMCLK
+    EUSCI_A_CTLW0_SSEL__SMCLK;      // Configure eUSCI clock source for SMCLK
 
     // Baud Rate calculation
     // 3000000/(115200) = 26.04167
