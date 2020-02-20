@@ -5,7 +5,8 @@
 #include <stdint.h>
 
 #define RESETKEY 73
-#define TIME 30
+#define TIMEUART 30
+#define TIMESETKEY 1
 
 //pin2
 #define R0 BIT3
