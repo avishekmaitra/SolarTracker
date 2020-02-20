@@ -2,18 +2,18 @@
 #define RTC_H_
 #include <stdint.h>
 
-void initRTC(void);
-void setRTCYear(uint16_t inputYear);
-uint16_t getRTCYear(void);
-void setRTCMonth(uint8_t inputMonth);
-uint8_t getRTCMonth(void);
-void setRTCDay(uint8_t inputDay);
-uint8_t getRTCDay(void);
-void setRTCHour(uint8_t inputHour);
-uint8_t getRTCHour(void);
-void setRTCMinute(uint8_t inputMin);
-uint8_t getRTCMinute(void);
-uint16_t getCurrentTime(void);
-void startRTC(void);
+void RTC_Init(void);
+void RTC_Start(void);
+void RTC_SetYear(uint16_t inputYear);
+uint16_t RTC_GetYear(void);
+void RTC_SetMonth(uint8_t inputMonth);
+uint8_t RTC_GetMonth(void);
+void RTC_SetDay(uint8_t inputDay);
+uint8_t RTC_GetDay(void);
+void RTC_SetHour(uint8_t inputHour);
+uint8_t RTC_GetHour(void);
+void RTC_SetMinute(uint8_t inputMin);
+uint8_t RTC_GetMinute(void);
+uint16_t RTC_GetCurrentTime(void);
 
 #endif /* RTC_H_ */

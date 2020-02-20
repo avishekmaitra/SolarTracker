@@ -2,12 +2,15 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
+SHELL = cmd.exe
+
 # Add inputs and outputs from these tool invocations to the build variables 
 CMD_SRCS += \
 ../msp432p401r.cmd 
 
 C_SRCS += \
 ../I2C.c \
+../Keypad.c \
 ../RTC.c \
 ../UART.c \
 ../delay.c \
@@ -17,6 +20,7 @@ C_SRCS += \
 
 C_DEPS += \
 ./I2C.d \
+./Keypad.d \
 ./RTC.d \
 ./UART.d \
 ./delay.d \
@@ -26,6 +30,7 @@ C_DEPS += \
 
 OBJS += \
 ./I2C.obj \
+./Keypad.obj \
 ./RTC.obj \
 ./UART.obj \
 ./delay.obj \
@@ -35,6 +40,7 @@ OBJS += \
 
 OBJS__QUOTED += \
 "I2C.obj" \
+"Keypad.obj" \
 "RTC.obj" \
 "UART.obj" \
 "delay.obj" \
@@ -44,6 +50,7 @@ OBJS__QUOTED += \
 
 C_DEPS__QUOTED += \
 "I2C.d" \
+"Keypad.d" \
 "RTC.d" \
 "UART.d" \
 "delay.d" \
@@ -53,6 +60,7 @@ C_DEPS__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../I2C.c" \
+"../Keypad.c" \
 "../RTC.c" \
 "../UART.c" \
 "../delay.c" \

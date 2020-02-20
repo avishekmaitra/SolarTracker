@@ -5,7 +5,7 @@
 
 static uint16_t TransmitFlag = 0;
 
-void InitI2C(uint8_t DeviceAddress)
+void I2C_Init(uint8_t DeviceAddress)
 {
     // Set I2C pins of eUSCI_B0
     P1->SEL0 |= BIT6 | BIT7;
@@ -33,7 +33,7 @@ void InitI2C(uint8_t DeviceAddress)
 }
 
 //Function that writes a single byte to I2C
-void WriteI2C_SingleByte(uint8_t MemAddress, uint8_t MemByte)
+void I2C_WriteSingleByte(uint8_t MemAddress, uint8_t MemByte)
 {
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TR;          // Set transmit mode (write)
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTT;       // I2C start condition
@@ -52,7 +52,7 @@ void WriteI2C_SingleByte(uint8_t MemAddress, uint8_t MemByte)
 }
 
 //Function that reads a single byte from the I2C
-uint8_t ReadI2C_SingleByte(uint8_t MemAddress)
+uint8_t I2C_ReadSingleByte(uint8_t MemAddress)
 {
     uint8_t ReceiveByte;
 
@@ -85,7 +85,7 @@ uint8_t ReadI2C_SingleByte(uint8_t MemAddress)
 }
 
 //Function that writes a two bytes to I2C
-void WriteI2C_MultiByte(uint8_t MemAddress, uint16_t MemByte)
+void I2C_WriteMultiByte(uint8_t MemAddress, uint16_t MemByte)
 {
     uint8_t HiByte;
     uint8_t LoByte;
@@ -114,7 +114,7 @@ void WriteI2C_MultiByte(uint8_t MemAddress, uint16_t MemByte)
 }
 
 //Function that reads a single byte from the I2C
-uint16_t ReadI2C_MultiByte(uint8_t MemAddress)
+uint16_t I2C_ReadMultiByte(uint8_t MemAddress)
 {
     uint16_t ReceiveBytes;
     uint8_t LoByte;
