@@ -18,7 +18,6 @@ void Keypad_Init(void)
    P5 -> REN |= (C1|C2|C3|C4);                  //use enable resistor
    P5 -> OUT &= ~(C1|C2|C3|C4);                 //pull down resistors
 
-
    P2 -> DIR |= (R0|R1|R2|R3);                  //sets rows as outputs
    P2 -> SEL1 &= ~(R0|R1|R2|R3);
    P2 -> SEL0 &= ~(R0|R1|R2|R3);
