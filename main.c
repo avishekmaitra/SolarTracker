@@ -1,44 +1,22 @@
-/**
- * Senior Project: Solar Tracker
- *
- * ENGINEERS: AVISHEK MAITRA, DELANEY BERGER, HELEN RICE
- *
- * DESCRIPTION: This project allows users to easily control and test solar panels
- *
- * INPUT: Users input to set angle and algorithm for solar panels
- * OUTPUT: Relay output that controls movement of the solar panel
- *
- * DATE: JUNE 5TH, 2020
- *
- * SPONSOR: CALIFORNIA POLYTECHNIC STATE UNVERSITY - ELECTRICAL ENGINEERING DEPARTMENT
- */
-
 #include "msp.h"
-#include "delay.h"
-#include "UART.h"
-#include "RTC.h"
-#include <stdint.h>
+#include"delay.h"
+#include"LCD.h"
+#include<stdint.h>
 
 void main(void)
 {
-    // stop watchdog timer
-	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    set_DCO(FREQ_12_MHZ);
 
-	// Set clock to 24 MHz
-	set_DCO(FREQ_24_MHZ);
+    init_LCD();
+    command_LCD(CLR_DISP);          //clear_LCD();
+    delay_us(200000, FREQ_12_MHZ);  //delay
+    write_char_LCD('A');
+    delay_us(200000, FREQ_12_MHZ);  //delay
 
-	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
-	initRTC();
-
-	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
-
-	// MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
-	startRTC();
-
-    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
-
-    while (1)
-    {
-        __sleep();
-    }
+    //write_char_LCD('C');
+    //write_string_LCD("sweet");
+    //command_LCD(0x0F);
+    //delay_us(10000, FREQ_12_MHZ);
+    //while(1);
 }
