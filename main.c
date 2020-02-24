@@ -9,14 +9,14 @@ void main(void)
     set_DCO(FREQ_12_MHZ);
 
     init_LCD();
-    command_LCD(CLR_DISP);          //clear_LCD();
-    delay_us(200000, FREQ_12_MHZ);  //delay
-    write_char_LCD('A');
-    delay_us(200000, FREQ_12_MHZ);  //delay
-
+    while(1) {
+        command_LCD(CLR_DISP);          //clear_LCD();
+        delay_us(200000, FREQ_12_MHZ);  //delay
+        write_char_LCD('A');
+        delay_us(200000, FREQ_12_MHZ);  //delay
+    }
     //write_char_LCD('C');
     //write_string_LCD("sweet");
     //command_LCD(0x0F);
     //delay_us(10000, FREQ_12_MHZ);
-    //while(1);
 }
