@@ -5,7 +5,7 @@
 
 void main(void)
 {
-    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watch dog timer
     set_DCO(FREQ_12_MHZ);
 
     init_LCD();
