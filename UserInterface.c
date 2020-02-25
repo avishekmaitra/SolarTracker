@@ -8,7 +8,15 @@
 
 void Start_screen(void)
 {
-
+    /*
+    LCD_write('SingleAxisSolarTracker');
+    LCD_newline;
+    LCD_write('Enter Date: _ _ / _ _ / _ _ _ _');
+    LCD_newline;
+    LCD_write('Enter Military Time: _ _ : _ _');
+    LCD_newline;
+    LCD_write('#Enter');
+    */
 }
 
 void Home_screen(void)
