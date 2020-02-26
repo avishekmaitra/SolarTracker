@@ -5,18 +5,19 @@
 
 void main(void)
 {
-    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watch dog timer
-    set_DCO(FREQ_12_MHZ);
-
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;    // stop watch dog timer
+    set_DCO(FREQ_48_MHZ);
     init_LCD();
-    while(1) {
-        command_LCD(CLR_DISP);          //clear_LCD();
-        delay_us(200000, FREQ_12_MHZ);  //delay
-        write_char_LCD('A');
-        delay_us(200000, FREQ_12_MHZ);  //delay
+    clear_LCD();
+    while(1)
+    {
+        clear_LCD();
+        delay_ms(1000, FREQ_48_MHZ);  //delay
+        write_LCD_L1("This now kinda works");          // issue where T in line 1 and 2 are deleted after all 4 lines write
+        write_LCD_L2("This now kindb works");
+        write_LCD_L3("This now kindc works");
+        write_LCD_L4("This now kindd works");
+
+        delay_ms(2000, FREQ_48_MHZ);
     }
-    //write_char_LCD('C');
-    //write_string_LCD("sweet");
-    //command_LCD(0x0F);
-    //delay_us(10000, FREQ_12_MHZ);
 }

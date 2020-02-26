@@ -11,7 +11,7 @@
 
 //  1   2  3   4   5     6    7   8   9  10   11   12  13    14   15   16
 // VSS VDD V0  RS  RW   EN   DB0 DB1 DB2 DB3  DB4  DB5  DB6  DB7 LED+ LED-
-// GND 3V3    P3.5 P3.6 P3.7                 P4.4 P4.5 P4.6 P4.7  5V  GND
+// GND 3V3    P3.5 P3.6 P3.7                 P4.0 P4.1 P4.2 P4.3  5V  GND
 
 #define RS BIT5         // P3.5 Register Select.
 #define RW BIT6         // P3.6 Read/Write Select. RW=1: Read, RW=0: Write
@@ -30,6 +30,8 @@
 #define FUNC_SET        0x28    // 4 bit, 1 line, 5x8 font
 #define WRITE_DATA      0x20    // write data on | D7-D0 address
 #define READ_DATA       0x30    // read data from ram
+#define SET_CURSOR      0x10    // set cursor
+#define ENABLE_MOVE     0X80
 
 void init_LCD(void);                        // initialize LCD
 void clear_LCD(void);                       // clear display
@@ -37,6 +39,11 @@ void command_LCD(unsigned char command);    // set LCD properties
 void write_char_LCD(unsigned char letter);  // write character to LCD
 void write_string_LCD(char* string);        // write string to LCD
 void home_LCD(void);                        // move cursor top left
+void SetCursorLocation(char place);         // set DDRAM location address
+void write_LCD_L1(char* string);            // write string to line 1
+void write_LCD_L2(char* string);            // write string to line 2
+void write_LCD_L3(char* string);            // write string to line 3
+void write_LCD_L4(char* string);            // write string to line 4
 void nybble(void);
 
 
