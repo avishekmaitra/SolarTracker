@@ -8,28 +8,12 @@
 
 void Start_screen(void)
 {
-    /*
-    LCD_write('SingleAxisSolarTracker');
-    LCD_newline;
-    LCD_write('Enter Date: _ _ / _ _ / _ _ _ _');
-    LCD_newline;
-    LCD_write('Enter Military Time: _ _ : _ _');
-    LCD_newline;
-    LCD_write('#Enter');
-    */
+
 }
 
 void Home_screen(void)
 {
-    /*
-    LCD_write('HOME SCREEEN');
-    LCD_newline;
-    LCD_write('A: Manual Input');
-    LCD_newline;
-    LCD_write('B: Algorithm Based');
-    LCD_newline;
-    LCD_write('C: DEMO');
-    */
+
 }
 
 void Select_modes(void)
@@ -80,11 +64,7 @@ void Select_modes(void)
 
 void Manual_input(void)
 {
-    /*
-    LCD_write('Enter Angle:  ')
-    LCD_newline();
-    LCD_write('*back         .home')
-    */
+
 }
 
 void Algorithm_based(void)
