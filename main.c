@@ -15,7 +15,6 @@
 
 #include "delay.h"
 #include "I2C.h"
-#include "LCD.h"
 #include "msp.h"
 #include "RTC.h"
 #include "Keypad.h"
@@ -32,16 +31,17 @@ void main(void)
 
     __enable_irq();
 
-    // MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
-    RTC_Init();
-    I2C_Init(ACCEL_ADDRESS);
-    Keypad_Init();
-    init_LCD();
+	__enable_irq();
+
+	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
+	RTC_Init();
+	I2C_Init(ACCEL_ADDRESS);
+	Keypad_Init();
 
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
-    // MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
-    // RTC_Start();
+	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
+	// RTC_Start();
 
     SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
