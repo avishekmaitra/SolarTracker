@@ -10,7 +10,7 @@
 #include "LCD.h"
 
 void init_LCD(void)                         //setup GPIO pins
-    {
+{
     P4-> SEL0 &= ~(DB4 | DB5 | DB6 | DB7);  //initialize P4 pins
     P4-> SEL1 &= ~(DB4 | DB5 | DB6 | DB7);  //GPIO setup
     P4-> DIR |=   (DB4 | DB5 | DB6 | DB7);  //set pins to output mode
@@ -21,8 +21,8 @@ void init_LCD(void)                         //setup GPIO pins
 
     delay_ms(2,FREQ_48_MHZ);
 
-    P4-> OUT = 0x00;                        //clear outputs
-    P3-> OUT = 0x00;
+    P4-> OUT = 0x00;                        //clear output pins
+    P3-> OUT = 0x00;                        //clear output pins
     delay_ms(100,FREQ_48_MHZ);              //power up delay
     P4 -> OUT = 0x30;
 
@@ -126,7 +126,7 @@ void write_LCD_L4(char* string)
 void nybble(void)
 {
     P3-> OUT |= EN;                         //enable high
-    delay_ms(1, FREQ_48_MHZ);               //delay 0.1ms
+    delay_ms(1, FREQ_48_MHZ);               //delay 1ms
     P3-> OUT &= ~EN;                        //enable low
 }
 
@@ -136,7 +136,7 @@ void StartScreen(void)                      //STARTING SCREEN
     write_LCD_L2("Enter Date:__/__/__ ");   //remember: only have 20 char spaces
     write_LCD_L3("Enter Time:__:__    ");   //military time
     write_LCD_L4("*Clear        #Enter");
-    SetCursorLocation(0x4B);
+    SetCursorLocation(0x4B);                //set cursor to first input blank space
     //getkeypress function
     //replace "_" with keypress
     //once key is pressed, will cursor automatically move right, or do we need to define next location?
@@ -156,7 +156,7 @@ void A1_MANUAL(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
     write_LCD_L1("                    ");
     write_LCD_L2("Enter Angle: ___deg ");
     write_LCD_L3("                    ");
-    write_LCD_L4("*Back  !Home  #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
+    write_LCD_L4("*Back  .Home  #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
 }
 
 void A2_MANUAL(void)                        //A_2: MANUAL ENTRY ANGLE UPDATE SCREEN
@@ -164,7 +164,7 @@ void A2_MANUAL(void)                        //A_2: MANUAL ENTRY ANGLE UPDATE SCR
     write_LCD_L1("Present Angle:___deg");
     write_LCD_L2("                    ");
     write_LCD_L3("Done.               ");   //only displayed when reach desired angle
-    write_LCD_L4("*Back  !Home        ");
+    write_LCD_L4("*Back  .Home        ");
 }
 
 void B1_ALGORITHM(void)                     //B_1: ALGORITHM BASED ENTRY SCREEN
@@ -172,7 +172,7 @@ void B1_ALGORITHM(void)                     //B_1: ALGORITHM BASED ENTRY SCREEN
     write_LCD_L1("                    ");
     write_LCD_L2("                    ");
     write_LCD_L3("                    ");
-    write_LCD_L4("*Back  !Home  #Enter");
+    write_LCD_L4("*Back  .Home  #Enter");
 }
 
 void B2_ALGORITHM(void)                     //B_2: ALGORITHM ANGLE UPDATE SCREEN
@@ -180,7 +180,7 @@ void B2_ALGORITHM(void)                     //B_2: ALGORITHM ANGLE UPDATE SCREEN
     write_LCD_L1("Present Time:__:__  ");
     write_LCD_L2("Present Angle:___deg");
     write_LCD_L3("Done.               ");   //only displayed when reach desired angle
-    write_LCD_L4("*Back  !Home        ");
+    write_LCD_L4("*Back  .Home        ");
 }
 
 void C1_DEMO(void)                          //C_1: DEMO choice screen
@@ -188,7 +188,7 @@ void C1_DEMO(void)                          //C_1: DEMO choice screen
     write_LCD_L1("Choose Demo Speed:  ");
     write_LCD_L2("A, B, C             ");
     write_LCD_L3("                    ");
-    write_LCD_L4("       !Home  #Enter");
+    write_LCD_L4("       .Home  #Enter");
 }
 
 void C2_DEMO(void)                          //C_2: DEMO UPDATE SCREEN
@@ -199,7 +199,7 @@ void C2_DEMO(void)                          //C_2: DEMO UPDATE SCREEN
     write_LCD_L4("*Back          !Home");
 }
 
-void lcd_test(void)                         //write LCD Test
+void lcd_test(void)                         //write LCD Screens Test
 {
     write_LCD_L1("This now kinda works");
     write_LCD_L2("This now kindb works");
