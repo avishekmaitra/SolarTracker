@@ -40,8 +40,8 @@ void nybble(void);
 void LCD_Command(unsigned char command);    // set LCD properties
 void LCD_Write_Char(unsigned char letter);  // write character to LCD
 void LCD_Write_String(char* string);        // write string to LCD
-void LCD_write(void);                        // move cursor top left
-void LCD_Cursor_Location(char place);         // set DDRAM location address
+void LCD_write(void);                       // move cursor top left
+void LCD_Cursor_Location(char place);       // set DDRAM location address
 void LCD_Write_L1(char* string);            // write string to line 1
 void LCD_Write_L2(char* string);            // write string to line 2
 void LCD_Write_L3(char* string);            // write string to line 3

@@ -93,7 +93,7 @@ void LCD_Write_String(char* string)
     }
 }
 
-void LCD_Cursor_Location(char place)          //set cursor to DDRAM location as defined
+void LCD_Cursor_Location(char place)        //set cursor to DDRAM location as defined
 {                                           //by the STU data sheet for 2-line mode
     char myCommand = ENABLE_MOVE + place;
     LCD_Command(myCommand);
@@ -101,25 +101,25 @@ void LCD_Cursor_Location(char place)          //set cursor to DDRAM location as 
 
 void LCD_Write_L1(char* string)
 {
-    LCD_Cursor_Location(0x00);                //set cursor location to DDRAM address 0x00, line 1
+    LCD_Cursor_Location(0x00);              //set cursor location to DDRAM address 0x00, line 1
     LCD_Write_String(string);               //string to be assigned to line 1
 }
 
 void LCD_Write_L2(char* string)
 {
-    LCD_Cursor_Location(0x40);                //set cursor location to DDRAM address 0x40, line 2
+    LCD_Cursor_Location(0x40);              //set cursor location to DDRAM address 0x40, line 2
     LCD_Write_String(string);               //string to be assigned to line 2
 }
 
 void LCD_Write_L3(char* string)
 {
-    LCD_Cursor_Location(0x14);                //set cursor location to DDRAM address 0x14, line 3
+    LCD_Cursor_Location(0x14);              //set cursor location to DDRAM address 0x14, line 3
     LCD_Write_String(string);               //string to be assigned to line 3
 }
 
 void LCD_Write_L4(char* string)
 {
-    LCD_Cursor_Location(0x54);                //set cursor location to DDRAM address 0x54, line 4
+    LCD_Cursor_Location(0x54);              //set cursor location to DDRAM address 0x54, line 4
     LCD_Write_String(string);               //string to be assigned to line 4
 }
 
@@ -136,7 +136,7 @@ void StartScreen(void)                      //STARTING SCREEN
     LCD_Write_L2("Enter Date:__/__/__ ");   //remember: only have 20 char spaces
     LCD_Write_L3("Enter Time:__:__    ");   //military time
     LCD_Write_L4("*Clear        #Enter");
-    LCD_Cursor_Location(0x4B);                //set cursor to first input blank space
+    LCD_Cursor_Location(0x4B);              //set cursor to first input blank space
     //getkeypress function
     //replace "_" with keypress
     //once key is pressed, will cursor automatically move right, or do we need to define next location?
