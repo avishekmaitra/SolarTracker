@@ -34,19 +34,19 @@
 #define SET_CURSOR      0x10                // set cursor
 #define ENABLE_MOVE     0X80
 
-void init_LCD(void);                        // initialize LCD
-void clear_LCD(void);                       // clear display
+void LCD_Init(void);                        // initialize LCD
+void LCD_Clear(void);                       // clear display
 void nybble(void);
-void command_LCD(unsigned char command);    // set LCD properties
-void write_char_LCD(unsigned char letter);  // write character to LCD
-void write_string_LCD(char* string);        // write string to LCD
-void home_LCD(void);                        // move cursor top left
-void SetCursorLocation(char place);         // set DDRAM location address
-void write_LCD_L1(char* string);            // write string to line 1
-void write_LCD_L2(char* string);            // write string to line 2
-void write_LCD_L3(char* string);            // write string to line 3
-void write_LCD_L4(char* string);            // write string to line 4
-void lcd_test(void);
+void LCD_Command(unsigned char command);    // set LCD properties
+void LCD_Write_Char(unsigned char letter);  // write character to LCD
+void LCD_Write_String(char* string);        // write string to LCD
+void LCD_write(void);                        // move cursor top left
+void LCD_Cursor_Location(char place);         // set DDRAM location address
+void LCD_Write_L1(char* string);            // write string to line 1
+void LCD_Write_L2(char* string);            // write string to line 2
+void LCD_Write_L3(char* string);            // write string to line 3
+void LCD_Write_L4(char* string);            // write string to line 4
+void LCD_Test(void);
 
 void StartScreen(void);
 void HomeScreen(void);

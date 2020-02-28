@@ -28,17 +28,15 @@ void main(void)
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
 
     // Set clock to 24 MHz
-    set_DCO(FREQ_24_MHZ);
+    set_DCO(FREQ_48_MHZ);
 
     __enable_irq();
-
-	__enable_irq();
 
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 	RTC_Init();
 	I2C_Init(ACCEL_ADDRESS);
 	Keypad_Init();
-	init_LCD();
+	LCD_Init();
 
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
