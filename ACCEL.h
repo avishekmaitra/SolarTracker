@@ -7,6 +7,7 @@
 
 #ifndef ACCEL_H_
 #define ACCEL_H_
+#include <stdint.h>
 
 void ACCEL_Reset (void);
 void ACCEL_Init(void);

@@ -13,6 +13,7 @@
  * SPONSOR: CALIFORNIA POLYTECHNIC STATE UNVERSITY - ELECTRICAL ENGINEERING DEPARTMENT
  */
 
+#include "ACCEL.h"
 #include "delay.h"
 #include "I2C.h"
 #include "LCD.h"
@@ -38,15 +39,21 @@ void main(void)
 	Keypad_Init();
 	LCD_Init();
 
+	// Accelerometer testing
+	// ACCEL_Reset();
+	ACCEL_Init();
+	ACCEL_Calibrate();
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
 	// RTC_Start();
 
-    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+    // SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
     while (1)
     {
-        __sleep();
+       int8_t angle = 0;
+       angle = ACCEL_GetAngle();
+       int test = 0;
     }
 }
