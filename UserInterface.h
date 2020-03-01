@@ -8,13 +8,12 @@
 #ifndef USERINTERFACE_H_
 #define USERINTERFACE_H_
 
-void Start_screen(void);
-void Home_screen(void);
-void Select_modes(void);
-void Manual_input(void);
-void Algorithm_based(void);
+void Start_Screen(void);
+void Home_Screen(void);
+void Select_Modes(void);
+void Manual_Input(void);
+void Algorithm_Based(void);
 void Demo(void);
-void back(void);
-void enter(void);
+
 
 #endif /* USERINTERFACE_H_ */

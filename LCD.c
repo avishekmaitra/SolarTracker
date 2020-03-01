@@ -196,7 +196,7 @@ void C2_DEMO(void)                          //C_2: DEMO UPDATE SCREEN
     LCD_Write_L1("Percent Complete:__%");
     LCD_Write_L2("Present Angle:___deg");
     LCD_Write_L3("Done.               ");   //only displayed when reach desired angle
-    LCD_Write_L4("*Back          !Home");
+    LCD_Write_L4("*Back          .Home");
 }
 
 void LCD_Test(void)                         //write LCD Screens Test
