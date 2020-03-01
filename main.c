@@ -15,6 +15,7 @@
 
 #include "delay.h"
 #include "I2C.h"
+#include "LCD.h"
 #include "msp.h"
 #include "RTC.h"
 #include "Keypad.h"
@@ -24,12 +25,12 @@
 void main(void)
 {
     // stop watchdog timer
-	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
 
-	// Set clock to 24 MHz
-	set_DCO(FREQ_24_MHZ);
+    // Set clock to 24 MHz
+    set_DCO(FREQ_48_MHZ);
 
-	__enable_irq();
+    __enable_irq();
 
 	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 	RTC_Init();
@@ -37,7 +38,7 @@ void main(void)
 	Keypad_Init();
 	LCD_Init();
 
-	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
+    // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
 	// RTC_Start();
