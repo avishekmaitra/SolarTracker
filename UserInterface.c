@@ -1,3 +1,4 @@
+/*
 #include "Keypad.h"
 #include "delay.h"
 #include "msp.h"
@@ -10,7 +11,6 @@ static uint8_t select = 0;
 void Start_Screen(void)
 {
     StartScreen();
-
 }
 
 void Home_Screen(void)
@@ -111,4 +111,4 @@ void Demo(void)
     select = 67;
     C2_DEMO();
 }
-
+*/

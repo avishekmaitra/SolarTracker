@@ -37,17 +37,19 @@ void main(void)
 	I2C_Init(ACCEL_ADDRESS);
 	Keypad_Init();
 	LCD_Init();
+	LCD_Clear();
+	initUART();
 
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
 	// RTC_Start();
 
-    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+    //SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
     while (1)
     {
        // __sleep();
-        lcd_keypad_test();
+       keypad_testkey();
     }
 }

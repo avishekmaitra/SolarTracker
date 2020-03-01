@@ -8,6 +8,7 @@
 #include "msp.h"
 #include "delay.h"
 #include "LCD.h"
+#define TO_CHAR 0x30
 
 void LCD_Init(void)                         //setup GPIO pins
 {

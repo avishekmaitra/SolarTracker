@@ -4,7 +4,7 @@
 #define KEYPAD_H_
 #include <stdint.h>
 
-#define RESETKEY 73
+#define RESETKEY 100
 #define TIMEUART 30
 #define TIMESETKEY 1
 

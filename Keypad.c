@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "UART.h"
 
-static uint8_t key = 100;
+static uint8_t key = RESETKEY;
 static uint8_t hitFlag = 0;
 
 void Keypad_Init(void)
@@ -285,8 +285,4 @@ void keypad_testkey(void)                      //test function to write key valu
 }
 
 
-void lcd_keypad_test (void)
-{
-    LCD_Write_L1(Keypad_GetKey());
 
-}

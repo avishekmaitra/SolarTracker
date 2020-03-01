@@ -2,7 +2,7 @@
 #ifndef DELAY_H_
 #define DELAY_H_
 #define MS 300
-#define CLK FREQ_24_MHZ
+#define CLK FREQ_48_MHZ
 #define FREQ_1p5_MHZ 1500000
 #define FREQ_3_MHZ   3000000
 #define FREQ_6_MHZ   6000000
