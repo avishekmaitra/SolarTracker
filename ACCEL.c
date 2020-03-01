@@ -36,7 +36,7 @@
 #define RAD_TO_ANGLE    57.3
 
 // Helper Functions
-void swap(int *p,int *q)
+void swap(int8_t *p,int8_t *q)
 {
    int t;
    t=*p;
@@ -45,7 +45,7 @@ void swap(int *p,int *q)
 }
 
 // Sorts list a of NUM_OF_SAMPLES length
-void sort(int a[])
+void sort(int8_t a[])
 {
    int i,j;
    for(i = 0;i < NUM_OF_SAMPLES-1;i++)
@@ -141,6 +141,7 @@ int8_t ACCEL_GetAngle(void)
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
     }
 
+    sort(accelData);
     medianData = accelData[MEDIAN_INDEX];
     pVal = (double)medianData/MAX_VAL;
     radians = asin(pVal);
