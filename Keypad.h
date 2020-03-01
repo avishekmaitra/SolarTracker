@@ -21,7 +21,7 @@
 #define C4 BIT6
 
 void Keypad_Init(void);
-uint8_t Keypad_GetKey(void);
+char Keypad_GetKey(void);
 void keypad_setkey(void);
 void keypad_testkey(void);
 

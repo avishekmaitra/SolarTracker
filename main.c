@@ -53,10 +53,8 @@ void main(void)
        // __sleep();
        char myOut[2];
        myOut[1]=' ';
-       uint8_t testKey = Keypad_GetKey();
-       uint8_t preKey = testKey + TO_CHAR;
-       char myKey = (char) preKey;
-       if(testKey != RESETKEY)
+       char myKey = Keypad_GetKey();
+       if(myKey != RESETKEY)
        {
            myOut[0] = myKey;
            LCD_Write_L1(myOut);

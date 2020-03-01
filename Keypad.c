@@ -3,8 +3,9 @@
 #include "msp.h"
 #include <stdint.h>
 #include "UART.h"
+#define TO_CHAR 0x30
 
-static uint8_t key = RESETKEY;
+static char key = RESETKEY;
 static uint8_t hitFlag = 0;
 
 void Keypad_Init(void)
@@ -52,15 +53,15 @@ void keypad_setkey(void)                        //function that checks the rows 
     {
         if ((COL & C1) != 0)
         {
-            key = 1;
+            key = 1 + TO_CHAR;
         }
         else if ((COL & C2) !=0)
         {
-            key = 2;
+            key = 2 + TO_CHAR;
         }
         else if ((COL & C3) != 0)
         {
-            key = 3;
+            key = 3 + TO_CHAR;
         }
         else
         {
@@ -79,15 +80,15 @@ void keypad_setkey(void)                        //function that checks the rows 
     {
         if ((COL & C1) != 0)
         {
-            key = 4;
+            key = 4 + TO_CHAR;
         }
         else if ((COL & C2) != 0)
         {
-            key = 5;
+            key = 5 + TO_CHAR;
         }
         else if ((COL & C3) != 0)
         {
-            key = 6;
+            key = 6 + TO_CHAR;
         }
         else
         {
@@ -106,15 +107,15 @@ void keypad_setkey(void)                        //function that checks the rows 
     {
         if ((COL & C1) != 0)
         {
-            key = 7;
+            key = 7 + TO_CHAR;
         }
         else if ((COL & C2) != 0)
         {
-            key = 8;
+            key = 8 + TO_CHAR;
         }
         else if ((COL & C3) != 0)
         {
-            key = 9;
+            key = 9 + TO_CHAR;
         }
         else
         {
@@ -137,7 +138,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         }
         else if ((COL & C2) != 0)
         {
-            key = 0;
+            key = 0 + TO_CHAR;
         }
         else if ((COL & C3) != 0)
         {
@@ -153,9 +154,9 @@ void keypad_setkey(void)                        //function that checks the rows 
     P2 -> OUT &= ~(R3);                         //clears row3
 }
 
-uint8_t Keypad_GetKey(void)                     //function that returns the key value
+char Keypad_GetKey(void)                     //function that returns the key value
 {
-    uint8_t tempkey = key;
+    char tempkey = key;
     key = RESETKEY;
     hitFlag = 0;                                //reset hitFlag to 0 to enter the if statement in IRQ
     return tempkey;
@@ -165,21 +166,21 @@ void keypad_testkey(void)                      //test function to write key valu
 {
     switch(Keypad_GetKey())
     {
-        case 1:
+        case '1':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("1");
         }
         break;
 
-        case 2:
+        case '2':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("2");
         }
         break;
 
-        case 3:
+        case '3':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("3");
@@ -193,21 +194,21 @@ void keypad_testkey(void)                      //test function to write key valu
         }
         break;
 
-        case 4:
+        case '4':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("4");
         }
         break;
 
-        case 5:
+        case '5':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("5");
         }
         break;
 
-        case 6:
+        case '6':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("6");
@@ -221,21 +222,21 @@ void keypad_testkey(void)                      //test function to write key valu
         }
         break;
 
-        case 7:
+        case '7':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("7");
         }
         break;
 
-        case 8:
+        case '8':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("8");
         }
         break;
 
-        case 9:
+        case '9':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("9");
@@ -256,7 +257,7 @@ void keypad_testkey(void)                      //test function to write key valu
         }
         break;
 
-        case 0:
+        case '0':
         {
             delay_ms(TIMEUART, CLK);
             write_UART("0");
