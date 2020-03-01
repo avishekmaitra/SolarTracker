@@ -144,7 +144,7 @@ int8_t ACCEL_GetAngle(void)
     sort(accelData);
     medianData = accelData[MEDIAN_INDEX];
     pVal = (double)medianData/MAX_VAL;
-    radians = asin(pVal);
+    radians = acos(pVal);
     angle = radians*RAD_TO_ANGLE;
     return (int8_t)angle;
 }

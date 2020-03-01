@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker Unix v18.12.1                  
 ******************************************************************************
->> Linked Sat Feb 29 20:57:12 2020
+>> Linked Sat Feb 29 21:09:48 2020
 
 OUTPUT FILE NAME:   <SolarTracker.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000138d
