@@ -33,7 +33,7 @@
 #define NUM_OF_SAMPLES  9
 #define MEDIAN_INDEX    NUM_OF_SAMPLES/2
 #define MAX_VAL         128
-#define RAD_TO_ANGLE    57
+#define RAD_TO_ANGLE    57.3
 
 // Helper Functions
 void swap(int *p,int *q)
@@ -131,8 +131,8 @@ int8_t ACCEL_GetAngle(void)
     int8_t accelData[NUM_OF_SAMPLES];
     int8_t medianData;
     double pVal;
-    double radAngle;
-    int8_t angle;
+    double radians;
+    double angle;
     uint8_t i;
     for(i = 0; i < NUM_OF_SAMPLES; i=i+1)
     {
@@ -143,7 +143,7 @@ int8_t ACCEL_GetAngle(void)
 
     medianData = accelData[MEDIAN_INDEX];
     pVal = (double)medianData/MAX_VAL;
-    radAngle = asin(pVal);
-    angle = (int8_t)RAD_TO_ANGLE*radAngle;
-    return angle;
+    radians = asin(pVal);
+    angle = radians*RAD_TO_ANGLE;
+    return (int8_t)angle;
 }
