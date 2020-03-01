@@ -2,13 +2,12 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-SHELL = cmd.exe
-
 # Add inputs and outputs from these tool invocations to the build variables 
 CMD_SRCS += \
 ../msp432p401r.cmd 
 
 C_SRCS += \
+../ACCEL.c \
 ../I2C.c \
 ../Keypad.c \
 ../RTC.c \
@@ -19,6 +18,7 @@ C_SRCS += \
 ../system_msp432p401r.c 
 
 C_DEPS += \
+./ACCEL.d \
 ./I2C.d \
 ./Keypad.d \
 ./RTC.d \
@@ -29,6 +29,7 @@ C_DEPS += \
 ./system_msp432p401r.d 
 
 OBJS += \
+./ACCEL.obj \
 ./I2C.obj \
 ./Keypad.obj \
 ./RTC.obj \
@@ -39,6 +40,7 @@ OBJS += \
 ./system_msp432p401r.obj 
 
 OBJS__QUOTED += \
+"ACCEL.obj" \
 "I2C.obj" \
 "Keypad.obj" \
 "RTC.obj" \
@@ -49,6 +51,7 @@ OBJS__QUOTED += \
 "system_msp432p401r.obj" 
 
 C_DEPS__QUOTED += \
+"ACCEL.d" \
 "I2C.d" \
 "Keypad.d" \
 "RTC.d" \
@@ -59,6 +62,7 @@ C_DEPS__QUOTED += \
 "system_msp432p401r.d" 
 
 C_SRCS__QUOTED += \
+"../ACCEL.c" \
 "../I2C.c" \
 "../Keypad.c" \
 "../RTC.c" \
