@@ -35,6 +35,7 @@ void main(void)
 	RTC_Init();
 	I2C_Init(ACCEL_ADDRESS);
 	Keypad_Init();
+	LCD_Init();
 
 	// TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
@@ -45,6 +46,7 @@ void main(void)
 
     while (1)
     {
-        __sleep();
+       // __sleep();
+        lcd_keypad_test();
     }
 }

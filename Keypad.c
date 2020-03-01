@@ -283,3 +283,10 @@ void keypad_testkey(void)                      //test function to write key valu
         }
      }
 }
+
+
+void lcd_keypad_test (void)
+{
+    LCD_Write_L1(Keypad_GetKey());
+
+}
