@@ -51,6 +51,16 @@ void main(void)
     while (1)
     {
        // __sleep();
-       keypad_testkey();
+       char myOut[2];
+       myOut[1]=' ';
+       uint8_t testKey = Keypad_GetKey();
+       uint8_t preKey = testKey + TO_CHAR;
+       char myKey = (char) preKey;
+       if(testKey != RESETKEY)
+       {
+           myOut[0] = myKey;
+           LCD_Write_L1(myOut);
+       }
+
     }
 }
