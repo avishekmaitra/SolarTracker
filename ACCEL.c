@@ -131,34 +131,35 @@ void ACCEL_Calibrate(void)
 
 int8_t ACCEL_GetAngle(void)
 {
-    int8_t accelData_X[NUM_OF_SAMPLES];
-    int8_t accelData_Y[NUM_OF_SAMPLES];
+    // int8_t accelData_X[NUM_OF_SAMPLES];
+    // int8_t accelData_Y[NUM_OF_SAMPLES];
     int8_t accelData_Z[NUM_OF_SAMPLES];
-    int8_t medianData_X;
-    int8_t medianData_Y;
+    //int8_t medianData_X;
+    //int8_t medianData_Y;
     int8_t medianData_Z;
-    //double pVal;
-    //double radians;
-    //double angle;
-    uint8_t i;
-    uint8_t j;
+    double pVal;
+    double radians;
+    double angle;
+    int8_t finalVal;
+    //uint8_t i;
+    //uint8_t j;
     uint8_t k;
 
     // Populate X data
-    for(i = 0; i < NUM_OF_SAMPLES; i=i+1)
+    /*for(i = 0; i < NUM_OF_SAMPLES; i=i+1)
     {
         accelData_X[i] = I2C_ReadSingleByte(OUT_X_MSB);
         // Wait until new data ready
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_X_READY));
-    }
+    }*/
 
     // Populate Y data
-    for(j = 0; j < NUM_OF_SAMPLES; j=j+1)
+    /*for(j = 0; j < NUM_OF_SAMPLES; j=j+1)
     {
         accelData_Y[j] = I2C_ReadSingleByte(OUT_Y_MSB);
         // Wait until new data ready
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Y_READY));
-    }
+    }*/
 
     // Populate Z data
     for(k = 0; k < NUM_OF_SAMPLES; k=k+1)
@@ -168,15 +169,16 @@ int8_t ACCEL_GetAngle(void)
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
     }
 
-    sort(accelData_X);
-    sort(accelData_Y);
+    //sort(accelData_X);
+    //sort(accelData_Y);
     sort(accelData_Z);
-    medianData_X = accelData_X[MEDIAN_INDEX];
-    medianData_Y = accelData_Y[MEDIAN_INDEX];
+    //medianData_X = accelData_X[MEDIAN_INDEX];
+    //medianData_Y = accelData_Y[MEDIAN_INDEX];
     medianData_Z = accelData_Z[MEDIAN_INDEX];
 
-    // pVal = ((double)medianData/MAX_VAL)-1;
-    // radians = asin(pVal);
-    // angle = (radians*RAD_TO_ANGLE);
-    return medianData_Z;
+    pVal = ((double)medianData_Z/MAX_VAL)*-1;
+    radians = acos(pVal);
+    angle = (radians*RAD_TO_ANGLE);
+    finalVal  = (int8_t)angle;
+    return finalVal;
 }

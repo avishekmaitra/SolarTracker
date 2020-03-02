@@ -54,6 +54,25 @@ void main(void)
     {
        int8_t angle = 0;
        angle = ACCEL_GetAngle();
-       int test = 0;
+       char myOutput[3];
+       if(angle>=100)
+       {
+           myOutput[0] = angle/100 + TO_CHAR;
+           myOutput[1] = ((angle%100)/10) + TO_CHAR;
+           myOutput[2] = (angle%10) +TO_CHAR;
+       }
+       else if(angle<100 && angle >=10)
+       {
+           myOutput[0] = ' ';
+           myOutput[1] = (angle/10) + TO_CHAR;
+           myOutput[2] = (angle%10) + TO_CHAR;
+       }
+       else
+       {
+           myOutput[0] = ' ';
+           myOutput[1] = ' ';
+           myOutput[2] = (angle%10) + TO_CHAR;
+       }
+       LCD_Write_L1(myOutput);
     }
 }
