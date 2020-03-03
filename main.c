@@ -38,11 +38,8 @@ void main(void)
 	I2C_Init(ACCEL_ADDRESS);
 	Keypad_Init();
 	LCD_Init();
-
-	// Accelerometer testing
-	// ACCEL_Reset();
 	ACCEL_Init();
-	ACCEL_Calibrate();
+
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
