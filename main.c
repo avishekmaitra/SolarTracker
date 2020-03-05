@@ -39,7 +39,8 @@ void main(void)
 	Keypad_Init();
 	LCD_Init();
 	ACCEL_Init();
-
+	ACCEL_Calibrate();
+	LCD_Clear();
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
@@ -49,27 +50,38 @@ void main(void)
 
     while (1)
     {
+       delay_ms(1000,FREQ_48_MHZ);
+       LCD_Clear();
        int8_t angle = 0;
        angle = ACCEL_GetAngle();
-       char myOutput[3];
-       if(angle>=100)
-       {
-           myOutput[0] = angle/100 + TO_CHAR;
-           myOutput[1] = ((angle%100)/10) + TO_CHAR;
-           myOutput[2] = (angle%10) +TO_CHAR;
-       }
-       else if(angle<100 && angle >=10)
+       char myOutput[4];
+       if(angle<100 && angle >=10)
        {
            myOutput[0] = ' ';
            myOutput[1] = (angle/10) + TO_CHAR;
            myOutput[2] = (angle%10) + TO_CHAR;
        }
-       else
+       else if(angle<10 && angle>=0)
        {
            myOutput[0] = ' ';
            myOutput[1] = ' ';
            myOutput[2] = (angle%10) + TO_CHAR;
        }
+       else if(angle<0 && angle>-10)
+       {
+           angle = angle*-1;
+           myOutput[0] = ' ';
+           myOutput[1] = '-';
+           myOutput[2] = (angle%10) + TO_CHAR;
+       }
+       else if(angle>-100)
+       {
+           angle = angle*-1;
+           myOutput[0] = '-';
+           myOutput[1] = (angle/10) + TO_CHAR;
+           myOutput[2] = (angle%10) + TO_CHAR;
+       }
+       myOutput[3]='\0';
        LCD_Write_L1(myOutput);
     }
 }

@@ -36,11 +36,12 @@
 #define AWAKE_CONFIG    0x00
 
 // Misc
-#define NUM_OF_SAMPLES  9
+#define NUM_OF_SAMPLES  5
 #define MEDIAN_INDEX    NUM_OF_SAMPLES/2
 #define MAX_VAL         64
 #define RAD_TO_ANGLE    57.3
 
+static int8_t offset_z = 0;
 // Helper Functions
 void swap(int8_t *p,int8_t *q)
 {
@@ -119,14 +120,8 @@ void ACCEL_Init(void)
 // Call only when first situating the accelerometer
 void ACCEL_Calibrate(void)
 {
-    // Algorithm based on section 5.1 of AN4069
-    int8_t offset_z, offset_y, offset_x;
+    // Calibrate with solar panel completely vertical.
     offset_z = 64-I2C_ReadSingleByte(OUT_Z_MSB);
-    offset_y = 0-I2C_ReadSingleByte(OUT_Y_MSB);
-    offset_x = 0-I2C_ReadSingleByte(OUT_X_MSB);
-    I2C_WriteSingleByte(OFFSET_Z_ADDR, offset_z);
-    I2C_WriteSingleByte(OFFSET_Y_ADDR, offset_y);
-    I2C_WriteSingleByte(OFFSET_X_ADDR, offset_x);
 }
 
 int8_t ACCEL_GetAngle(void)
@@ -141,6 +136,7 @@ int8_t ACCEL_GetAngle(void)
     double radians;
     double angle;
     int8_t finalVal;
+    int8_t calVal;
     //uint8_t i;
     //uint8_t j;
     uint8_t k;
@@ -174,10 +170,11 @@ int8_t ACCEL_GetAngle(void)
     sort(accelData_Z);
     //medianData_X = accelData_X[MEDIAN_INDEX];
     //medianData_Y = accelData_Y[MEDIAN_INDEX];
-    medianData_Z = accelData_Z[MEDIAN_INDEX];
+    calVal = (I2C_ReadSingleByte(OFFSET_Z_ADDR));
+    medianData_Z = accelData_Z[MEDIAN_INDEX] + offset_z;
 
-    pVal = ((double)medianData_Z/MAX_VAL)*-1;
-    radians = acos(pVal);
+    pVal = ((double)medianData_Z/MAX_VAL);
+    radians = asin(pVal);
     angle = (radians*RAD_TO_ANGLE);
     finalVal  = (int8_t)angle;
     return finalVal;
