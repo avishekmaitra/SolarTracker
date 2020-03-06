@@ -154,8 +154,8 @@ void HomeScreen(void)                       //HOME MODE CHOICE SCREEN
 
 void A1_MANUAL(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
 {
-    LCD_Write_L1("                    ");
-    LCD_Write_L2("Enter Angle: ___deg ");
+    LCD_Write_L1("Enter Angle: ___deg ");
+    LCD_Write_L2("                    ");
     LCD_Write_L3("                    ");
     LCD_Write_L4("*Back  .Home  #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
 }

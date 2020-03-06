@@ -51,6 +51,7 @@ void main(void)
     while (1)
     {
        // __sleep();
+       ///*
        char myOut[2];
        myOut[1]=' ';
        char myKey = Keypad_GetKey();
@@ -59,6 +60,8 @@ void main(void)
            myOut[0] = myKey;
            LCD_Write_L1(myOut);
        }
+       //*/
+       //Demo_W2();
 
     }
 }

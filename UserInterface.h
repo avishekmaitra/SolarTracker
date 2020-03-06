@@ -15,6 +15,7 @@ char Manual_Input(void);
 int8_t ManualAngleConversion(void)
 void Algorithm_Based(void);
 void Demo(void);
+void Demo_W2(void);                             //demo for Dolan winter quarter
 
 
 #endif /* USERINTERFACE_H_ */
