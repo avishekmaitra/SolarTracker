@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include "UART.h"
 #include "LCD.h"
+#include "UserInterface.h"
 
 
 static uint8_t select = 0;
@@ -26,21 +27,24 @@ void Select_Modes(void)                                                      //s
         case 65:                                                             //Keypress = A (manual mode)
         {
             Manual_Input();
+            break;
         }
-        break;
+
 
         case 66:                                                             //Keypress = B (algorithm mode)
         {
             Algorithm_Based();
+            break;
         }
-        break;
+
 
         case 67:                                                             //Keypress = C (DEMO mode)
         {
             //Demo();
             Demo_W2();
+            break;
         }
-        break;
+
 
         case 42:                                                             //Keypress = * (Back button also clear)
         {
@@ -49,19 +53,19 @@ void Select_Modes(void)                                                      //s
                 LCD_Cursor_Location(0x0D);
                 LCD_Write_String("  ");
             }
-            if (select == 650)
+            if (select == 80)
             {
                 Manual_Input();
             }
-
+            break;
         }
-        break;
+
 
         case 35:                                                             //Keypress = # (enter)
         {
            if (select == 65)                                                 //after user enters the angle for manual input, shows the angle that tracker is at
             {
-                select = 650;                                                //case 65_0
+                select = 80;                                                //case 65_0 POUND DEFINE ALL THE NUMBERS
                 A2_MANUAL();
                 LCD_Cursor_Location(0x0D);
                 //LCD_Write_String(angle from accelerometer)
@@ -78,19 +82,22 @@ void Select_Modes(void)                                                      //s
            {
                Demo_W2();
            }
+           break;
         }
-        break;
+
 
         case 46:                                                             //Keypress = . (Home button)
         {
-            Home_screen();                                                   //will go back to homescreen directly
+            HomeScreen();                                                   //will go back to homescreen directly
+            break;
         }
-        break;
+
 
         default:
         {
             break;
         }
+    }
 }
 
 char Manual_Input(void)
@@ -109,20 +116,8 @@ char Manual_Input(void)
     manual_angle = (int8_t) (manual_angle1 & manual_angle2 & manual_angle3);  //puts into variable so can use in accelerometer
     return manual_angle;
 }
-int8_t ManualAngleConversion(void)                                            //conversion function since Angles are going to be given from 0-180
-{                                                                             //pseudo
-    char MA_accel = 0;
-    if (Manual_Inuput() <= 90)
-    {
-        MA_accel = Manual_Input();
-        return MA_accel;
-    }
-    else
-    {
-        MA_accel = Manual_Input() - '180';
-        return MA_accel;
-    }
-}
+
+
 void Algorithm_Based(void)
 {
     //show angle based on calculation for given time and day
@@ -142,31 +137,39 @@ void Demo(void)
 void Demo_W2(void)
 {
     select = 100;                                                                //for if statements in the other cases
-    char myangle[3] = [???];                                                     //angle input array
+    char myangle[3];                                                             //angle input array
+    myangle[0] = '?';
+    myangle[1] = '?';
+    myangle[2] = '?';
+    char manual_angle0;
+    char manual_angle1;
+    char manual_angle2;
     static char angleVal = '0';                                                     //angle value
     static int countQs = 0;                                                      //# of question marks left in array (non press)
     A1_MANUAL();
     LCD_Cursor_Location(0x0D);
     if (Keypad_GetKey() != RESETKEY)
     {
-        char manual_angle0 = Keypad_GetKey();                                          //enter first number of angle
+        manual_angle0 = Keypad_GetKey();                                          //enter first number of angle
         LCD_Write_Char(manual_angle0);
     }
     if (Keypad_GetKey() != RESETKEY)
     {
-        char manual_angle1 = Keypad_GetKey();                                          //enter 2nd number of angle
+        manual_angle1 = Keypad_GetKey();                                          //enter 2nd number of angle
         LCD_Write_Char(manual_angle1);
     }
     if (Keypad_GetKey() != RESETKEY)
     {
-        char manual_angle2 = Keypad_GetKey();                                          //enter 3rd number of angle
+        manual_angle2 = Keypad_GetKey();                                          //enter 3rd number of angle
         LCD_Write_Char(manual_angle2);
     }
 
 
     if (Keypad_GetKey() == '#')
     {
-        myangle[3] = [manual_angle0, manual_angle1, manual_angle2];                     //when enter is pressed put values into the arrray
+        myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
+        myangle[1] = manual_angle1;
+        myangle[2] = manual_angle2;
 
         if (myangle[0] == '?')                                                          //counts question marks left after user inputs angle
         {
@@ -186,14 +189,14 @@ void Demo_W2(void)
         {
            if (myangle[0] == 'A')                                                        //negative angle
            {
-               angleVal = (-1)*(myangle[1]*(10)) + myangle[2]);
+               angleVal = (-1)*(myangle[1]*(10) + myangle[2]);
            }
            else                                                                            //will be error, cant have angle > 90
            {
                LCD_Write_L2("  Enter -90 to 90  ");
            }
-
         }
+
         if (countQs == 1)                                                               //case for 1 ? => num,num or A,num or           error if A,A or num,A
         {
             if (myangle[0] == 'A')                                                        //negative angle -0 to -9
@@ -210,5 +213,5 @@ void Demo_W2(void)
             angleVal = myangle[0];
         }
     }
-    LCD_Write_L3(angleVal);
+    LCD_Write_L3(myangle);
 }
