@@ -29,7 +29,7 @@ void main(void)
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
 
     // Set clock to 24 MHz
-    set_DCO(FREQ_48_MHZ);
+    set_DCO(FREQ_24_MHZ);
 
     __enable_irq();
 
@@ -50,7 +50,7 @@ void main(void)
 
     while (1)
     {
-       delay_ms(1000,FREQ_48_MHZ);
+       delay_ms(1000,FREQ_24_MHZ);
        LCD_Clear();
        int8_t angle = 0;
        angle = ACCEL_GetAngle();

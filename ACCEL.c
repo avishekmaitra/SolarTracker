@@ -30,20 +30,27 @@
 #define OUT_X_READY     0x01
 #define OUT_2G_RANGE    0x00
 #define STANDBY_MODE    0x00
-#define ACTIVE_MODE     0x03
-#define DATA_CONFIG     0x02
+#define ACTIVE_MODE     0x01
+#define DATA_CONFIG     0x00
 #define SW_RESET        0x40
 #define AWAKE_CONFIG    0x00
 
 // Misc
-#define NUM_OF_SAMPLES  5
+#define NUM_OF_SAMPLES  9
 #define MEDIAN_INDEX    NUM_OF_SAMPLES/2
-#define MAX_VAL         64
-#define RAD_TO_ANGLE    57.3
+#define MAX_VAL         1024
+#define RAD_TO_ANGLE    57.29577951
+#define SHIFT_4         4
+#define MAX_ANGLE       90
+#define MIN_ANGLE       -90
+#define NORM_MAX        0.999
+#define NORM_MIN        -0.999
 
+// Static variables
 static int8_t offset_z = 0;
+
 // Helper Functions
-void swap(int8_t *p,int8_t *q)
+void swap(int16_t *p,int16_t *q)
 {
    int t;
    t=*p;
@@ -52,7 +59,7 @@ void swap(int8_t *p,int8_t *q)
 }
 
 // Sorts list a of NUM_OF_SAMPLES length
-void sort(int8_t a[])
+void sort(int16_t a[])
 {
    int i,j;
    for(i = 0;i < NUM_OF_SAMPLES-1;i++)
@@ -75,6 +82,7 @@ void ACCEL_Reset (void)
 void ACCEL_Init(void)
 {
     uint8_t errorFlag = 0;
+
     // Put in standby mode
     I2C_WriteSingleByte(CTRL_REG1, STANDBY_MODE);
     if((I2C_ReadSingleByte(CTRL_REG1)&BIT0) != STANDBY_MODE)
@@ -120,62 +128,70 @@ void ACCEL_Init(void)
 // Call only when first situating the accelerometer
 void ACCEL_Calibrate(void)
 {
-    // Calibrate with solar panel completely vertical.
-    offset_z = 64-I2C_ReadSingleByte(OUT_Z_MSB);
-}
+    // Calibrate with solar panel completely vertical (accelerometer flat)
+    int16_t preData;
+    int16_t accelData_Z[NUM_OF_SAMPLES];
+    int16_t medianData_Z;
 
-int8_t ACCEL_GetAngle(void)
-{
-    // int8_t accelData_X[NUM_OF_SAMPLES];
-    // int8_t accelData_Y[NUM_OF_SAMPLES];
-    int8_t accelData_Z[NUM_OF_SAMPLES];
-    //int8_t medianData_X;
-    //int8_t medianData_Y;
-    int8_t medianData_Z;
-    double pVal;
-    double radians;
-    double angle;
-    int8_t finalVal;
-    int8_t calVal;
-    //uint8_t i;
-    //uint8_t j;
     uint8_t k;
-
-    // Populate X data
-    /*for(i = 0; i < NUM_OF_SAMPLES; i=i+1)
-    {
-        accelData_X[i] = I2C_ReadSingleByte(OUT_X_MSB);
-        // Wait until new data ready
-        while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_X_READY));
-    }*/
-
-    // Populate Y data
-    /*for(j = 0; j < NUM_OF_SAMPLES; j=j+1)
-    {
-        accelData_Y[j] = I2C_ReadSingleByte(OUT_Y_MSB);
-        // Wait until new data ready
-        while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Y_READY));
-    }*/
 
     // Populate Z data
     for(k = 0; k < NUM_OF_SAMPLES; k=k+1)
     {
-        accelData_Z[k] = I2C_ReadSingleByte(OUT_Z_MSB);
+        preData = I2C_ReadMultiByte(OUT_Z_MSB);
+        accelData_Z[k] = (preData >> SHIFT_4);
         // Wait until new data ready
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
     }
 
-    //sort(accelData_X);
-    //sort(accelData_Y);
     sort(accelData_Z);
-    //medianData_X = accelData_X[MEDIAN_INDEX];
-    //medianData_Y = accelData_Y[MEDIAN_INDEX];
-    calVal = (I2C_ReadSingleByte(OFFSET_Z_ADDR));
+
+    medianData_Z = accelData_Z[MEDIAN_INDEX];
+    offset_z = MAX_VAL-medianData_Z;
+}
+
+int16_t ACCEL_GetAngle(void)
+{
+    int16_t accelData_Z[NUM_OF_SAMPLES];
+    int16_t preData;
+    int16_t medianData_Z;
+
+    double pVal;
+    double radians;
+    double angle;
+
+    int8_t finalVal;
+    uint8_t k;
+
+    // Populate Z data
+    for(k = 0; k < NUM_OF_SAMPLES; k=k+1)
+    {
+        preData = I2C_ReadMultiByte(OUT_Z_MSB);
+        accelData_Z[k] = (preData >> SHIFT_4);
+        // Wait until new data ready
+        while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
+    }
+
+    sort(accelData_Z);
+
     medianData_Z = accelData_Z[MEDIAN_INDEX] + offset_z;
 
     pVal = ((double)medianData_Z/MAX_VAL);
-    radians = asin(pVal);
-    angle = (radians*RAD_TO_ANGLE);
-    finalVal  = (int8_t)angle;
+
+    if(pVal > NORM_MAX)
+    {
+        finalVal = MAX_ANGLE;
+    }
+    else if(pVal < NORM_MIN)
+    {
+        finalVal  = MIN_ANGLE;
+    }
+    else
+    {
+        radians = asin(pVal);
+        angle = (radians*RAD_TO_ANGLE);
+        finalVal  = (int8_t)angle;
+    }
+
     return finalVal;
 }
