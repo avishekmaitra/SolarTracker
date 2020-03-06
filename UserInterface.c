@@ -1,4 +1,4 @@
-/*
+
 #include "Keypad.h"
 #include "delay.h"
 #include "msp.h"
@@ -10,37 +10,37 @@ static uint8_t select = 0;
 
 void Start_Screen(void)
 {
-    StartScreen();
+    StartScreen();                                                //initially start with enter time and day
 }
 
 void Home_Screen(void)
 {
-    HomeScreen();
+    HomeScreen();                                                //gives options to select the modes: A=manual, B=algorithm, C=demo
 }
 
-void Select_Modes(void)
+void Select_Modes(void)                                          //states dependent on the keypress for (A,B,C,.,#,*)
 {
    switch(Keypad_GetKey())
     {
-        case 65:                                //Keypress = A (manual mode)
+        case 65:                                                //Keypress = A (manual mode)
         {
             Manual_Input();
         }
         break;
 
-        case 66:                                //Keypress = B (algorithm mode)
+        case 66:                                                 //Keypress = B (algorithm mode)
         {
             Algorithm_Based();
         }
         break;
 
-        case 67:                                //Keypress = C (DEMO mode)
+        case 67:                                                //Keypress = C (DEMO mode)
         {
             Demo();
         }
         break;
 
-        case 42:                                //Keypress = * (Back button also clear)
+        case 42:                                                //Keypress = * (Back button also clear)
         {
             if (select == 65)
             {
@@ -55,16 +55,16 @@ void Select_Modes(void)
         }
         break;
 
-        case 35:                                //Keypress = # (enter)
+        case 35:                                                //Keypress = # (enter)
         {
-           if (select == 65)                   //after user enters the angle for manual input
+           if (select == 65)                                    //after user enters the angle for manual input, shows the angle that tracker is at
             {
-                select = 650;                  //case 65_0
+                select = 650;                                   //case 65_0
                 A2_MANUAL();
                 LCD_Cursor_Location(0x0D);
                 //LCD_Write_String(angle from accelerometer)
             }
-           if (select == 66)
+           if (select == 66)                                    //after enter is pressed will show angle that tracker is at
            {
                B2_ALGORITHM();
                LCD_Cursor_Location(0x0D);
@@ -75,9 +75,9 @@ void Select_Modes(void)
         }
         break;
 
-        case 46:                               //Keypress = . (Home button)
+        case 46:                                               //Keypress = . (Home button)
         {
-            Home_screen();
+            Home_screen();                                     //will go back to homescreen directly
         }
         break;
 
@@ -87,15 +87,35 @@ void Select_Modes(void)
         }
 }
 
-void Manual_Input(void)
+char Manual_Input(void)
 {
-    select = 65;                         //for if statements in the other cases
+    char manual_angle1 = 0;
+    char manual_angle2 = 0;
+    char manual_angle3 = 0;
+    char manual_angle = 0;
+    select = 65;                                                               //for if statements in the other cases
     A1_MANUAL();
-    LCD_Cursor_Location(0x0C);
-    LCD_Write_Char(Keypad_GetKey);
-    LCD_Write_Char(Keypad_GetKey);
+    LCD_Cursor_Location(0x0C);                                                //move cursor to position to allow user to input angle in desired spot
+    manual_angle1 = Keypad_GetKey();                                          //enter first number of angle
+    manual_angle2 = Keypad_GetKey();                                         //second number of angle
+    manual_angle3 = Keypad_GetKey();                                         //third number of angle
+    manual_angle = manual_angle1 + manual_angle2 + manual_angle3;           //puts into variable so can use in accelerometer
+    return manual_angle;
 }
-
+int8_t ManualAngleConversion(void)                                          //conversion function since Angles are going to be given from 0-180
+{                                                                           //pseudo
+    char MA_accel = 0;
+    if (Manual_Inuput() <= 90)
+    {
+        MA_accel = Manual_Input();
+        return MA_accel;
+    }
+    else
+    {
+        MA_accel = Manual_Input() - '180';
+        return MA_accel;
+    }
+}
 void Algorithm_Based(void)
 {
     //show angle based on calculation for given time and day
@@ -111,4 +131,4 @@ void Demo(void)
     select = 67;
     C2_DEMO();
 }
-*/
+

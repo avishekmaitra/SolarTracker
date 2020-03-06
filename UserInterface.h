@@ -11,7 +11,8 @@
 void Start_Screen(void);
 void Home_Screen(void);
 void Select_Modes(void);
-void Manual_Input(void);
+char Manual_Input(void);
+int8_t ManualAngleConversion(void)
 void Algorithm_Based(void);
 void Demo(void);
 
