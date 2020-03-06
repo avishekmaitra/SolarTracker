@@ -102,6 +102,7 @@ char Manual_Input(void)
     select = 65;                                                              //for if statements in the other cases
     A1_MANUAL();
     LCD_Cursor_Location(0x0C);                                                //move cursor to position to allow user to input angle in desired spot
+
     manual_angle1 = Keypad_GetKey();                                          //enter first number of angle
     manual_angle2 = Keypad_GetKey();                                          //second number of angle
     manual_angle3 = Keypad_GetKey();                                          //third number of angle
@@ -146,12 +147,22 @@ void Demo_W2(void)
     static int countQs = 0;                                                      //# of question marks left in array (non press)
     A1_MANUAL();
     LCD_Cursor_Location(0x0D);
-    char manual_angle0 = Keypad_GetKey();                                          //enter first number of angle
-    LCD_Write_Char(manual_angle0);
-    char manual_angle1 = Keypad_GetKey();                                          //enter second number of angle
-    LCD_Write_Char(manual_angle1);
-    char manual_angle2 = Keypad_GetKey();                                          //enter third number of angle
-    LCD_Write_Char(manual_angle2);
+    if (Keypad_GetKey() != RESETKEY)
+    {
+        char manual_angle0 = Keypad_GetKey();                                          //enter first number of angle
+        LCD_Write_Char(manual_angle0);
+    }
+    if (Keypad_GetKey() != RESETKEY)
+    {
+        char manual_angle1 = Keypad_GetKey();                                          //enter 2nd number of angle
+        LCD_Write_Char(manual_angle1);
+    }
+    if (Keypad_GetKey() != RESETKEY)
+    {
+        char manual_angle2 = Keypad_GetKey();                                          //enter 3rd number of angle
+        LCD_Write_Char(manual_angle2);
+    }
+
 
     if (Keypad_GetKey() == '#')
     {
