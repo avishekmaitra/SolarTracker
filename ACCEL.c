@@ -5,11 +5,15 @@
  *      Author: AviMaitra
  */
 
+#include "ACCEL.h"
 #include "delay.h"
 #include "I2C.h"
+#include "LCD.h"
 #include <math.h>
 #include "msp.h"
 #include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
 
 // All address and values can be found in MMA8452Q data sheet
 // Register Addresses
@@ -45,10 +49,11 @@
 #define MIN_ANGLE       -90
 #define NORM_MAX        0.999
 #define NORM_MIN        -0.999
+#define MAX_LENGTH      4
+#define TO_CHAR         0x30
 
 // Static variables
 static int8_t offset_z = 0;
-static int8_t setAngle = 0;
 
 // Helper Functions
 void swap(int16_t *p,int16_t *q)
@@ -80,6 +85,7 @@ void ACCEL_Reset (void)
     I2C_WriteSingleByte(CTRL_REG2, SW_RESET);
 }
 
+// Initialize ACCEL – Call after I2C initialization
 void ACCEL_Init(void)
 {
     uint8_t errorFlag = 0;
@@ -91,7 +97,7 @@ void ACCEL_Init(void)
         errorFlag = 1;
     }
 
-    // Configure 800Hz, 8-bit sampling
+    // Configure 800Hz, 12-bit sampling
     I2C_WriteSingleByte(CTRL_REG1, DATA_CONFIG);
     if((I2C_ReadSingleByte(CTRL_REG1)&BIT1) != DATA_CONFIG)
     {
@@ -121,7 +127,8 @@ void ACCEL_Init(void)
 
     if(errorFlag)
     {
-        // TODO display error on LCD
+        LCD_Clear();
+        LCD_Write_L1("ACCEL_Init() error");
     }
 }
 
@@ -151,7 +158,7 @@ void ACCEL_Calibrate(void)
     offset_z = MAX_VAL-medianData_Z;
 }
 
-int16_t ACCEL_GetAngle(void)
+int8_t ACCEL_GetAngle_Int(void)
 {
     int16_t accelData_Z[NUM_OF_SAMPLES];
     int16_t preData;
@@ -179,6 +186,7 @@ int16_t ACCEL_GetAngle(void)
 
     pVal = ((double)medianData_Z/MAX_VAL);
 
+    // Account for max/min exemption
     if(pVal > NORM_MAX)
     {
         finalVal = MAX_ANGLE;
@@ -197,42 +205,48 @@ int16_t ACCEL_GetAngle(void)
     return finalVal;
 }
 
-void ACCEL_SetAngle(int8_t inputAngle)
+char* ACCEL_GetAngle_String(void)
 {
-    setAngle = inputAngle;
-}
+    int8_t angleVal;
+    angleVal = ACCEL_GetAngle_Int;
 
-/*delay_ms(1000,FREQ_24_MHZ);
-LCD_Clear();
-int8_t angle = 0;
-angle = ACCEL_GetAngle();
-char myOutput[4];
-if(angle<100 && angle >=10)
-{
-    myOutput[0] = ' ';
-    myOutput[1] = (angle/10) + TO_CHAR;
-    myOutput[2] = (angle%10) + TO_CHAR;
+    // Make space for angle string
+    uint8_t size;
+    size = MAX_LENGTH;
+    char* str = (char*)malloc(sizeof(char)*size);
+    *(str+0) = '\0';
+    *(str+1) = '\0';
+    *(str+2) = '\0';
+    *(str+3) = '\0';
+
+    if(angleVal<=90 && angleVal >=10)
+    {
+        *(str+0) = (angleVal/10) + TO_CHAR;
+        *(str+1) = (angleVal%10) + TO_CHAR;
+    }
+    else if(angleVal<10 && angleVal>=0)
+    {
+        *(str+0) = (angleVal%10) + TO_CHAR;;
+    }
+    else if(angleVal<0 && angleVal>-10)
+    {
+        angleVal = angleVal*-1;
+        *(str+0) = '-';
+        *(str+1) = (angleVal%10) + TO_CHAR;
+    }
+    else if(angleVal>=-90)
+    {
+        angleVal = angleVal*-1;
+        *(str+0) = '-';
+        *(str+1) = (angleVal/10) + TO_CHAR;
+        *(str+2) = (angleVal%10) + TO_CHAR;
+    }
+    else
+    {
+        *(str+0) = 'I';
+        *(str+1) = 'N';
+        *(str+2) = 'V';
+    }
+
+    return str;
 }
-else if(angle<10 && angle>=0)
-{
-    myOutput[0] = ' ';
-    myOutput[1] = ' ';
-    myOutput[2] = (angle%10) + TO_CHAR;
-}
-else if(angle<0 && angle>-10)
-{
-    angle = angle*-1;
-    myOutput[0] = ' ';
-    myOutput[1] = '-';
-    myOutput[2] = (angle%10) + TO_CHAR;
-}
-else if(angle>-100)
-{
-    angle = angle*-1;
-    myOutput[0] = '-';
-    myOutput[1] = (angle/10) + TO_CHAR;
-    myOutput[2] = (angle%10) + TO_CHAR;
-}
-myOutput[3]='\0';
-LCD_Write_L1(myOutput);
-*/
