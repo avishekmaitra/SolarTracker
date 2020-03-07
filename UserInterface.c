@@ -135,7 +135,7 @@ void Demo(void)
     C2_DEMO();
 }
 
-void Demo_W2(void)
+void Demo_W2(void)                                                              //will change to void Manual_Input(void) after demo to dolan
 {
     select = 100;                                                                //for if statements in the other cases
     char myangle[3];                                                             //angle input array
@@ -150,39 +150,36 @@ void Demo_W2(void)
 
     LCD_Cursor_Location(0x0D);
     char myKey;
+
+    //cycle waiting for first angle input
     while(Keypad_GetKey() == RESETKEY);
-    myKey = Keypad_GetKey();
+    myKey = Keypad_GetKey();                                            //enter first number of angle
     Keypad_ResetKey();
-    manual_angle0 = myKey;                                              //enter first number of angle
+    manual_angle0 = myKey;
     LCD_Write_Char(manual_angle0);
 
+    //cycle waiting for second angle input
     while(Keypad_GetKey() == RESETKEY);
-    myKey = Keypad_GetKey();
+    myKey = Keypad_GetKey();                                            //enter 2nd number of angle
     Keypad_ResetKey();
     if (myKey != '#')
     {
-        manual_angle1 = myKey;                                          //enter 2nd number of angle
+        manual_angle1 = myKey;
         LCD_Write_Char(manual_angle1);
     }
     else
     {
-        myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
+        myangle[0] = manual_angle0;                                                         //when enter is pressed put values into the array
         myangle[1] = manual_angle1;
         myangle[2] = manual_angle2;
 
-        if (myangle[0] == '?')                                                          //counts question marks left after user inputs angle
-        {                                                                                //convert to for loop
-            countQs += 1;
-        }
-        if (myangle[1] == '?')
+        for (int i = 0; i < 3; i++)
         {
-            countQs += 1;
+            if (myangle[i] == '?')                                                          //counts question marks left after user inputs angle
+            {
+                countQs += 1;
+            }
         }
-        if (myangle[2] == '?')
-        {
-            countQs += 1;
-        }
-
                                                                                         //user can only enter angle from -90 to 90
         if (countQs == 0)                                                               //case for 0 ? => num,num,num or A,num,num or   error if A,A,num or A,A,A or A,num,A or num,A,A or num,num,A
         {
@@ -227,6 +224,7 @@ void Demo_W2(void)
         return;
     }
 
+    //cycle waiting for third angle input
     while(Keypad_GetKey() == RESETKEY);
     myKey = Keypad_GetKey();
     Keypad_ResetKey();
@@ -241,19 +239,13 @@ void Demo_W2(void)
         myangle[1] = manual_angle1;
         myangle[2] = manual_angle2;
 
-        if (myangle[0] == '?')                                                          //counts question marks left after user inputs angle
-        {                                                                                //convert to for loop
-            countQs += 1;
-        }
-        if (myangle[1] == '?')
+        for (int i = 0; i < 3; i++)
         {
-            countQs += 1;
+            if (myangle[i] == '?')                                                          //counts question marks left after user inputs angle
+            {
+                countQs += 1;
+            }
         }
-        if (myangle[2] == '?')
-        {
-            countQs += 1;
-        }
-
                                                                                             //user can only enter angle from -90 to 90
         if (countQs == 0)                                                               //case for 0 ? => num,num,num or A,num,num or   error if A,A,num or A,A,A or A,num,A or num,A,A or num,num,A
         {
@@ -297,10 +289,10 @@ void Demo_W2(void)
         return;
     }
 
-    myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
+    myangle[0] = manual_angle0;                                                     //when enter is pressed put values into the arrray
     myangle[1] = manual_angle1;
     myangle[2] = manual_angle2;
-                                                                            //user can only enter angle from -90 to 90
+                                                                                    //user can only enter angle from -90 to 90
     if (countQs == 0)                                                               //case for 0 ? => num,num,num or A,num,num or   error if A,A,num or A,A,A or A,num,A or num,A,A or num,num,A
     {
         if (myangle[0] == 'A')                                                        //negative angle
@@ -316,8 +308,6 @@ void Demo_W2(void)
            LCD_Write_L2("  Enter -90 to 90  ");
        }
     }
-
-    LCD_Write_L3(myangle);
 }
 
 
