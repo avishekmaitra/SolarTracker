@@ -46,42 +46,10 @@ void main(void)
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
 	// RTC_Start();
 
-    // SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
 
     while (1)
     {
-       delay_ms(1000,FREQ_24_MHZ);
-       LCD_Clear();
-       int8_t angle = 0;
-       angle = ACCEL_GetAngle();
-       char myOutput[4];
-       if(angle<100 && angle >=10)
-       {
-           myOutput[0] = ' ';
-           myOutput[1] = (angle/10) + TO_CHAR;
-           myOutput[2] = (angle%10) + TO_CHAR;
-       }
-       else if(angle<10 && angle>=0)
-       {
-           myOutput[0] = ' ';
-           myOutput[1] = ' ';
-           myOutput[2] = (angle%10) + TO_CHAR;
-       }
-       else if(angle<0 && angle>-10)
-       {
-           angle = angle*-1;
-           myOutput[0] = ' ';
-           myOutput[1] = '-';
-           myOutput[2] = (angle%10) + TO_CHAR;
-       }
-       else if(angle>-100)
-       {
-           angle = angle*-1;
-           myOutput[0] = '-';
-           myOutput[1] = (angle/10) + TO_CHAR;
-           myOutput[2] = (angle%10) + TO_CHAR;
-       }
-       myOutput[3]='\0';
-       LCD_Write_L1(myOutput);
+        __sleep();
     }
 }

@@ -48,6 +48,7 @@
 
 // Static variables
 static int8_t offset_z = 0;
+static int8_t setAngle = 0;
 
 // Helper Functions
 void swap(int16_t *p,int16_t *q)
@@ -195,3 +196,43 @@ int16_t ACCEL_GetAngle(void)
 
     return finalVal;
 }
+
+void ACCEL_SetAngle(int8_t inputAngle)
+{
+    setAngle = inputAngle;
+}
+
+/*delay_ms(1000,FREQ_24_MHZ);
+LCD_Clear();
+int8_t angle = 0;
+angle = ACCEL_GetAngle();
+char myOutput[4];
+if(angle<100 && angle >=10)
+{
+    myOutput[0] = ' ';
+    myOutput[1] = (angle/10) + TO_CHAR;
+    myOutput[2] = (angle%10) + TO_CHAR;
+}
+else if(angle<10 && angle>=0)
+{
+    myOutput[0] = ' ';
+    myOutput[1] = ' ';
+    myOutput[2] = (angle%10) + TO_CHAR;
+}
+else if(angle<0 && angle>-10)
+{
+    angle = angle*-1;
+    myOutput[0] = ' ';
+    myOutput[1] = '-';
+    myOutput[2] = (angle%10) + TO_CHAR;
+}
+else if(angle>-100)
+{
+    angle = angle*-1;
+    myOutput[0] = '-';
+    myOutput[1] = (angle/10) + TO_CHAR;
+    myOutput[2] = (angle%10) + TO_CHAR;
+}
+myOutput[3]='\0';
+LCD_Write_L1(myOutput);
+*/
