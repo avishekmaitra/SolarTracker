@@ -21,6 +21,7 @@
 #include "Keypad.h"
 #include <stdint.h>
 #include "UART.h"
+#include "UserInterface.h"
 
 void main(void)
 {
@@ -47,11 +48,12 @@ void main(void)
 	// RTC_Start();
 
     //SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
-
+	A1_MANUAL();
+	Demo_W2();
     while (1)
     {
        // __sleep();
-       ///*
+       /*
        char myOut[2];
        myOut[1]=' ';
        char myKey = Keypad_GetKey();
@@ -60,8 +62,7 @@ void main(void)
            myOut[0] = myKey;
            LCD_Write_L1(myOut);
        }
-       //*/
-       //Demo_W2();
+       */
 
     }
 }

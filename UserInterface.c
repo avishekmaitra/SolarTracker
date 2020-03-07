@@ -6,10 +6,11 @@
 #include "UART.h"
 #include "LCD.h"
 #include "UserInterface.h"
-
+#define CHAR_TO_NUM 0x30
 
 static uint8_t select = 0;
 
+void ui_evaluateKey(void);
 void Start_Screen(void)
 {
     StartScreen();                                                           //initially start with enter time and day
@@ -138,41 +139,39 @@ void Demo_W2(void)
 {
     select = 100;                                                                //for if statements in the other cases
     char myangle[3];                                                             //angle input array
-    myangle[0] = '?';
-    myangle[1] = '?';
-    myangle[2] = '?';
     char manual_angle0;
     char manual_angle1;
     char manual_angle2;
-    static char angleVal = '0';                                                     //angle value
-    static int countQs = 0;                                                      //# of question marks left in array (non press)
-    A1_MANUAL();
+    manual_angle0 = '?';
+    manual_angle1 = '?';
+    manual_angle2 = '?';
+    int8_t angleVal = '0';                                                     //angle value int8t
+    uint8_t countQs = 0;                                                      //# of question marks left in array (non press) uint8t
+
     LCD_Cursor_Location(0x0D);
-    if (Keypad_GetKey() != RESETKEY)
+    char myKey;
+    while(Keypad_GetKey() == RESETKEY);
+    myKey = Keypad_GetKey();
+    Keypad_ResetKey();
+    manual_angle0 = myKey;                                              //enter first number of angle
+    LCD_Write_Char(manual_angle0);
+
+    while(Keypad_GetKey() == RESETKEY);
+    myKey = Keypad_GetKey();
+    Keypad_ResetKey();
+    if (myKey != '#')
     {
-        manual_angle0 = Keypad_GetKey();                                          //enter first number of angle
-        LCD_Write_Char(manual_angle0);
-    }
-    if (Keypad_GetKey() != RESETKEY)
-    {
-        manual_angle1 = Keypad_GetKey();                                          //enter 2nd number of angle
+        manual_angle1 = myKey;                                          //enter 2nd number of angle
         LCD_Write_Char(manual_angle1);
     }
-    if (Keypad_GetKey() != RESETKEY)
-    {
-        manual_angle2 = Keypad_GetKey();                                          //enter 3rd number of angle
-        LCD_Write_Char(manual_angle2);
-    }
-
-
-    if (Keypad_GetKey() == '#')
+    else
     {
         myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
         myangle[1] = manual_angle1;
         myangle[2] = manual_angle2;
 
         if (myangle[0] == '?')                                                          //counts question marks left after user inputs angle
-        {
+        {                                                                                //convert to for loop
             countQs += 1;
         }
         if (myangle[1] == '?')
@@ -189,7 +188,11 @@ void Demo_W2(void)
         {
            if (myangle[0] == 'A')                                                        //negative angle
            {
-               angleVal = (-1)*(myangle[1]*(10) + myangle[2]);
+               uint8_t ones;
+               uint8_t tens;
+               tens = myangle[1] - CHAR_TO_NUM;
+               ones = myangle[2] - CHAR_TO_NUM;
+               angleVal = (-1)*(tens*(10) + ones);
            }
            else                                                                            //will be error, cant have angle > 90
            {
@@ -201,17 +204,120 @@ void Demo_W2(void)
         {
             if (myangle[0] == 'A')                                                        //negative angle -0 to -9
             {
-                angleVal = -1*(myangle[1]);
+                uint8_t ones;
+                ones = myangle[1] - CHAR_TO_NUM;
+                angleVal = -1*(ones);
             }
             else                                                                        //positive angle 0 to 90
             {
-                angleVal = ((myangle[0]*10) + myangle[1]);
+                uint8_t ones;
+                uint8_t tens;
+                ones = myangle[1] - CHAR_TO_NUM;
+                tens = myangle[0] - CHAR_TO_NUM;
+                angleVal = ((tens*10) + ones);
             }
         }
         if (countQs == 2)                                                                             //positive angle 0 to 9
         {
-            angleVal = myangle[0];
+            uint8_t ones;
+            ones = myangle[0] - CHAR_TO_NUM;
+            angleVal = ones;
         }
+        LCD_Write_L3(myangle);
+        return;
     }
+
+    while(Keypad_GetKey() == RESETKEY);
+    myKey = Keypad_GetKey();
+    Keypad_ResetKey();
+    if (myKey != '#')
+    {
+        manual_angle2 = myKey;                                                          //enter 3rd number of angle
+        LCD_Write_Char(manual_angle2);
+    }
+    else
+    {
+        myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
+        myangle[1] = manual_angle1;
+        myangle[2] = manual_angle2;
+
+        if (myangle[0] == '?')                                                          //counts question marks left after user inputs angle
+        {                                                                                //convert to for loop
+            countQs += 1;
+        }
+        if (myangle[1] == '?')
+        {
+            countQs += 1;
+        }
+        if (myangle[2] == '?')
+        {
+            countQs += 1;
+        }
+
+                                                                                            //user can only enter angle from -90 to 90
+        if (countQs == 0)                                                               //case for 0 ? => num,num,num or A,num,num or   error if A,A,num or A,A,A or A,num,A or num,A,A or num,num,A
+        {
+            if (myangle[0] == 'A')                                                        //negative angle
+            {
+               uint8_t ones;
+               uint8_t tens;
+               tens = myangle[1] - CHAR_TO_NUM;
+               ones = myangle[2] - CHAR_TO_NUM;
+               angleVal = (-1)*(tens*(10) + ones);
+           }
+           else                                                                            //will be error, cant have angle > 90
+           {
+               LCD_Write_L2("  Enter -90 to 90  ");
+           }
+        }
+
+        if (countQs == 1)                                                               //case for 1 ? => num,num or A,num or           error if A,A or num,A
+        {
+            if (myangle[0] == 'A')                                                        //negative angle -0 to -9
+            {
+                uint8_t ones;
+                ones = myangle[1] - CHAR_TO_NUM;
+                angleVal = -1*(ones);
+            }
+            else                                                                        //positive angle 0 to 90
+            {
+                uint8_t ones;
+                uint8_t tens;
+                ones = myangle[1] - CHAR_TO_NUM;
+                tens = myangle[0] - CHAR_TO_NUM;
+                angleVal = ((tens*10) + ones);
+            }
+        }
+        if (countQs == 2)                                                                             //positive angle 0 to 9
+        {
+            uint8_t ones;
+            ones = myangle[0] - CHAR_TO_NUM;
+            angleVal = ones;
+        }
+        return;
+    }
+
+    myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
+    myangle[1] = manual_angle1;
+    myangle[2] = manual_angle2;
+                                                                            //user can only enter angle from -90 to 90
+    if (countQs == 0)                                                               //case for 0 ? => num,num,num or A,num,num or   error if A,A,num or A,A,A or A,num,A or num,A,A or num,num,A
+    {
+        if (myangle[0] == 'A')                                                        //negative angle
+        {
+           uint8_t ones;
+           uint8_t tens;
+           tens = myangle[1] - CHAR_TO_NUM;
+           ones = myangle[2] - CHAR_TO_NUM;
+           angleVal = (-1)*(tens*(10) + ones);
+       }
+       else                                                                            //will be error, cant have angle > 90
+       {
+           LCD_Write_L2("  Enter -90 to 90  ");
+       }
+    }
+
     LCD_Write_L3(myangle);
 }
+
+
