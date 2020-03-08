@@ -6,6 +6,8 @@
 #include "UART.h"
 #include "LCD.h"
 #include "UserInterface.h"
+#include "Relay.h"
+#include "ACCEL.h"
 #define CHAR_TO_NUM 0x30
 
 static uint8_t select = 0;
@@ -201,7 +203,6 @@ void Demo(void)
 void Demo_W2(void)                                                              //will change to void Manual_Input(void) after demo to dolan
 {
     select = 100;                                                                //for if statements in the other cases
-    char myangle[3];                                                             //angle input array
     char manual_angle0;
     char manual_angle1;
     char manual_angle2;
@@ -242,12 +243,21 @@ void Demo_W2(void)                                                              
     {
         manual_angle2 = myKey;                                                          //enter 3rd number of angle
         LCD_Write_Char(manual_angle2);
+
     }
     else
     {
         ui_evaluateKey(manual_angle0, manual_angle1, manual_angle2);
     }
-
+    while(Keypad_GetKey() == RESETKEY);
+    myKey = Keypad_GetKey();
+    Keypad_ResetKey();
+    ui_evaluateKey(manual_angle0, manual_angle1, manual_angle2);
+    while(1)
+    {
+        Relay_MoveToGoal();
+        LCD_Write_L3(ACCEL_GetAngle_String());
+    }
 }
 
 
