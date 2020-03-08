@@ -208,7 +208,7 @@ int8_t ACCEL_GetAngle_Int(void)
 char* ACCEL_GetAngle_String(void)
 {
     int8_t angleVal;
-    angleVal = ACCEL_GetAngle_Int;
+    angleVal = ACCEL_GetAngle_Int();
 
     // Make space for angle string
     uint8_t size;

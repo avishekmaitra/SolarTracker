@@ -172,8 +172,8 @@ void Demo_W2(void)                                                              
         myangle[0] = manual_angle0;                                                         //when enter is pressed put values into the array
         myangle[1] = manual_angle1;
         myangle[2] = manual_angle2;
-
-        for (int i = 0; i < 3; i++)
+        uint8_t i;
+        for (i = 0; i < 3; i++)
         {
             if (myangle[i] == '?')                                                          //counts question marks left after user inputs angle
             {
@@ -238,8 +238,8 @@ void Demo_W2(void)                                                              
         myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
         myangle[1] = manual_angle1;
         myangle[2] = manual_angle2;
-
-        for (int i = 0; i < 3; i++)
+        uint8_t i;
+        for (i = 0; i < 3; i++)
         {
             if (myangle[i] == '?')                                                          //counts question marks left after user inputs angle
             {

@@ -54,12 +54,7 @@ void main(void)
 	Demo_W2();
 	delay_ms(5, CLK);
 	A2_MANUAL();
-    if (myangle[0] == 'A')
-    {
-        myangle[0] = '-';
-        LCD_Cursor_Location(0x0D)
-        LCD_Write_Char(myangle);
-    }
+
     while (1)
     {
        // __sleep();
