@@ -19,20 +19,20 @@ void LCD_Init(void)                         //setup GPIO pins
     P3-> SEL1 &= ~(RS | RW | EN);           //GPIO setup
     P3-> DIR |= (RS | RW | EN);             //set pins to output mode
 
-    delay_ms(2,FREQ_48_MHZ);
+    delay_ms(2,FREQ_24_MHZ);
 
     P4-> OUT = 0x00;                        //clear output pins
     P3-> OUT = 0x00;                        //clear output pins
-    delay_ms(100,FREQ_48_MHZ);              //power up delay
+    delay_ms(100,FREQ_24_MHZ);              //power up delay
     P4 -> OUT = 0x30;
 
-    delay_ms(30,FREQ_48_MHZ);               //power up delay
+    delay_ms(30,FREQ_24_MHZ);               //power up delay
     nybble();
-    delay_ms(10,FREQ_48_MHZ);
+    delay_ms(10,FREQ_24_MHZ);
     nybble();
-    delay_ms(10,FREQ_48_MHZ);
+    delay_ms(10,FREQ_24_MHZ);
     nybble();
-    delay_ms(10,FREQ_48_MHZ);
+    delay_ms(10,FREQ_24_MHZ);
 
     P4 -> OUT = 0x20;
     nybble();
@@ -42,19 +42,19 @@ void LCD_Init(void)                         //setup GPIO pins
     LCD_Command(DISPLAY_ON);                //set display, cursor, blinking
     LCD_Command(CURSOR_RIGHT);              //set cursor direction
 
-    delay_ms(2,FREQ_48_MHZ);
+    delay_ms(2,FREQ_24_MHZ);
 }
 
 void LCD_Clear(void)                        //clears all characters from screen
 {
-    delay_ms(2, FREQ_48_MHZ);
+    delay_ms(2, FREQ_24_MHZ);
     LCD_Command(CLR_DISP);
-    delay_ms(2, FREQ_48_MHZ);
+    delay_ms(2, FREQ_24_MHZ);
 }
 
 void LCD_Command(unsigned char command)     //reads instruction codes
 {
-    delay_ms(2,FREQ_48_MHZ);
+    delay_ms(2,FREQ_24_MHZ);
 
     P4-> OUT = command;                     //put instruction on OUT
     P3-> OUT &= ~RS;                        //D/I = low --> Send Instruction
@@ -65,12 +65,12 @@ void LCD_Command(unsigned char command)     //reads instruction codes
     P4-> OUT = command;                     //shifted instruction code on OUT
     nybble();
 
-    delay_ms(2,FREQ_48_MHZ);
+    delay_ms(2,FREQ_24_MHZ);
 }
 
 void LCD_Write_Char(unsigned char letter)
 {
-    delay_ms(2,FREQ_48_MHZ);
+    delay_ms(2,FREQ_24_MHZ);
 
     P4 -> OUT = letter;                     //put letter data on OUT
     P3-> OUT |= RS;                         //D/I = high --> Send Data
@@ -81,7 +81,7 @@ void LCD_Write_Char(unsigned char letter)
     P4 -> OUT = letter;                     //shifted letter data on OUT
     nybble();
 
-    delay_ms(2,FREQ_48_MHZ);
+    delay_ms(2,FREQ_24_MHZ);
 }
 
 void LCD_Write_String(char* string)
@@ -126,7 +126,7 @@ void LCD_Write_L4(char* string)
 void nybble(void)
 {
     P3-> OUT |= EN;                         //enable high
-    delay_ms(1, FREQ_48_MHZ);               //delay 1ms
+    delay_ms(1, FREQ_24_MHZ);               //delay 1ms
     P3-> OUT &= ~EN;                        //enable low
 }
 

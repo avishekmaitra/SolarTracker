@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "I2C.h"
 #include "delay.h"
+#include "LCD.h"
 
 static uint16_t TransmitFlag = 0;
 
@@ -174,7 +175,8 @@ void EUSCIB0_IRQHandler(void)
     // Error has occurred if these flags are set
     if((EUSCI_B0->IFG & EUSCI_B_IFG_NACKIFG) || (EUSCI_B0->IFG & EUSCI_B_IFG_CLTOIFG))
     {
-        // TODO Call function to clear LCD and display warning on LCD
+        LCD_Clear();
+        LCD_Write_L1("I2C COM ERROR");
         EUSCI_B0->IFG &= ~(EUSCI_B_IFG_NACKIFG | EUSCI_B_IFG_CLTOIFG);
     }
 }

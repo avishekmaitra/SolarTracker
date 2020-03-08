@@ -13,6 +13,7 @@
  * SPONSOR: CALIFORNIA POLYTECHNIC STATE UNVERSITY - ELECTRICAL ENGINEERING DEPARTMENT
  */
 
+#include "ACCEL.h"
 #include "delay.h"
 #include "I2C.h"
 #include "LCD.h"
@@ -28,7 +29,7 @@ void main(void)
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
 
     // Set clock to 24 MHz
-    set_DCO(FREQ_48_MHZ);
+    set_DCO(FREQ_24_MHZ);
 
     __enable_irq();
 
@@ -37,7 +38,9 @@ void main(void)
 	I2C_Init(ACCEL_ADDRESS);
 	Keypad_Init();
 	LCD_Init();
-
+	ACCEL_Init();
+	ACCEL_Calibrate();
+	LCD_Clear();
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
 	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
