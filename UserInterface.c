@@ -3,6 +3,7 @@
 #include "delay.h"
 #include "msp.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include "UART.h"
 #include "LCD.h"
 #include "UserInterface.h"
@@ -233,6 +234,11 @@ void Demo_W2(void)                                                              
     else
     {
         ui_evaluateKey(manual_angle0, manual_angle1, manual_angle2);
+        while(1)
+        {
+            Relay_MoveToGoal();
+            LCD_Write_L3(ACCEL_GetAngle_String());
+        }
     }
 
     //cycle waiting for third angle input
@@ -248,6 +254,11 @@ void Demo_W2(void)                                                              
     else
     {
         ui_evaluateKey(manual_angle0, manual_angle1, manual_angle2);
+        while(1)
+        {
+            Relay_MoveToGoal();
+            LCD_Write_L3(ACCEL_GetAngle_String());
+        }
     }
     while(Keypad_GetKey() == RESETKEY);
     myKey = Keypad_GetKey();
@@ -256,6 +267,7 @@ void Demo_W2(void)                                                              
     while(1)
     {
         Relay_MoveToGoal();
+        delay_ms(200,FREQ_24_MHZ);
         LCD_Write_L3(ACCEL_GetAngle_String());
     }
 }

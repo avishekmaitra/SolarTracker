@@ -9,7 +9,6 @@
 #include "delay.h"
 #include "I2C.h"
 #include "LCD.h"
-#include <math.h>
 #include "msp.h"
 #include <stdint.h>
 #include <stddef.h>
@@ -51,6 +50,11 @@
 #define NORM_MIN        -0.999
 #define MAX_LENGTH      4
 #define TO_CHAR         0x30
+#define FOURTH_COEFF    0.00000000003071153588
+#define THIRD_COEFF     0.00000003853874416748
+#define SECOND_COEFF    -0.0000331675881064726
+#define FIRST_COEFF     0.0469102804322059
+#define ZERO_COEFF      1
 
 // Static variables
 static int8_t offset_z = 0;
@@ -164,9 +168,12 @@ int8_t ACCEL_GetAngle_Int(void)
     int16_t preData;
     int16_t medianData_Z;
 
-    double pVal;
-    double radians;
-    double angle;
+    double fourth;
+    double third;
+    double second;
+    double first;
+    double zero;
+    double total;
 
     int8_t finalVal;
     uint8_t k;
@@ -182,26 +189,15 @@ int8_t ACCEL_GetAngle_Int(void)
 
     sort(accelData_Z);
 
-    medianData_Z = accelData_Z[MEDIAN_INDEX] + offset_z;
+    medianData_Z = accelData_Z[MEDIAN_INDEX];
 
-    pVal = ((double)medianData_Z/MAX_VAL);
-
-    // Account for max/min exemption
-    if(pVal > NORM_MAX)
-    {
-        finalVal = MAX_ANGLE;
-    }
-    else if(pVal < NORM_MIN)
-    {
-        finalVal  = MIN_ANGLE;
-    }
-    else
-    {
-        radians = asin(pVal);
-        angle = (radians*RAD_TO_ANGLE);
-        finalVal  = (int8_t)angle;
-    }
-
+    fourth = FOURTH_COEFF * (medianData_Z) * (medianData_Z) * (medianData_Z) * (medianData_Z);
+    third = THIRD_COEFF * (medianData_Z) * (medianData_Z) * (medianData_Z);
+    second = SECOND_COEFF * (medianData_Z) * (medianData_Z);
+    first = FIRST_COEFF * (medianData_Z);
+    zero = 1;
+    total = fourth + third + second + first + zero;
+    finalVal = (int8_t) total;
     return finalVal;
 }
 

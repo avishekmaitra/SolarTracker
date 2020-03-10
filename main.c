@@ -41,7 +41,6 @@ void main(void)
 	Keypad_Init();
 	LCD_Init();
 	ACCEL_Init();
-	ACCEL_Calibrate();
 	LCD_Clear();
 
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
