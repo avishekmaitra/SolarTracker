@@ -21,6 +21,7 @@
 #include "RTC.h"
 #include "Keypad.h"
 #include <stdint.h>
+#include "Relay.h"
 #include "UART.h"
 #include "UserInterface.h"
 
@@ -41,6 +42,7 @@ void main(void)
 	Keypad_Init();
 	LCD_Init();
 	ACCEL_Init();
+	Relay_Init();
 	LCD_Clear();
 
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME

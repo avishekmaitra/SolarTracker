@@ -237,6 +237,7 @@ void Demo_W2(void)                                                              
         while(1)
         {
             Relay_MoveToGoal();
+            delay_ms(250,FREQ_24_MHZ);
             LCD_Write_L3(ACCEL_GetAngle_String());
         }
     }
@@ -257,6 +258,7 @@ void Demo_W2(void)                                                              
         while(1)
         {
             Relay_MoveToGoal();
+            delay_ms(250,FREQ_24_MHZ);
             LCD_Write_L3(ACCEL_GetAngle_String());
         }
     }
@@ -267,7 +269,7 @@ void Demo_W2(void)                                                              
     while(1)
     {
         Relay_MoveToGoal();
-        delay_ms(200,FREQ_24_MHZ);
+        delay_ms(250,FREQ_24_MHZ);
         LCD_Write_L3(ACCEL_GetAngle_String());
     }
 }
