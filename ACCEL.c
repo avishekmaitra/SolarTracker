@@ -10,6 +10,7 @@
 #include "I2C.h"
 #include "LCD.h"
 #include "msp.h"
+#include <math.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -39,15 +40,13 @@
 #define AWAKE_CONFIG    0x00
 
 // Misc
-#define NUM_OF_SAMPLES  9
+#define NUM_OF_SAMPLES  27
+#define NUM_SUB_SAMPLES 3.0
 #define MEDIAN_INDEX    NUM_OF_SAMPLES/2
+#define MEDIAN_RIGHT    MEDIAN_INDEX+1
+#define MEDIAN_LEFT     MEDIAN_INDEX-1
 #define MAX_VAL         1024
-#define RAD_TO_ANGLE    57.29577951
 #define SHIFT_4         4
-#define MAX_ANGLE       90
-#define MIN_ANGLE       -90
-#define NORM_MAX        0.999
-#define NORM_MIN        -0.999
 #define MAX_LENGTH      4
 #define TO_CHAR         0x30
 #define FOURTH_COEFF    0.00000000003071153588
@@ -57,7 +56,7 @@
 #define ZERO_COEFF      1
 
 // Static variables
-static int8_t offset_z = 0;
+static double offset_z = 0.0;
 
 // Helper Functions
 void swap(int16_t *p,int16_t *q)
@@ -143,7 +142,10 @@ void ACCEL_Calibrate(void)
     // Calibrate with solar panel completely vertical (accelerometer flat)
     int16_t preData;
     int16_t accelData_Z[NUM_OF_SAMPLES];
-    int16_t medianData_Z;
+    int16_t medianData_mid;
+    int16_t medianData_right;
+    int16_t medianData_left;
+    double avgData;
 
     uint8_t k;
 
@@ -156,17 +158,24 @@ void ACCEL_Calibrate(void)
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
     }
 
+    // Process data in list
     sort(accelData_Z);
+    medianData_mid = accelData_Z[MEDIAN_INDEX];
+    medianData_right = accelData_Z[MEDIAN_RIGHT];
+    medianData_left = accelData_Z[MEDIAN_LEFT];
+    avgData = (double)(medianData_mid + medianData_right + medianData_left)/NUM_SUB_SAMPLES;
 
-    medianData_Z = accelData_Z[MEDIAN_INDEX];
-    offset_z = MAX_VAL-medianData_Z;
+    offset_z = MAX_VAL-avgData;
 }
 
-int8_t ACCEL_GetAngle_Int(void)
+double ACCEL_GetAngle_Double(void)
 {
     int16_t accelData_Z[NUM_OF_SAMPLES];
     int16_t preData;
-    int16_t medianData_Z;
+    int16_t medianData_mid;
+    int16_t medianData_right;
+    int16_t medianData_left;
+    double avgData;
 
     double fourth;
     double third;
@@ -187,24 +196,26 @@ int8_t ACCEL_GetAngle_Int(void)
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
     }
 
+    // Process data in list
     sort(accelData_Z);
+    medianData_mid = accelData_Z[MEDIAN_INDEX];
+    medianData_right = accelData_Z[MEDIAN_RIGHT];
+    medianData_left = accelData_Z[MEDIAN_LEFT];
+    avgData = (double)(medianData_mid + medianData_right + medianData_left)/NUM_SUB_SAMPLES;
 
-    medianData_Z = accelData_Z[MEDIAN_INDEX];
-
-    fourth = FOURTH_COEFF * (medianData_Z) * (medianData_Z) * (medianData_Z) * (medianData_Z);
-    third = THIRD_COEFF * (medianData_Z) * (medianData_Z) * (medianData_Z);
-    second = SECOND_COEFF * (medianData_Z) * (medianData_Z);
-    first = FIRST_COEFF * (medianData_Z);
+    fourth = FOURTH_COEFF * (avgData) * (avgData) * (avgData) * (avgData);
+    third = THIRD_COEFF * (avgData) * (avgData) * (avgData);
+    second = SECOND_COEFF * (avgData) * (avgData);
+    first = FIRST_COEFF * (avgData);
     zero = 1;
     total = fourth + third + second + first + zero;
-    finalVal = (int8_t) total;
-    return finalVal;
+    return total;
 }
 
 char* ACCEL_GetAngle_String(void)
 {
     int8_t angleVal;
-    angleVal = ACCEL_GetAngle_Int();
+    angleVal = (int8_t)round(ACCEL_GetAngle_Double());
 
     // Make space for angle string
     uint8_t size;

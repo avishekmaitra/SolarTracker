@@ -64,7 +64,7 @@ bool Relay_MoveToGoal(void)
     bool notAtGoal = true;
 
     goalAngle = UI_GetGoalAngle();
-    actualAngle = ACCEL_GetAngle_Int();
+    actualAngle = ACCEL_GetAngle_Double();
 
     minThreshold = goalAngle - THRESHOLD;
     maxThreshold = goalAngle + THRESHOLD;

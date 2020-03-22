@@ -12,7 +12,7 @@
 void ACCEL_Reset (void);
 void ACCEL_Init(void);
 void ACCEL_Calibrate(void);
-int8_t ACCEL_GetAngle_Int(void);
+double ACCEL_GetAngle_Double(void);
 char* ACCEL_GetAngle_String(void);
 
 
