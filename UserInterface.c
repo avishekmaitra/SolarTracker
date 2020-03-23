@@ -9,12 +9,24 @@
 #include "UserInterface.h"
 #include "Relay.h"
 #include "ACCEL.h"
+
 #define CHAR_TO_NUM 0x30
 
 static uint8_t select = 0;
 static int8_t goalAngle;
+static mode_t currentMode;
 
-void ui_setGoalAngle(int8_t newAngle)
+void UI_SetMode(mode_t inputMode)
+{
+    currentMode = inputMode;
+}
+
+mode_t UI_GetMode(void)
+{
+    return currentMode;
+}
+
+void UI_SetGoalAngle(int8_t newAngle)
 {
     goalAngle = newAngle;
 }
@@ -22,6 +34,21 @@ void ui_setGoalAngle(int8_t newAngle)
 int8_t UI_GetGoalAngle(void)
 {
     return goalAngle;
+}
+
+void UI_RunManualMode(void)
+{
+
+}
+
+void UI_RunAlgoMode(void)
+{
+
+}
+
+void UI_RunDemoMode(void)
+{
+
 }
 
 void ui_evaluateKey(char manual_angle0, char manual_angle1, char manual_angle2)
@@ -74,7 +101,7 @@ void ui_evaluateKey(char manual_angle0, char manual_angle1, char manual_angle2)
         ones = myangle[0] - CHAR_TO_NUM;
         angleVal = ones;
     }
-    ui_setGoalAngle(angleVal);
+    UI_SetGoalAngle(angleVal);
 }
 
 void Start_Screen(void)

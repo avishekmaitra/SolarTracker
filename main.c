@@ -46,29 +46,31 @@ void main(void)
 	LCD_Clear();
 
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
+	// TODO Use set functions in RTC to adjust time registers
+	// TODO Call RTC_Start() after entering information
 
-	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
-	// RTC_Start();
+	// TODO Have User select first mode
+	// TODO Prepare all modules for the selected mode mode
 
     //SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
-	A1_MANUAL();
-	Demo_W2();
-	delay_ms(5, CLK);
-	A2_MANUAL();
+
+	UI_SetMode(MANUAL);
 
     while (1)
     {
-       // __sleep();
-       /*
-       char myOut[2];
-       myOut[1]=' ';
-       char myKey = Keypad_GetKey();
-       if(myKey != RESETKEY)
-       {
-           myOut[0] = myKey;
-           LCD_Write_L1(myOut);
-       }
-       */
-
+        switch (UI_GetMode())
+        {
+            case MANUAL:
+                UI_RunManualMode();
+                break;
+            case ALGO:
+                UI_RunAlgoMode();
+                break;
+            case DEMO:
+                UI_RunDemoMode();
+                break;
+            default:
+                break;
+        }
     }
 }

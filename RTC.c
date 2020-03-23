@@ -22,7 +22,16 @@ void RTC_Start(void)
 {
     RTCCTL1 &= ~(RTCHOLD);                    // Start RTC calendar mode
     RTCCTL0_H = 0;                            // Lock the RTC registers
+}
+
+void RTC_EnableInterrupt(void)
+{
     NVIC->ISER[0] = 1 << ((RTC_C_IRQn) & 31);
+}
+
+void RTC_DisableInterrupt(void)
+{
+    NVIC->ISER[0] = 0 << ((RTC_C_IRQn) & 31);
 }
 
 void RTC_SetYear(uint16_t inputYear)
