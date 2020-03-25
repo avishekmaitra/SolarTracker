@@ -160,11 +160,13 @@ char Keypad_GetKey(void)                     //function that returns the key val
 {
     hitFlag = 0;                                //reset hitFlag to 0 to enter the if statement in IRQ
     return key;
-  }
+}
+
 void Keypad_ResetKey(void)
 {
     key = RESETKEY;
 }
+
 void keypad_testkey(void)                      //test function to write key value to terminal
 {
     switch(Keypad_GetKey())

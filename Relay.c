@@ -59,7 +59,7 @@ uint8_t Relay_GetState(void)
 // Returns true if still moving, false when reaches goal
 bool Relay_MoveToGoal(void)
 {
-    int8_t goalAngle,actualAngle;
+    double goalAngle, actualAngle;
     int8_t minThreshold, maxThreshold;
     bool notAtGoal = true;
 

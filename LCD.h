@@ -48,13 +48,13 @@ void LCD_Write_L3(char* string);            // write string to line 3
 void LCD_Write_L4(char* string);            // write string to line 4
 void LCD_Test(void);
 
-void StartScreen(void);
-void HomeScreen(void);
-void A1_MANUAL(void);
+void LCD_SetStartScreen(void);
+void LCD_SetHomeScreen(void);
+void LCD_SetManualScreen(void);
 void A2_MANUAL(void);
 void B1_ALGORITHM(void);
-void B2_ALGORITHM(void);
-void C1_DEMO(void);
+void LCD_SetAlgoScreen(void);
+void LCD_SetDemoScreen(void);
 void C2_DEMO(void);
 
 #endif /* LCD_H_ */

@@ -45,6 +45,7 @@ void main(void)
 	Relay_Init();
 	LCD_Clear();
 
+	LCD_SetStartScreen();
     // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 	// TODO Use set functions in RTC to adjust time registers
 	// TODO Call RTC_Start() after entering information
@@ -60,6 +61,9 @@ void main(void)
     {
         switch (UI_GetMode())
         {
+            case HOME:
+                UI_RunHomeMode();
+                break;
             case MANUAL:
                 UI_RunManualMode();
                 break;

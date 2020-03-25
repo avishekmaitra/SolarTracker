@@ -184,7 +184,6 @@ double ACCEL_GetAngle_Double(void)
     double zero;
     double total;
 
-    int8_t finalVal;
     uint8_t k;
 
     // Populate Z data
@@ -228,18 +227,22 @@ char* ACCEL_GetAngle_String(void)
 
     if(angleVal<=90 && angleVal >=10)
     {
-        *(str+0) = (angleVal/10) + TO_CHAR;
-        *(str+1) = (angleVal%10) + TO_CHAR;
+        *(str+0) = ' ';
+        *(str+1) = (angleVal/10) + TO_CHAR;
+        *(str+2) = (angleVal%10) + TO_CHAR;
     }
     else if(angleVal<10 && angleVal>=0)
     {
-        *(str+0) = (angleVal%10) + TO_CHAR;;
+        *(str+0) = ' ';
+        *(str+1) = ' ';
+        *(str+2) = (angleVal%10) + TO_CHAR;;
     }
     else if(angleVal<0 && angleVal>-10)
     {
         angleVal = angleVal*-1;
         *(str+0) = '-';
-        *(str+1) = (angleVal%10) + TO_CHAR;
+        *(str+1) = ' ';
+        *(str+2) = (angleVal%10) + TO_CHAR;
     }
     else if(angleVal>=-90)
     {

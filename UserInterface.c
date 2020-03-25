@@ -1,4 +1,4 @@
-
+#include "ACCEL.h"
 #include "Keypad.h"
 #include "delay.h"
 #include "msp.h"
@@ -8,13 +8,24 @@
 #include "LCD.h"
 #include "UserInterface.h"
 #include "Relay.h"
-#include "ACCEL.h"
+#include "RTC.h"
 
-#define CHAR_TO_NUM 0x30
 
-static uint8_t select = 0;
+#define CHAR_TO_NUM     0x30
+#define START_DEMO      35
+#define SET_HOME        46
+#define SET_MANUAL      65
+#define SET_ALGO        66
+#define SET_DEMO        67
+#define DEMO_GOAL_POS   60.0
+#define DEMO_GOAL_NEG   -60.0
+
+// Variables for all modes
 static int8_t goalAngle;
 static mode_t currentMode;
+
+// Variables for Demo mode
+static bool finishFlag = false;
 
 void UI_SetMode(mode_t inputMode)
 {
@@ -26,33 +37,135 @@ mode_t UI_GetMode(void)
     return currentMode;
 }
 
-void UI_SetGoalAngle(int8_t newAngle)
+void UI_SetGoalAngle(double newAngle)
 {
     goalAngle = newAngle;
 }
 
-int8_t UI_GetGoalAngle(void)
+double UI_GetGoalAngle(void)
 {
     return goalAngle;
 }
 
+void UI_RunHomeMode(void)
+{
+    currentMode = HOME;
+    if(Keypad_GetKey() == RESETKEY)
+    {
+        return;
+    }
+
+    else if(Keypad_GetKey() == SET_MANUAL)
+    {
+        Keypad_ResetKey();
+        LCD_Clear();
+        currentMode = MANUAL;
+        LCD_SetManualScreen();
+        return;
+    }
+
+    else if(Keypad_GetKey() == SET_ALGO)
+    {
+        Keypad_ResetKey();
+        LCD_Clear();
+        currentMode = ALGO;
+        LCD_SetAlgoScreen();
+        RTC_EnableInterrupt();
+        return;
+    }
+
+    else if(Keypad_GetKey() == SET_DEMO)
+    {
+        Keypad_ResetKey();
+        LCD_Clear();
+        currentMode = DEMO;
+        LCD_SetDemoScreen();
+        UI_SetGoalAngle(DEMO_GOAL_POS);
+        finishFlag = false;
+        return;
+    }
+    else
+    {
+        Keypad_ResetKey();
+        return;
+    }
+
+}
+
 void UI_RunManualMode(void)
 {
-
+    currentMode = MANUAL;
 }
 
 void UI_RunAlgoMode(void)
 {
-
+    currentMode = ALGO;
 }
 
 void UI_RunDemoMode(void)
 {
-
+    currentMode = DEMO;
+    LCD_Write_L3(ACCEL_GetAngle_String());
+    if(Keypad_GetKey() == RESETKEY)
+    {
+        if(!finishFlag)
+        {
+            if(UI_GetGoalAngle() == DEMO_GOAL_POS)
+            {
+                if(ACCEL_GetAngle_Double() >= DEMO_GOAL_POS)
+                {
+                    finishFlag = true;
+                    UI_SetGoalAngle(DEMO_GOAL_NEG);
+                    Relay_Off();
+                }
+                else
+                {
+                    Relay_Out();
+                    finishFlag = false;
+                }
+            }
+            else if(UI_GetGoalAngle() == DEMO_GOAL_NEG)
+            {
+                if(ACCEL_GetAngle_Double() <= DEMO_GOAL_NEG)
+                {
+                    finishFlag = true;
+                    UI_SetGoalAngle(DEMO_GOAL_POS);
+                    Relay_Off();
+                }
+                else
+                {
+                    Relay_In();
+                    finishFlag = false;
+                }
+            }
+        }
+        return;
+    }
+    else if(Keypad_GetKey() == START_DEMO)
+    {
+        Keypad_ResetKey();
+        finishFlag = false;
+        return;
+    }
+    else if(Keypad_GetKey() == SET_HOME)
+    {
+        Keypad_ResetKey();
+        LCD_Clear();
+        Relay_Off();
+        currentMode = HOME;
+        LCD_SetHomeScreen();
+        return;
+    }
+    else
+    {
+        Keypad_ResetKey();
+        return;
+    }
 }
 
 void ui_evaluateKey(char manual_angle0, char manual_angle1, char manual_angle2)
 {
+    double setAngle;
     uint8_t countQs;
     uint8_t i;
     int8_t angleVal = '0';
@@ -101,136 +214,12 @@ void ui_evaluateKey(char manual_angle0, char manual_angle1, char manual_angle2)
         ones = myangle[0] - CHAR_TO_NUM;
         angleVal = ones;
     }
-    UI_SetGoalAngle(angleVal);
-}
-
-void Start_Screen(void)
-{
-    StartScreen();                                                           //initially start with enter time and day
-}
-
-void Home_Screen(void)
-{
-    HomeScreen();                                                            //gives options to select the modes: A=manual, B=algorithm, C=demo
-}
-
-void Select_Modes(void)                                                      //states dependent on the keypress for (A,B,C,.,#,*)
-{
-   switch(Keypad_GetKey())
-    {
-        case 65:                                                             //Keypress = A (manual mode)
-        {
-            Manual_Input();
-            break;
-        }
-
-
-        case 66:                                                             //Keypress = B (algorithm mode)
-        {
-            Algorithm_Based();
-            break;
-        }
-
-
-        case 67:                                                             //Keypress = C (DEMO mode)
-        {
-            //Demo();
-            Demo_W2();
-            break;
-        }
-
-
-        case 42:                                                             //Keypress = * (Back button also clear)
-        {
-            if (select == 65)
-            {
-                LCD_Cursor_Location(0x0D);
-                LCD_Write_String("  ");
-            }
-            if (select == 80)
-            {
-                Manual_Input();
-            }
-            break;
-        }
-
-
-        case 35:                                                             //Keypress = # (enter)
-        {
-           if (select == 65)                                                 //after user enters the angle for manual input, shows the angle that tracker is at
-            {
-                select = 80;                                                //case 65_0 POUND DEFINE ALL THE NUMBERS
-                A2_MANUAL();
-                LCD_Cursor_Location(0x0D);
-                //LCD_Write_String(angle from accelerometer)
-            }
-           if (select == 66)                                                //after enter is pressed will show angle that tracker is at
-           {
-               B2_ALGORITHM();
-               LCD_Cursor_Location(0x0D);
-               //LCD_Write_String(angle from accelerometer)
-               LCD_Cursor_Location(0x4E);
-               //LCD_Write_String(angle from accelerometer)
-           }
-           if (select == 100)
-           {
-               Demo_W2();
-           }
-           break;
-        }
-
-
-        case 46:                                                             //Keypress = . (Home button)
-        {
-            HomeScreen();                                                   //will go back to homescreen directly
-            break;
-        }
-
-
-        default:
-        {
-            break;
-        }
-    }
-}
-
-char Manual_Input(void)
-{
-    char manual_angle1 = 0;
-    char manual_angle2 = 0;
-    char manual_angle3 = 0;
-    int8_t manual_angle = 0;
-    select = 65;                                                              //for if statements in the other cases
-    A1_MANUAL();
-    LCD_Cursor_Location(0x0C);                                                //move cursor to position to allow user to input angle in desired spot
-
-    manual_angle1 = Keypad_GetKey();                                          //enter first number of angle
-    manual_angle2 = Keypad_GetKey();                                          //second number of angle
-    manual_angle3 = Keypad_GetKey();                                          //third number of angle
-    manual_angle = (int8_t) (manual_angle1 & manual_angle2 & manual_angle3);  //puts into variable so can use in accelerometer
-    return manual_angle;
-}
-
-
-void Algorithm_Based(void)
-{
-    //show angle based on calculation for given time and day
-    //say 'done' and '.Home'
-    select = 66;
-    B1_ALGORITHM();
-}
-
-void Demo(void)
-{
-    //display angle from sunrise to sunset 90:-90
-    //done after reaches -90
-    select = 67;
-    C2_DEMO();
+    setAngle = (double)angleVal;
+    UI_SetGoalAngle(setAngle);
 }
 
 void Demo_W2(void)                                                              //will change to void Manual_Input(void) after demo to dolan
-{
-    select = 100;                                                                //for if statements in the other cases
+{                                                            //for if statements in the other cases
     char manual_angle0;
     char manual_angle1;
     char manual_angle2;
@@ -300,5 +289,3 @@ void Demo_W2(void)                                                              
         LCD_Write_L3(ACCEL_GetAngle_String());
     }
 }
-
-

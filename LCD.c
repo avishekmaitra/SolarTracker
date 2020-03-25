@@ -131,7 +131,7 @@ void nybble(void)
     P3-> OUT &= ~EN;                        //enable low
 }
 
-void StartScreen(void)                      //STARTING SCREEN
+void LCD_SetStartScreen(void)                      //STARTING SCREEN
 {
     LCD_Write_L1("Startup             ");
     LCD_Write_L2("Enter Date:__/__/__ ");   //remember: only have 20 char spaces
@@ -144,7 +144,7 @@ void StartScreen(void)                      //STARTING SCREEN
     //needs to wait for either Clear or Enter press before changing screens
 }
 
-void HomeScreen(void)                       //HOME MODE CHOICE SCREEN
+void LCD_SetHomeScreen(void)                       //HOME MODE CHOICE SCREEN
 {
     LCD_Write_L1("A: Manual Entry     ");   //A, B, or C key press will decide next LCD screen
     LCD_Write_L2("B: Algorithm Based  ");
@@ -152,11 +152,11 @@ void HomeScreen(void)                       //HOME MODE CHOICE SCREEN
     LCD_Write_L4("*Back               ");
 }
 
-void A1_MANUAL(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
+void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
 {
-    LCD_Write_L1("Enter Angle: ___deg ");
+    LCD_Write_L1("Enter Angle:  ___deg");
     LCD_Write_L2("                    ");
-    LCD_Write_L3("                    ");
+    LCD_Write_L3("Current Angle:___deg");
     LCD_Write_L4("*Back  .Home  #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
 }
 
@@ -176,15 +176,15 @@ void B1_ALGORITHM(void)                     //B_1: ALGORITHM BASED ENTRY SCREEN
     LCD_Write_L4("*Back  .Home  #Enter");
 }
 
-void B2_ALGORITHM(void)                     //B_2: ALGORITHM ANGLE UPDATE SCREEN
+void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
 {
     LCD_Write_L1("Present Time:__:__  ");
     LCD_Write_L2("Present Angle:___deg");
-    LCD_Write_L3("Done.               ");   //only displayed when reach desired angle
+    LCD_Write_L3("                    ");   //only displayed when reach desired angle
     LCD_Write_L4("*Back  .Home        ");
 }
 
-void C1_DEMO(void)                          //C_1: DEMO choice screen
+void LCD_SetDemoScreen(void)                 //C_1: DEMO choice screen
 {
     LCD_Write_L1("Choose Demo Speed:  ");
     LCD_Write_L2("A, B, C             ");

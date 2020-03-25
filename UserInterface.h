@@ -9,6 +9,7 @@
 #define USERINTERFACE_H_
 
 typedef enum {
+  HOME,
   MANUAL,
   ALGO,
   DEMO
@@ -21,11 +22,12 @@ void Home_Screen(void);
 char Manual_Input(void);
 void Select_Modes(void);
 void Start_Screen(void);
-void UI_SetGoalAngle(int8_t newAngle);
+void UI_SetGoalAngle(double newAngle);
 void ui_evaluateKey(char manual_angle0, char manual_angle1, char manual_angle2);
-int8_t UI_GetGoalAngle(void);
+double UI_GetGoalAngle(void);
 void UI_SetMode(mode_t inputMode);
 mode_t UI_GetMode(void);
+void UI_RunHomeMode(void);
 void UI_RunManualMode(void);
 void UI_RunAlgoMode(void);
 void UI_RunDemoMode(void);
