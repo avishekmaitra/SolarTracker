@@ -10,7 +10,6 @@
 #include "Relay.h"
 #include "RTC.h"
 
-
 #define CHAR_TO_NUM     0x30
 #define START_DEMO      35
 #define SET_HOME        46
@@ -50,38 +49,34 @@ double UI_GetGoalAngle(void)
 void UI_RunHomeMode(void)
 {
     currentMode = HOME;
-    if(Keypad_GetKey() == RESETKEY)
-    {
-        return;
-    }
 
-    else if(Keypad_GetKey() == SET_MANUAL)
+    if(Keypad_GetKey() == SET_MANUAL)
     {
-        Keypad_ResetKey();
         LCD_Clear();
         currentMode = MANUAL;
         LCD_SetManualScreen();
+        Keypad_ResetKey();
         return;
     }
 
     else if(Keypad_GetKey() == SET_ALGO)
     {
-        Keypad_ResetKey();
         LCD_Clear();
         currentMode = ALGO;
         LCD_SetAlgoScreen();
         RTC_EnableInterrupt();
+        Keypad_ResetKey();
         return;
     }
 
     else if(Keypad_GetKey() == SET_DEMO)
     {
-        Keypad_ResetKey();
         LCD_Clear();
         currentMode = DEMO;
         LCD_SetDemoScreen();
         UI_SetGoalAngle(DEMO_GOAL_POS);
         finishFlag = false;
+        Keypad_ResetKey();
         return;
     }
     else
@@ -100,6 +95,28 @@ void UI_RunManualMode(void)
 void UI_RunAlgoMode(void)
 {
     currentMode = ALGO;
+
+    if(RTC_HasEventOccured())
+    {
+        RTC_ResetEventFlag();
+
+    }
+
+    if(Keypad_GetKey() == SET_HOME)
+    {
+        RTC_DisableInterrupt();
+        LCD_Clear();
+        Relay_Off();
+        currentMode = HOME;
+        LCD_SetHomeScreen();
+        Keypad_ResetKey();
+        return;
+    }
+    else
+    {
+        Keypad_ResetKey();
+        return;
+    }
 }
 
 void UI_RunDemoMode(void)
@@ -143,17 +160,17 @@ void UI_RunDemoMode(void)
     }
     else if(Keypad_GetKey() == START_DEMO)
     {
-        Keypad_ResetKey();
         finishFlag = false;
+        Keypad_ResetKey();
         return;
     }
     else if(Keypad_GetKey() == SET_HOME)
     {
-        Keypad_ResetKey();
         LCD_Clear();
         Relay_Off();
         currentMode = HOME;
         LCD_SetHomeScreen();
+        Keypad_ResetKey();
         return;
     }
     else

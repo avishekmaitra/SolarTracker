@@ -1,8 +1,7 @@
 #include "RTC.h"
 #include "msp.h"
-#include "global.h"
-#include <stdint.h>
 
+static bool minuteEventFlag = false;
 // MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 void RTC_Init(void)
 {
@@ -32,6 +31,21 @@ void RTC_EnableInterrupt(void)
 void RTC_DisableInterrupt(void)
 {
     NVIC->ISER[0] = 0 << ((RTC_C_IRQn) & 31);
+}
+
+void RTC_SetEventFlag(void)
+{
+    minuteEventFlag = true;
+}
+
+void RTC_ResetEventFlag(void)
+{
+    minuteEventFlag = false;
+}
+
+bool RTC_HasEventOccured(void)
+{
+    return minuteEventFlag;
 }
 
 void RTC_SetYear(uint16_t inputYear)
@@ -101,7 +115,8 @@ void RTC_C_IRQHandler(void)
     //Check if the fields are ready to read
     if (RTCCTL0 & RTCTEVIFG)
     {
-        // TODO Have function callback that uses the current time to access an array of angles
+        // Set flag
+        RTC_SetEventFlag();
 
         // Unlock and clear interrupt event
         RTCCTL0_H = RTCKEY_H ;

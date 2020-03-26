@@ -158,13 +158,13 @@ void keypad_setkey(void)                        //function that checks the rows 
 
 char Keypad_GetKey(void)                     //function that returns the key value
 {
-    hitFlag = 0;                                //reset hitFlag to 0 to enter the if statement in IRQ
     return key;
 }
 
 void Keypad_ResetKey(void)
 {
     key = RESETKEY;
+    hitFlag = 0;                             //not sure if we should reset here or in GetKey
 }
 
 void keypad_testkey(void)                      //test function to write key value to terminal
