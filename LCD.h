@@ -48,6 +48,7 @@ void LCD_Write_L3(char* string);            // write string to line 3
 void LCD_Write_L4(char* string);            // write string to line 4
 void LCD_Test(void);
 
+void LCD_SetWelcomeScreen(void);
 void LCD_SetStartScreen(void);
 void LCD_SetHomeScreen(void);
 void LCD_SetManualScreen(void);

@@ -90,6 +90,8 @@ void UI_RunHomeMode(void)
 void UI_RunManualMode(void)
 {
     currentMode = MANUAL;
+    // TODO Use state machine system to get it working
+    // Use code from Demo_W2 as basis
 }
 
 void UI_RunAlgoMode(void)
@@ -99,7 +101,9 @@ void UI_RunAlgoMode(void)
     if(RTC_HasEventOccured())
     {
         RTC_ResetEventFlag();
-
+        // TODO Using algorithm from Dolan, grab an angle depending on the day and time
+        // UI_SetGoalAngle(Dolan_Angle)
+        while(Relay_MoveToGoal());
     }
 
     if(Keypad_GetKey() == SET_HOME)
@@ -123,7 +127,23 @@ void UI_RunDemoMode(void)
 {
     currentMode = DEMO;
     LCD_Write_L3(ACCEL_GetAngle_String());
-    if(Keypad_GetKey() == RESETKEY)
+
+    if(Keypad_GetKey() == START_DEMO)
+    {
+        finishFlag = false;
+        Keypad_ResetKey();
+        return;
+    }
+    else if(Keypad_GetKey() == SET_HOME)
+    {
+        LCD_Clear();
+        Relay_Off();
+        currentMode = HOME;
+        LCD_SetHomeScreen();
+        Keypad_ResetKey();
+        return;
+    }
+    else
     {
         if(!finishFlag)
         {
@@ -156,25 +176,6 @@ void UI_RunDemoMode(void)
                 }
             }
         }
-        return;
-    }
-    else if(Keypad_GetKey() == START_DEMO)
-    {
-        finishFlag = false;
-        Keypad_ResetKey();
-        return;
-    }
-    else if(Keypad_GetKey() == SET_HOME)
-    {
-        LCD_Clear();
-        Relay_Off();
-        currentMode = HOME;
-        LCD_SetHomeScreen();
-        Keypad_ResetKey();
-        return;
-    }
-    else
-    {
         Keypad_ResetKey();
         return;
     }
@@ -187,7 +188,7 @@ void ui_evaluateKey(char manual_angle0, char manual_angle1, char manual_angle2)
     uint8_t i;
     int8_t angleVal = '0';
     char myangle[3];
-    myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the arrray
+    myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the array
     myangle[1] = manual_angle1;
     myangle[2] = manual_angle2;
     for (i = 0; i < 3; i++)

@@ -50,12 +50,11 @@ void main(void)
 	// TODO Use set functions in RTC to adjust time registers
 	// TODO Call RTC_Start() after entering information
 
-	// TODO Have User select first mode
-	// TODO Prepare all modules for the selected mode mode
+    LCD_SetWelcomeScreen();
+	// TODO generate daily angles using Dolan algorithm
 
-    //SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
-
-	UI_SetMode(MANUAL);
+	LCD_SetHomeScreen();
+	UI_SetMode(HOME);
 
     while (1)
     {
