@@ -10,6 +10,7 @@
 #include "Relay.h"
 #include "RTC.h"
 
+#define EMPTY_CHAR      '?'
 #define CHAR_TO_NUM     0x30
 #define START_DEMO      35
 #define SET_HOME        46
@@ -18,6 +19,11 @@
 #define SET_DEMO        67
 #define DEMO_GOAL_POS   60.0
 #define DEMO_GOAL_NEG   -60.0
+#define NEGATIVE_FLAG   'A'
+#define NEGATIVE_SIGN   '-'
+#define NO_INPUT        RESETKEY
+#define ENTER           '#'
+#define LCD_WRITE_COUNT 1000
 
 // Variables for all modes
 static int8_t goalAngle;
@@ -25,6 +31,18 @@ static mode_t currentMode;
 
 // Variables for Demo mode
 static bool finishFlag = false;
+
+// Variables for Manual Mode
+// The state also corresponds to the length of the input
+enum manualState{
+    ZERO_STATE,
+    FIRST_STATE,
+    SECOND_STATE,
+    THIRD_STATE};
+
+static uint8_t currentState = ZERO_STATE;
+static int8_t currentInput = 0;
+static bool negativeFlag = false;
 
 void UI_SetMode(mode_t inputMode)
 {
@@ -90,8 +108,133 @@ void UI_RunHomeMode(void)
 void UI_RunManualMode(void)
 {
     currentMode = MANUAL;
-    // TODO Use state machine system to get it working
-    // Use code from Demo_W2 as basis
+    if(Keypad_GetKey() == SET_HOME)
+    {
+        LCD_Clear();
+        Relay_Off();
+        currentMode = HOME;
+        LCD_SetHomeScreen();
+        Keypad_ResetKey();
+        return;
+    }
+    else if(Keypad_GetKey() == NO_INPUT)
+    {
+        Keypad_ResetKey();
+        return;
+    }
+    else
+    {
+        if(currentState == ZERO_STATE)
+        {
+            LCD_Cursor_Location(0x0D);
+            if(Keypad_GetKey() == NEGATIVE_FLAG)
+            {
+                LCD_Write_Char(NEGATIVE_SIGN);
+                negativeFlag = true;
+                currentInput = 0;
+            }
+            else
+            {
+                LCD_Write_Char(Keypad_GetKey());
+                negativeFlag = false;
+                currentInput = Keypad_GetKey()-CHAR_TO_NUM;
+            }
+
+            // Prep for next state
+            currentState = FIRST_STATE;
+            Keypad_ResetKey();
+            return;
+        }
+        if(currentState == FIRST_STATE)
+        {
+            if(Keypad_GetKey() == ENTER)
+            {
+                double myGoal;
+                uint16_t writeCount;
+
+                myGoal = (double) currentInput;
+                UI_SetGoalAngle(myGoal);
+
+                writeCount = 0;
+                while(Relay_MoveToGoal())
+                {
+                    if(writeCount == LCD_WRITE_COUNT)
+                    {
+                        writeCount = 0;
+                        LCD_Write_L3(ACCEL_GetAngle_String());
+                    }
+                    else
+                    {
+                        writeCount = writeCount + 1;
+                    }
+                }
+
+                // Reset variables
+                LCD_Clear();
+                LCD_SetManualScreen();
+                LCD_Write_L3(ACCEL_GetAngle_String());
+                currentState = ZERO_STATE;
+                negativeFlag = false;
+                currentInput = 0;
+                Keypad_ResetKey();
+                return;
+            }
+            // This is wrong, need to change depending on neg flag
+            else
+            {
+                LCD_Write_Char(Keypad_GetKey());
+                currentInput = (currentInput*10)+ (Keypad_GetKey()-CHAR_TO_NUM);
+
+                // Prep for next state
+                currentState = SECOND_STATE;
+                Keypad_ResetKey();
+                return;
+            }
+        }
+        if(currentState == SECOND_STATE)
+        {
+            if(Keypad_GetKey() == ENTER)
+            {
+                double myGoal;
+                uint16_t writeCount;
+
+                if(negativeFlag)
+                {
+                    myGoal = (double) (-1*currentInput);
+                }
+                else
+                {
+                    myGoal = (double) currentInput;
+                }
+
+                UI_SetGoalAngle(myGoal);
+
+                writeCount = 0;
+                while(Relay_MoveToGoal())
+                {
+                    if(writeCount == LCD_WRITE_COUNT)
+                    {
+                        writeCount = 0;
+                        LCD_Write_L3(ACCEL_GetAngle_String());
+                    }
+                    else
+                    {
+                        writeCount = writeCount + 1;
+                    }
+                }
+
+                // Reset variables
+                LCD_Clear();
+                LCD_SetManualScreen();
+                LCD_Write_L3(ACCEL_GetAngle_String());
+                currentState = ZERO_STATE;
+                negativeFlag = false;
+                currentInput = 0;
+                Keypad_ResetKey();
+                return;
+            }
+        }
+    }
 }
 
 void UI_RunAlgoMode(void)
