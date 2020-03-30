@@ -39,10 +39,40 @@ enum manualState{
     FIRST_STATE,
     SECOND_STATE,
     THIRD_STATE};
-
 static uint8_t currentState = ZERO_STATE;
 static int8_t currentInput = 0;
 static bool negativeFlag = false;
+
+// Helper functions
+void ui_goToGoal_manual(double inputGoal)
+{
+    uint16_t writeCount;
+    UI_SetGoalAngle(inputGoal);
+    writeCount = 0;
+
+    while(Relay_MoveToGoal())
+    {
+        if(writeCount == LCD_WRITE_COUNT)
+        {
+            writeCount = 0;
+            LCD_Write_L3(ACCEL_GetAngle_String());
+        }
+        else
+        {
+            writeCount = writeCount + 1;
+        }
+    }
+}
+
+void ui_reset_manual(void)
+{
+    LCD_Clear();
+    LCD_SetManualScreen();
+    LCD_Write_L3(ACCEL_GetAngle_String());
+    currentState = ZERO_STATE;
+    negativeFlag = false;
+    currentInput = 0;
+}
 
 void UI_SetMode(mode_t inputMode)
 {
@@ -107,6 +137,7 @@ void UI_RunHomeMode(void)
 
 void UI_RunManualMode(void)
 {
+    // Input range is from -90 to 90 degrees
     currentMode = MANUAL;
     if(Keypad_GetKey() == SET_HOME)
     {
@@ -150,40 +181,27 @@ void UI_RunManualMode(void)
             if(Keypad_GetKey() == ENTER)
             {
                 double myGoal;
-                uint16_t writeCount;
 
                 myGoal = (double) currentInput;
-                UI_SetGoalAngle(myGoal);
-
-                writeCount = 0;
-                while(Relay_MoveToGoal())
-                {
-                    if(writeCount == LCD_WRITE_COUNT)
-                    {
-                        writeCount = 0;
-                        LCD_Write_L3(ACCEL_GetAngle_String());
-                    }
-                    else
-                    {
-                        writeCount = writeCount + 1;
-                    }
-                }
+                ui_goToGoal_manual(myGoal);
 
                 // Reset variables
-                LCD_Clear();
-                LCD_SetManualScreen();
-                LCD_Write_L3(ACCEL_GetAngle_String());
-                currentState = ZERO_STATE;
-                negativeFlag = false;
-                currentInput = 0;
+                ui_reset_manual();
                 Keypad_ResetKey();
                 return;
             }
-            // This is wrong, need to change depending on neg flag
             else
             {
                 LCD_Write_Char(Keypad_GetKey());
-                currentInput = (currentInput*10)+ (Keypad_GetKey()-CHAR_TO_NUM);
+                // Need to adjust input depending on negativity
+                if(negativeFlag)
+                {
+                    currentInput = Keypad_GetKey()-CHAR_TO_NUM;
+                }
+                else
+                {
+                    currentInput = (currentInput*10) + (Keypad_GetKey()-CHAR_TO_NUM);
+                }
 
                 // Prep for next state
                 currentState = SECOND_STATE;
@@ -196,7 +214,6 @@ void UI_RunManualMode(void)
             if(Keypad_GetKey() == ENTER)
             {
                 double myGoal;
-                uint16_t writeCount;
 
                 if(negativeFlag)
                 {
@@ -207,29 +224,42 @@ void UI_RunManualMode(void)
                     myGoal = (double) currentInput;
                 }
 
-                UI_SetGoalAngle(myGoal);
-
-                writeCount = 0;
-                while(Relay_MoveToGoal())
-                {
-                    if(writeCount == LCD_WRITE_COUNT)
-                    {
-                        writeCount = 0;
-                        LCD_Write_L3(ACCEL_GetAngle_String());
-                    }
-                    else
-                    {
-                        writeCount = writeCount + 1;
-                    }
-                }
+                ui_goToGoal_manual(myGoal);
 
                 // Reset variables
-                LCD_Clear();
-                LCD_SetManualScreen();
-                LCD_Write_L3(ACCEL_GetAngle_String());
-                currentState = ZERO_STATE;
-                negativeFlag = false;
-                currentInput = 0;
+                ui_reset_manual();
+                Keypad_ResetKey();
+                return;
+            }
+            else
+            {
+                LCD_Write_Char(Keypad_GetKey());
+                // If third entry, value must be negative
+                currentInput = -1 * (currentInput*10) + (Keypad_GetKey()-CHAR_TO_NUM);
+
+                // Prep for next state
+                currentState = THIRD_STATE;
+                Keypad_ResetKey();
+                return;
+            }
+        }
+        if (currentState == THIRD_STATE)
+        {
+            if(Keypad_GetKey() == ENTER)
+            {
+                double myGoal;
+
+                // Current input has already been made negative
+                myGoal = (double) currentInput;
+                ui_goToGoal_manual(myGoal);
+
+                // Reset variables
+                ui_reset_manual();
+                Keypad_ResetKey();
+                return;
+            }
+            else
+            {
                 Keypad_ResetKey();
                 return;
             }
@@ -321,132 +351,5 @@ void UI_RunDemoMode(void)
         }
         Keypad_ResetKey();
         return;
-    }
-}
-
-void ui_evaluateKey(char manual_angle0, char manual_angle1, char manual_angle2)
-{
-    double setAngle;
-    uint8_t countQs;
-    uint8_t i;
-    int8_t angleVal = '0';
-    char myangle[3];
-    myangle[0] = manual_angle0;                                                 //when enter is pressed put values into the array
-    myangle[1] = manual_angle1;
-    myangle[2] = manual_angle2;
-    for (i = 0; i < 3; i++)
-    {
-        if (myangle[i] == '?')                                                          //counts question marks left after user inputs angle
-        {
-            countQs += 1;
-        }
-    }
-    if (countQs == 0)
-    {
-        if (myangle[0] == 'A')                                                        //negative angle
-        {
-           uint8_t ones;
-           uint8_t tens;
-           tens = myangle[1] - CHAR_TO_NUM;
-           ones = myangle[2] - CHAR_TO_NUM;
-           angleVal = (-1)*(tens*(10) + ones);
-       }
-    }
-    if (countQs == 1)                                                               //case for 1 ? => num,num or A,num or           error if A,A or num,A
-    {
-        if (myangle[0] == 'A')                                                        //negative angle -0 to -9
-        {
-            uint8_t ones;
-            ones = myangle[1] - CHAR_TO_NUM;
-            angleVal = -1*(ones);
-        }
-        else                                                                        //positive angle 0 to 90
-        {
-            uint8_t ones;
-            uint8_t tens;
-            ones = myangle[1] - CHAR_TO_NUM;
-            tens = myangle[0] - CHAR_TO_NUM;
-            angleVal = ((tens*10) + ones);
-        }
-    }
-    if (countQs == 2)                                                                             //positive angle 0 to 9
-    {
-        uint8_t ones;
-        ones = myangle[0] - CHAR_TO_NUM;
-        angleVal = ones;
-    }
-    setAngle = (double)angleVal;
-    UI_SetGoalAngle(setAngle);
-}
-
-void Demo_W2(void)                                                              //will change to void Manual_Input(void) after demo to dolan
-{                                                            //for if statements in the other cases
-    char manual_angle0;
-    char manual_angle1;
-    char manual_angle2;
-    manual_angle0 = '?';
-    manual_angle1 = '?';
-    manual_angle2 = '?';
-//    int8_t angleVal = '0';                                                        //# of question marks left in array (non press) uint8t
-
-    LCD_Cursor_Location(0x0D);
-    char myKey;
-
-    //cycle waiting for first angle input
-    while(Keypad_GetKey() == RESETKEY);
-    myKey = Keypad_GetKey();                                            //enter first number of angle
-    Keypad_ResetKey();
-    manual_angle0 = myKey;
-    LCD_Write_Char(manual_angle0);
-
-    //cycle waiting for second angle input
-    while(Keypad_GetKey() == RESETKEY);
-    myKey = Keypad_GetKey();                                            //enter 2nd number of angle
-    Keypad_ResetKey();
-    if (myKey != '#')
-    {
-        manual_angle1 = myKey;
-        LCD_Write_Char(manual_angle1);
-    }
-    else
-    {
-        ui_evaluateKey(manual_angle0, manual_angle1, manual_angle2);
-        while(1)
-        {
-            Relay_MoveToGoal();
-            delay_ms(250,FREQ_24_MHZ);
-            LCD_Write_L3(ACCEL_GetAngle_String());
-        }
-    }
-
-    //cycle waiting for third angle input
-    while(Keypad_GetKey() == RESETKEY);
-    myKey = Keypad_GetKey();
-    Keypad_ResetKey();
-    if (myKey != '#')
-    {
-        manual_angle2 = myKey;                                                          //enter 3rd number of angle
-        LCD_Write_Char(manual_angle2);
-
-    }
-    else
-    {
-        ui_evaluateKey(manual_angle0, manual_angle1, manual_angle2);
-        while(1)
-        {
-            Relay_MoveToGoal();
-            delay_ms(250,FREQ_24_MHZ);
-            LCD_Write_L3(ACCEL_GetAngle_String());
-        }
-    }
-    while(Keypad_GetKey() == RESETKEY);
-    myKey = Keypad_GetKey();
-    Keypad_ResetKey();
-    ui_evaluateKey(manual_angle0, manual_angle1, manual_angle2);
-    while(1)
-    {
-        Relay_MoveToGoal();
-        delay_ms(250,FREQ_24_MHZ);
-        LCD_Write_L3(ACCEL_GetAngle_String());
     }
 }
