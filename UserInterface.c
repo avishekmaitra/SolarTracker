@@ -10,7 +10,6 @@
 #include "Relay.h"
 #include "RTC.h"
 
-#define EMPTY_CHAR      '?'
 #define CHAR_TO_NUM     0x30
 #define START_DEMO      35
 #define SET_HOME        46
@@ -23,7 +22,13 @@
 #define NEGATIVE_SIGN   '-'
 #define NO_INPUT        RESETKEY
 #define ENTER           '#'
+#define MILLENNIUM      2000
 #define LCD_WRITE_COUNT 1000
+#define LCD_MONTH_LOC   0x4D
+#define LCD_DAY_LOC     0x50
+#define LCD_YEAR_LOC    0x53
+#define LCD_HOUR_LOC    0x24
+#define LCD_MINUTE_LOC  0x27
 
 // Variables for all modes
 static int8_t goalAngle;
@@ -94,6 +99,100 @@ double UI_GetGoalAngle(void)
     return goalAngle;
 }
 
+void UI_EnterDateTime(void)
+{
+    char inputKey;
+    uint8_t month;
+    uint8_t day;
+    uint16_t year;
+
+    uint8_t hour;
+    uint8_t minute;
+
+    // Get first month input
+    LCD_SetCursorLocation(LCD_MONTH_LOC);
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    month = (inputKey-CHAR_TO_NUM) * 10;
+    Keypad_ResetKey();
+
+    // Get second month input
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    month = month + (inputKey-CHAR_TO_NUM);
+    RTC_SetMonth(month);
+    Keypad_ResetKey();
+
+    // Get first day input
+    LCD_SetCursorLocation(LCD_DAY_LOC);
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    day = (inputKey-CHAR_TO_NUM) * 10;
+    Keypad_ResetKey();
+
+    // Get second day input
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    day = day + (inputKey-CHAR_TO_NUM);
+    RTC_SetDay(day);
+    Keypad_ResetKey();
+
+    // Get first year input
+    LCD_SetCursorLocation(LCD_YEAR_LOC);
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    year = MILLENNIUM;
+    year = year + ((inputKey-CHAR_TO_NUM) * 10);
+    Keypad_ResetKey();
+
+    // Get second year input
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    year = year + (inputKey-CHAR_TO_NUM);
+    RTC_SetYear(year);
+    Keypad_ResetKey();
+
+    // Get first hour input -> NEEDS TO BE MILITARY TIME
+    LCD_SetCursorLocation(LCD_HOUR_LOC);
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    hour = (inputKey-CHAR_TO_NUM) * 10;
+    Keypad_ResetKey();
+
+    // Get second hour input -> NEEDS TO BE MILITARY TIME
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    hour = hour + (inputKey-CHAR_TO_NUM);
+    RTC_SetHour(hour);
+    Keypad_ResetKey();
+
+    // Get first minute input
+    LCD_SetCursorLocation(LCD_MINUTE_LOC);
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    minute = (inputKey-CHAR_TO_NUM) * 10;
+    Keypad_ResetKey();
+
+    // Get second day input
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    LCD_Write_Char(inputKey);
+    minute = minute + (inputKey-CHAR_TO_NUM);
+    RTC_SetMinute(minute);
+    Keypad_ResetKey();
+
+    // Start RTC with all the input information
+    RTC_Start();
+}
 void UI_RunHomeMode(void)
 {
     currentMode = HOME;
@@ -157,7 +256,7 @@ void UI_RunManualMode(void)
     {
         if(currentState == ZERO_STATE)
         {
-            LCD_Cursor_Location(0x0D);
+            LCD_SetCursorLocation(0x0D);
             if(Keypad_GetKey() == NEGATIVE_FLAG)
             {
                 LCD_Write_Char(NEGATIVE_SIGN);

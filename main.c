@@ -35,9 +35,8 @@ void main(void)
 
     __enable_irq();
 
-	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
+	// System Initialization
 	RTC_Init();
-	initUARTWriteOnly();
 	I2C_Init(ACCEL_ADDRESS);
 	Keypad_Init();
 	LCD_Init();
@@ -46,13 +45,13 @@ void main(void)
 	LCD_Clear();
 
 	LCD_SetStartScreen();
-    // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
-	// TODO Use set functions in RTC to adjust time registers
-	// TODO Call RTC_Start() after entering information
+	UI_EnterDateTime();
 
-    LCD_SetWelcomeScreen();
 	// TODO generate daily angles using Dolan algorithm
+    LCD_SetWelcomeScreen();
+    // Generate Angles based on Dolan algorithm
 
+    // Prep for super loop
 	LCD_SetHomeScreen();
 	UI_SetMode(HOME);
 

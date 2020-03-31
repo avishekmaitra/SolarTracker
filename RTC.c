@@ -14,6 +14,7 @@ void RTC_Init(void)
     // enable RTC read ready interrupt
     // enable RTC time event interrupt every minute
     RTCSEC = 0x2D;   // Hard-code in seconds
+    RTCDAY = 0x01;   // Hard-code in days
 }
 
 // MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
