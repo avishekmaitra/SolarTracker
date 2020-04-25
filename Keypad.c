@@ -25,6 +25,7 @@ void Keypad_Init(void)
    P2 -> OUT |= (R0|R1|R2|R3);                  // sets it high
 
    NVIC -> ISER[1] = 1 << ((PORT5_IRQn) & 31);
+   Keypad_ResetKey();
 }
 
 void PORT5_IRQHandler(void)                     //interrupt handler on Port 5
@@ -69,7 +70,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 65;                           //ASCII "A"
         }
-        //hitflag = 1;
+        hitFlag = 1;
         return;                                 //ensures that no other digits are pressed
     }
     P2 -> OUT &= ~(R0);                         //clears row0
@@ -96,7 +97,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 66;                           //ASCII "B"
         }
-        //hitFlag = 1;
+        hitFlag = 1;
         return;
     }
     P2 -> OUT &= ~(R1);                         //clears row1
@@ -123,7 +124,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 67;                           //ASCII "C"
         }
-       // hitFlag = 1;
+        hitFlag = 1;
         return;
     }
     P2 -> OUT &= ~(R2);                         //clears row2
@@ -150,7 +151,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 46;                           //ASCII "."
         }
-       // hitFlag = 1;
+        hitFlag = 1;
         return;
     }
     P2 -> OUT &= ~(R3);                         //clears row3

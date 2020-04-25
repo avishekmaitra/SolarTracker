@@ -57,6 +57,7 @@
 
 // Static variables
 static double offset_z = 0.0;
+static char angle_str[MAX_LENGTH];
 
 // Helper Functions
 void swap(int16_t *p,int16_t *q)
@@ -216,47 +217,44 @@ char* ACCEL_GetAngle_String(void)
     int8_t angleVal;
     angleVal = (int8_t)round(ACCEL_GetAngle_Double());
 
-    // Make space for angle string
-    uint8_t size;
-    size = MAX_LENGTH;
-    char* str = (char*)malloc(sizeof(char)*size);
-    *(str+0) = '\0';
-    *(str+1) = '\0';
-    *(str+2) = '\0';
-    *(str+3) = '\0';
+    // Clear previous input
+    angle_str[0] = '\0';
+    angle_str[1] = '\0';
+    angle_str[2] = '\0';
+    angle_str[3] = '\0';
 
     if(angleVal<=90 && angleVal >=10)
     {
-        *(str+0) = ' ';
-        *(str+1) = (angleVal/10) + TO_CHAR;
-        *(str+2) = (angleVal%10) + TO_CHAR;
+        angle_str[0] = ' ';
+        angle_str[1] = (angleVal/10) + TO_CHAR;
+        angle_str[2] = (angleVal%10) + TO_CHAR;
     }
     else if(angleVal<10 && angleVal>=0)
     {
-        *(str+0) = ' ';
-        *(str+1) = ' ';
-        *(str+2) = (angleVal%10) + TO_CHAR;;
+        angle_str[0] = ' ';
+        angle_str[1] = ' ';
+        angle_str[2] = (angleVal%10) + TO_CHAR;;
     }
     else if(angleVal<0 && angleVal>-10)
     {
         angleVal = angleVal*-1;
-        *(str+0) = '-';
-        *(str+1) = ' ';
-        *(str+2) = (angleVal%10) + TO_CHAR;
+        angle_str[0] = '-';
+        angle_str[1] = ' ';
+        angle_str[2] = (angleVal%10) + TO_CHAR;
     }
     else if(angleVal>=-90)
     {
         angleVal = angleVal*-1;
-        *(str+0) = '-';
-        *(str+1) = (angleVal/10) + TO_CHAR;
-        *(str+2) = (angleVal%10) + TO_CHAR;
+        angle_str[0] = '-';
+        angle_str[1] = (angleVal/10) + TO_CHAR;
+        angle_str[2] = (angleVal%10) + TO_CHAR;
     }
     else
     {
-        *(str+0) = 'I';
-        *(str+1) = 'N';
-        *(str+2) = 'V';
+        angle_str[0] = 'I';
+        angle_str[1] = 'N';
+        angle_str[2] = 'V';
     }
 
-    return str;
+    return angle_str;
 }
