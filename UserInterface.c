@@ -61,10 +61,12 @@ void ui_goToGoal_manual(double inputGoal)
         {
             writeCount = 0;
             LCD_Write_L3(ACCEL_GetAngle_String());
+            Keypad_ResetKey();                                  //added this 5/1/20 to make sure keypad is getting reset
         }
         else
         {
             writeCount = writeCount + 1;
+            Keypad_ResetKey();                                  //added this 5/1/20 to make sure keypad is getting reset
         }
     }
 }
@@ -108,6 +110,8 @@ void UI_EnterDateTime(void)
 
     uint8_t hour;
     uint8_t minute;
+
+    Keypad_ResetKey();                                  //make sure hitflag starts as 0
 
     // Get first month input
     LCD_SetCursorLocation(LCD_MONTH_LOC);
@@ -238,6 +242,7 @@ void UI_RunManualMode(void)
 {
     // Input range is from -90 to 90 degrees
     currentMode = MANUAL;
+    Keypad_ResetKey();                                              //just to make sure hitflag starts as 0
     if(Keypad_GetKey() == SET_HOME)
     {
         LCD_Clear();
