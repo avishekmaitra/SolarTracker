@@ -157,7 +157,7 @@ void LCD_SetHomeScreen(void)                       //HOME MODE CHOICE SCREEN
     LCD_Write_L1("A: Manual Entry     ");   //A, B, or C key press will decide next LCD screen
     LCD_Write_L2("B: Algorithm Based  ");
     LCD_Write_L3("C: Demo Mode        ");
-    LCD_Write_L4("*Back               ");
+    LCD_Write_L4("                    ");
 }
 
 void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
@@ -165,23 +165,7 @@ void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT 
     LCD_Write_L1("Enter Angle:  ___deg");
     LCD_Write_L2("                    ");
     LCD_Write_L3("Current Angle:___deg");
-    LCD_Write_L4("*Back  .Home  #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
-}
-
-void A2_MANUAL(void)                        //A_2: MANUAL ENTRY ANGLE UPDATE SCREEN
-{
-    LCD_Write_L1("Present Angle:___deg");
-    LCD_Write_L2("                    ");
-    LCD_Write_L3("Done.               ");   //only displayed when reach desired angle
-    LCD_Write_L4("*Back  .Home        ");
-}
-
-void B1_ALGORITHM(void)                     //B_1: ALGORITHM BASED ENTRY SCREEN
-{
-    LCD_Write_L1("                    ");
-    LCD_Write_L2("                    ");
-    LCD_Write_L3("                    ");
-    LCD_Write_L4("*Back  .Home  #Enter");
+    LCD_Write_L4(".Home         #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
 }
 
 void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
@@ -189,29 +173,13 @@ void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
     LCD_Write_L1("Present Time:__:__  ");
     LCD_Write_L2("Present Angle:___deg");
     LCD_Write_L3("                    ");   //only displayed when reach desired angle
-    LCD_Write_L4("*Back  .Home        ");
+    LCD_Write_L4(".Home               ");
 }
 
 void LCD_SetDemoScreen(void)                 //C_1: DEMO choice screen
 {
-    LCD_Write_L1("Choose Demo Speed:  ");
-    LCD_Write_L2("A, B, C             ");
-    LCD_Write_L3("                    ");
-    LCD_Write_L4("       .Home  #Enter");
-}
-
-void C2_DEMO(void)                          //C_2: DEMO UPDATE SCREEN
-{
-    LCD_Write_L1("Percent Complete:__%");
-    LCD_Write_L2("Present Angle:___deg");
-    LCD_Write_L3("Done.               ");   //only displayed when reach desired angle
-    LCD_Write_L4("*Back          .Home");
-}
-
-void LCD_Test(void)                         //write LCD Screens Test
-{
-    LCD_Write_L1("This now kinda works");
-    LCD_Write_L2("This now kindb works");
-    LCD_Write_L3("This now kindc works");
-    LCD_Write_L4("This now kindd works");
+    LCD_Write_L1("Running Demo...     ");
+    LCD_Write_L2("                    ");
+    LCD_Write_L3("Angle:              ");
+    LCD_Write_L4(".Home         #Enter");
 }

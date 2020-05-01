@@ -23,7 +23,7 @@
 #define NO_INPUT        RESETKEY
 #define ENTER           '#'
 #define MILLENNIUM      2000
-#define LCD_WRITE_COUNT 1000
+#define LCD_WRITE_COUNT 100
 #define LCD_MONTH_LOC   0x4D
 #define LCD_DAY_LOC     0x50
 #define LCD_YEAR_LOC    0x53
@@ -430,6 +430,7 @@ void UI_RunDemoMode(void)
                 else
                 {
                     Relay_Out();
+                    LCD_Write_L3(ACCEL_GetAngle_String());
                     finishFlag = false;
                 }
             }
@@ -444,6 +445,7 @@ void UI_RunDemoMode(void)
                 else
                 {
                     Relay_In();
+                    LCD_Write_L3(ACCEL_GetAngle_String());
                     finishFlag = false;
                 }
             }
