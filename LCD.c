@@ -8,6 +8,7 @@
 #include "msp.h"
 #include "delay.h"
 #include "LCD.h"
+#define TO_CHAR 0x30
 
 void LCD_Init(void)                         //setup GPIO pins
 {
@@ -93,7 +94,7 @@ void LCD_Write_String(char* string)
     }
 }
 
-void LCD_Cursor_Location(char place)        //set cursor to DDRAM location as defined
+void LCD_SetCursorLocation(char place)        //set cursor to DDRAM location as defined
 {                                           //by the STU data sheet for 2-line mode
     char myCommand = ENABLE_MOVE + place;
     LCD_Command(myCommand);
@@ -101,25 +102,25 @@ void LCD_Cursor_Location(char place)        //set cursor to DDRAM location as de
 
 void LCD_Write_L1(char* string)
 {
-    LCD_Cursor_Location(0x00);              //set cursor location to DDRAM address 0x00, line 1
+    LCD_SetCursorLocation(0x00);              //set cursor location to DDRAM address 0x00, line 1
     LCD_Write_String(string);               //string to be assigned to line 1
 }
 
 void LCD_Write_L2(char* string)
 {
-    LCD_Cursor_Location(0x40);              //set cursor location to DDRAM address 0x40, line 2
+    LCD_SetCursorLocation(0x40);              //set cursor location to DDRAM address 0x40, line 2
     LCD_Write_String(string);               //string to be assigned to line 2
 }
 
 void LCD_Write_L3(char* string)
 {
-    LCD_Cursor_Location(0x14);              //set cursor location to DDRAM address 0x14, line 3
+    LCD_SetCursorLocation(0x14);              //set cursor location to DDRAM address 0x14, line 3
     LCD_Write_String(string);               //string to be assigned to line 3
 }
 
 void LCD_Write_L4(char* string)
 {
-    LCD_Cursor_Location(0x54);              //set cursor location to DDRAM address 0x54, line 4
+    LCD_SetCursorLocation(0x54);              //set cursor location to DDRAM address 0x54, line 4
     LCD_Write_String(string);               //string to be assigned to line 4
 }
 
@@ -130,20 +131,28 @@ void nybble(void)
     P3-> OUT &= ~EN;                        //enable low
 }
 
-void StartScreen(void)                      //STARTING SCREEN
+void LCD_SetWelcomeScreen(void)
+{
+    LCD_Write_L1("Welcome!            ");
+    LCD_Write_L2("                    ");
+    LCD_Write_L3("Generating angles...");   //only displayed when reach desired angle
+    LCD_Write_L4("                    ");
+}
+
+void LCD_SetStartScreen(void)                      //STARTING SCREEN
 {
     LCD_Write_L1("Startup             ");
-    LCD_Write_L2("Enter Date:__/__/__ ");   //remember: only have 20 char spaces
-    LCD_Write_L3("Enter Time:__:__    ");   //military time
+    LCD_Write_L2("Enter Date: __/__/__");   //remember: only have 20 char spaces
+    LCD_Write_L3("Enter Time:    __:__");   //military time
     LCD_Write_L4("*Clear        #Enter");
-    LCD_Cursor_Location(0x4B);              //set cursor to first input blank space
+    LCD_SetCursorLocation(0x4B);              //set cursor to first input blank space
     //getkeypress function
     //replace "_" with keypress
     //once key is pressed, will cursor automatically move right, or do we need to define next location?
     //needs to wait for either Clear or Enter press before changing screens
 }
 
-void HomeScreen(void)                       //HOME MODE CHOICE SCREEN
+void LCD_SetHomeScreen(void)                       //HOME MODE CHOICE SCREEN
 {
     LCD_Write_L1("A: Manual Entry     ");   //A, B, or C key press will decide next LCD screen
     LCD_Write_L2("B: Algorithm Based  ");
@@ -151,11 +160,11 @@ void HomeScreen(void)                       //HOME MODE CHOICE SCREEN
     LCD_Write_L4("*Back               ");
 }
 
-void A1_MANUAL(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
+void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
 {
-    LCD_Write_L1("                    ");
-    LCD_Write_L2("Enter Angle: ___deg ");
-    LCD_Write_L3("                    ");
+    LCD_Write_L1("Enter Angle:  ___deg");
+    LCD_Write_L2("                    ");
+    LCD_Write_L3("Current Angle:___deg");
     LCD_Write_L4("*Back  .Home  #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
 }
 
@@ -175,15 +184,15 @@ void B1_ALGORITHM(void)                     //B_1: ALGORITHM BASED ENTRY SCREEN
     LCD_Write_L4("*Back  .Home  #Enter");
 }
 
-void B2_ALGORITHM(void)                     //B_2: ALGORITHM ANGLE UPDATE SCREEN
+void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
 {
     LCD_Write_L1("Present Time:__:__  ");
     LCD_Write_L2("Present Angle:___deg");
-    LCD_Write_L3("Done.               ");   //only displayed when reach desired angle
+    LCD_Write_L3("                    ");   //only displayed when reach desired angle
     LCD_Write_L4("*Back  .Home        ");
 }
 
-void C1_DEMO(void)                          //C_1: DEMO choice screen
+void LCD_SetDemoScreen(void)                 //C_1: DEMO choice screen
 {
     LCD_Write_L1("Choose Demo Speed:  ");
     LCD_Write_L2("A, B, C             ");
@@ -196,7 +205,7 @@ void C2_DEMO(void)                          //C_2: DEMO UPDATE SCREEN
     LCD_Write_L1("Percent Complete:__%");
     LCD_Write_L2("Present Angle:___deg");
     LCD_Write_L3("Done.               ");   //only displayed when reach desired angle
-    LCD_Write_L4("*Back          !Home");
+    LCD_Write_L4("*Back          .Home");
 }
 
 void LCD_Test(void)                         //write LCD Screens Test

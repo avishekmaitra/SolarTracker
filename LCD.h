@@ -41,20 +41,21 @@ void LCD_Command(unsigned char command);    // set LCD properties
 void LCD_Write_Char(unsigned char letter);  // write character to LCD
 void LCD_Write_String(char* string);        // write string to LCD
 void LCD_write(void);                       // move cursor top left
-void LCD_Cursor_Location(char place);       // set DDRAM location address
+void LCD_SetCursorLocation(char place);       // set DDRAM location address
 void LCD_Write_L1(char* string);            // write string to line 1
 void LCD_Write_L2(char* string);            // write string to line 2
 void LCD_Write_L3(char* string);            // write string to line 3
 void LCD_Write_L4(char* string);            // write string to line 4
 void LCD_Test(void);
 
-void StartScreen(void);
-void HomeScreen(void);
-void A1_MANUAL(void);
+void LCD_SetWelcomeScreen(void);
+void LCD_SetStartScreen(void);
+void LCD_SetHomeScreen(void);
+void LCD_SetManualScreen(void);
 void A2_MANUAL(void);
 void B1_ALGORITHM(void);
-void B2_ALGORITHM(void);
-void C1_DEMO(void);
+void LCD_SetAlgoScreen(void);
+void LCD_SetDemoScreen(void);
 void C2_DEMO(void);
 
 #endif /* LCD_H_ */

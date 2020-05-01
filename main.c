@@ -21,7 +21,9 @@
 #include "RTC.h"
 #include "Keypad.h"
 #include <stdint.h>
+#include "Relay.h"
 #include "UART.h"
+#include "UserInterface.h"
 
 void main(void)
 {
@@ -33,23 +35,44 @@ void main(void)
 
     __enable_irq();
 
-	// MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
+	// System Initialization
 	RTC_Init();
 	I2C_Init(ACCEL_ADDRESS);
 	Keypad_Init();
 	LCD_Init();
 	ACCEL_Init();
-	ACCEL_Calibrate();
+	Relay_Init();
 	LCD_Clear();
-    // TODO HAVE USER SET CURRENT YEAR,MONTH,DAY,TIME
 
-	// MAKE SURE TO CALL THIS FUNCTION WHEN WE WANT TO START KEEPING TRACK OF TIME
-	// RTC_Start();
+	LCD_SetStartScreen();
+	UI_EnterDateTime();
 
-    SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;
+	// TODO generate daily angles using Dolan algorithm
+    LCD_SetWelcomeScreen();
+    // Generate Angles based on Dolan algorithm
+
+    // Prep for super loop
+	LCD_SetHomeScreen();
+	UI_SetMode(HOME);
 
     while (1)
     {
-        __sleep();
+        switch (UI_GetMode())
+        {
+            case HOME:
+                UI_RunHomeMode();
+                break;
+            case MANUAL:
+                UI_RunManualMode();
+                break;
+            case ALGO:
+                UI_RunAlgoMode();
+                break;
+            case DEMO:
+                UI_RunDemoMode();
+                break;
+            default:
+                break;
+        }
     }
 }

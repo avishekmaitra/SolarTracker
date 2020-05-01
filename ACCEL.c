@@ -9,8 +9,8 @@
 #include "delay.h"
 #include "I2C.h"
 #include "LCD.h"
-#include <math.h>
 #include "msp.h"
+#include <math.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -40,20 +40,24 @@
 #define AWAKE_CONFIG    0x00
 
 // Misc
-#define NUM_OF_SAMPLES  9
+#define NUM_OF_SAMPLES  27
+#define NUM_SUB_SAMPLES 3.0
 #define MEDIAN_INDEX    NUM_OF_SAMPLES/2
+#define MEDIAN_RIGHT    MEDIAN_INDEX+1
+#define MEDIAN_LEFT     MEDIAN_INDEX-1
 #define MAX_VAL         1024
-#define RAD_TO_ANGLE    57.29577951
 #define SHIFT_4         4
-#define MAX_ANGLE       90
-#define MIN_ANGLE       -90
-#define NORM_MAX        0.999
-#define NORM_MIN        -0.999
 #define MAX_LENGTH      4
 #define TO_CHAR         0x30
+#define FOURTH_COEFF    0.00000000003071153588
+#define THIRD_COEFF     0.00000003853874416748
+#define SECOND_COEFF    -0.0000331675881064726
+#define FIRST_COEFF     0.0469102804322059
+#define ZERO_COEFF      1
 
 // Static variables
-static int8_t offset_z = 0;
+static double offset_z = 0.0;
+static char angle_str[MAX_LENGTH];
 
 // Helper Functions
 void swap(int16_t *p,int16_t *q)
@@ -139,7 +143,10 @@ void ACCEL_Calibrate(void)
     // Calibrate with solar panel completely vertical (accelerometer flat)
     int16_t preData;
     int16_t accelData_Z[NUM_OF_SAMPLES];
-    int16_t medianData_Z;
+    int16_t medianData_mid;
+    int16_t medianData_right;
+    int16_t medianData_left;
+    double avgData;
 
     uint8_t k;
 
@@ -152,23 +159,32 @@ void ACCEL_Calibrate(void)
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
     }
 
+    // Process data in list
     sort(accelData_Z);
+    medianData_mid = accelData_Z[MEDIAN_INDEX];
+    medianData_right = accelData_Z[MEDIAN_RIGHT];
+    medianData_left = accelData_Z[MEDIAN_LEFT];
+    avgData = (double)(medianData_mid + medianData_right + medianData_left)/NUM_SUB_SAMPLES;
 
-    medianData_Z = accelData_Z[MEDIAN_INDEX];
-    offset_z = MAX_VAL-medianData_Z;
+    offset_z = MAX_VAL-avgData;
 }
 
-int8_t ACCEL_GetAngle_Int(void)
+double ACCEL_GetAngle_Double(void)
 {
     int16_t accelData_Z[NUM_OF_SAMPLES];
     int16_t preData;
-    int16_t medianData_Z;
+    int16_t medianData_mid;
+    int16_t medianData_right;
+    int16_t medianData_left;
+    double avgData;
 
-    double pVal;
-    double radians;
-    double angle;
+    double fourth;
+    double third;
+    double second;
+    double first;
+    double zero;
+    double total;
 
-    int8_t finalVal;
     uint8_t k;
 
     // Populate Z data
@@ -180,73 +196,65 @@ int8_t ACCEL_GetAngle_Int(void)
         while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
     }
 
+    // Process data in list
     sort(accelData_Z);
+    medianData_mid = accelData_Z[MEDIAN_INDEX];
+    medianData_right = accelData_Z[MEDIAN_RIGHT];
+    medianData_left = accelData_Z[MEDIAN_LEFT];
+    avgData = (double)(medianData_mid + medianData_right + medianData_left)/NUM_SUB_SAMPLES;
 
-    medianData_Z = accelData_Z[MEDIAN_INDEX] + offset_z;
-
-    pVal = ((double)medianData_Z/MAX_VAL);
-
-    // Account for max/min exemption
-    if(pVal > NORM_MAX)
-    {
-        finalVal = MAX_ANGLE;
-    }
-    else if(pVal < NORM_MIN)
-    {
-        finalVal  = MIN_ANGLE;
-    }
-    else
-    {
-        radians = asin(pVal);
-        angle = (radians*RAD_TO_ANGLE);
-        finalVal  = (int8_t)angle;
-    }
-
-    return finalVal;
+    fourth = FOURTH_COEFF * (avgData) * (avgData) * (avgData) * (avgData);
+    third = THIRD_COEFF * (avgData) * (avgData) * (avgData);
+    second = SECOND_COEFF * (avgData) * (avgData);
+    first = FIRST_COEFF * (avgData);
+    zero = 1;
+    total = fourth + third + second + first + zero;
+    return total;
 }
 
 char* ACCEL_GetAngle_String(void)
 {
     int8_t angleVal;
-    angleVal = ACCEL_GetAngle_Int;
+    angleVal = (int8_t)round(ACCEL_GetAngle_Double());
 
-    // Make space for angle string
-    uint8_t size;
-    size = MAX_LENGTH;
-    char* str = (char*)malloc(sizeof(char)*size);
-    *(str+0) = '\0';
-    *(str+1) = '\0';
-    *(str+2) = '\0';
-    *(str+3) = '\0';
+    // Clear previous input
+    angle_str[0] = '\0';
+    angle_str[1] = '\0';
+    angle_str[2] = '\0';
+    angle_str[3] = '\0';
 
     if(angleVal<=90 && angleVal >=10)
     {
-        *(str+0) = (angleVal/10) + TO_CHAR;
-        *(str+1) = (angleVal%10) + TO_CHAR;
+        angle_str[0] = ' ';
+        angle_str[1] = (angleVal/10) + TO_CHAR;
+        angle_str[2] = (angleVal%10) + TO_CHAR;
     }
     else if(angleVal<10 && angleVal>=0)
     {
-        *(str+0) = (angleVal%10) + TO_CHAR;;
+        angle_str[0] = ' ';
+        angle_str[1] = ' ';
+        angle_str[2] = (angleVal%10) + TO_CHAR;;
     }
     else if(angleVal<0 && angleVal>-10)
     {
         angleVal = angleVal*-1;
-        *(str+0) = '-';
-        *(str+1) = (angleVal%10) + TO_CHAR;
+        angle_str[0] = '-';
+        angle_str[1] = ' ';
+        angle_str[2] = (angleVal%10) + TO_CHAR;
     }
     else if(angleVal>=-90)
     {
         angleVal = angleVal*-1;
-        *(str+0) = '-';
-        *(str+1) = (angleVal/10) + TO_CHAR;
-        *(str+2) = (angleVal%10) + TO_CHAR;
+        angle_str[0] = '-';
+        angle_str[1] = (angleVal/10) + TO_CHAR;
+        angle_str[2] = (angleVal%10) + TO_CHAR;
     }
     else
     {
-        *(str+0) = 'I';
-        *(str+1) = 'N';
-        *(str+2) = 'V';
+        angle_str[0] = 'I';
+        angle_str[1] = 'N';
+        angle_str[2] = 'V';
     }
 
-    return str;
+    return angle_str;
 }
