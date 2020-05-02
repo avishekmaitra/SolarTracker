@@ -3,6 +3,9 @@
 #include "I2C.h"
 #include "delay.h"
 #include "LCD.h"
+#include "Keypad.h"
+#include "Relay.h"
+#include "UserInterface.h"
 
 static uint16_t TransmitFlag = 0;
 
@@ -173,11 +176,20 @@ void EUSCIB0_IRQHandler(void)
     }
 
     // Error has occurred if these flags are set
+    // Reset and resume
     if((EUSCI_B0->IFG & EUSCI_B_IFG_NACKIFG) || (EUSCI_B0->IFG & EUSCI_B_IFG_CLTOIFG))
     {
+        EUSCI_B0->IFG &= ~(EUSCI_B_IFG_NACKIFG | EUSCI_B_IFG_CLTOIFG);
+        Relay_Off();
         LCD_Clear();
         LCD_Write_L1("I2C COM ERROR");
-        EUSCI_B0->IFG &= ~(EUSCI_B_IFG_NACKIFG | EUSCI_B_IFG_CLTOIFG);
+        delay_ms(1000, FREQ_24_MHZ);
+        LCD_Write_L1("RECONNECTING");
+        delay_ms(1000, FREQ_24_MHZ);
+        LCD_Clear();
+        UI_SetMode(HOME);
+        LCD_SetHomeScreen();
+        Keypad_ResetKey();
     }
 }
 
