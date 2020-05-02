@@ -43,7 +43,7 @@ void PORT5_IRQHandler(void)                     //interrupt handler on Port 5
 
 void keypad_setkey(void)                        //function that checks the rows and columns for which button was pressed
 {
-    hitFlag = 1;                            //key was pressed
+    hitFlag = 1;                                //key was pressed
     P2 -> OUT &= ~(R0|R1|R2|R3);                //set all low
     uint8_t COL = 0;
 
@@ -70,7 +70,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 65;                           //ASCII "A"
         }
-        hitFlag = 1;
+        //hitFlag = 1;                          //commenting out because redundant
         return;                                 //ensures that no other digits are pressed
     }
     P2 -> OUT &= ~(R0);                         //clears row0
@@ -97,7 +97,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 66;                           //ASCII "B"
         }
-        hitFlag = 1;
+        //hitFlag = 1;                          //commenting out because redundant
         return;
     }
     P2 -> OUT &= ~(R1);                         //clears row1
@@ -124,7 +124,7 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 67;                           //ASCII "C"
         }
-        hitFlag = 1;
+        //hitFlag = 1;                          //commenting out because redundant
         return;
     }
     P2 -> OUT &= ~(R2);                         //clears row2
@@ -151,13 +151,13 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 46;                           //ASCII "."
         }
-        hitFlag = 1;
+        //hitFlag = 1;                          //commenting out because redundant
         return;
     }
     P2 -> OUT &= ~(R3);                         //clears row3
 }
 
-char Keypad_GetKey(void)                     //function that returns the key value
+char Keypad_GetKey(void)                        //function that returns the key value
 {
     return key;
 }
@@ -165,10 +165,10 @@ char Keypad_GetKey(void)                     //function that returns the key val
 void Keypad_ResetKey(void)
 {
     key = RESETKEY;
-    hitFlag = 0;                             //not sure if we should reset here or in GetKey
+    hitFlag = 0;                                //not sure if we should reset here or in GetKey
 }
 
-void keypad_testkey(void)                      //test function to write key value to terminal
+void keypad_testkey(void)                       //test function to write key value to terminal
 {
     switch(Keypad_GetKey())
     {
