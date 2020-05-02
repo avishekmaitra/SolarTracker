@@ -145,7 +145,7 @@ void LCD_SetStartScreen(void)                      //STARTING SCREEN
     LCD_Write_L2("Enter Date: __/__/__");   //remember: only have 20 char spaces
     LCD_Write_L3("Enter Time:    __:__");   //military time
     LCD_Write_L4("*Clear        #Enter");
-    LCD_SetCursorLocation(0x4B);              //set cursor to first input blank space
+    LCD_SetCursorLocation(0x4C);              //set cursor to first input blank space
     //getkeypress function
     //replace "_" with keypress
     //once key is pressed, will cursor automatically move right, or do we need to define next location?
