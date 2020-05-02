@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "UART.h"
+#include "I2C.h"
 #include "LCD.h"
 #include "UserInterface.h"
 #include "Relay.h"
@@ -32,7 +33,7 @@
 #define LCD_MINUTE_LOC  0x26
 
 // Variables for all modes
-static int8_t goalAngle;
+static double goalAngle;
 static mode_t currentMode;
 
 // Variables for Demo mode
@@ -52,22 +53,16 @@ static bool negativeFlag = false;
 // Helper functions
 void ui_goToGoal_manual(double inputGoal)
 {
-    uint16_t writeCount;
     UI_SetGoalAngle(inputGoal);
-    writeCount = 0;
 
     while(Relay_MoveToGoal())
     {
-        if(writeCount == LCD_WRITE_COUNT)
+        LCD_Write_L3(ACCEL_GetAngle_String());
+        Keypad_ResetKey();
+        if (I2C_GetComErrorFlag())
         {
-            writeCount = 0;
-            LCD_Write_L3(ACCEL_GetAngle_String());
-            Keypad_ResetKey();                                  //added this 5/1/20 to make sure keypad is getting reset
-        }
-        else
-        {
-            writeCount = writeCount + 1;
-            Keypad_ResetKey();                                  //added this 5/1/20 to make sure keypad is getting reset
+            I2C_ResetComErrorFlag();
+            break;
         }
     }
 }
@@ -76,7 +71,6 @@ void ui_reset_manual(void)
 {
     LCD_Clear();
     LCD_SetManualScreen();
-    LCD_Write_L3(ACCEL_GetAngle_String());
     currentState = ZERO_STATE;
     negativeFlag = false;
     currentInput = 0;
@@ -252,7 +246,6 @@ void UI_RunManualMode(void)
 {
     // Input range is from -90 to 90 degrees
     currentMode = MANUAL;
-    Keypad_ResetKey();                                              //just to make sure hitflag starts as 0
     if(Keypad_GetKey() == SET_HOME)
     {
         LCD_Clear();
