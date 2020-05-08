@@ -3,7 +3,11 @@
 #include "I2C.h"
 #include "delay.h"
 #include "LCD.h"
+#include "Keypad.h"
+#include "Relay.h"
+#include "UserInterface.h"
 
+static uint8_t comErrorFlag = 0;
 static uint16_t TransmitFlag = 0;
 
 void I2C_Init(uint8_t DeviceAddress)
@@ -154,6 +158,15 @@ uint16_t I2C_ReadMultiByte(uint8_t MemAddress)
     return ReceiveBytes;
 }
 
+uint8_t I2C_GetComErrorFlag()
+{
+    return comErrorFlag;
+}
+
+void I2C_ResetComErrorFlag(void)
+{
+    comErrorFlag = 0;
+}
 
 // I2C ISR
 void EUSCIB0_IRQHandler(void)
@@ -173,11 +186,19 @@ void EUSCIB0_IRQHandler(void)
     }
 
     // Error has occurred if these flags are set
+    // Reset and resume
     if((EUSCI_B0->IFG & EUSCI_B_IFG_NACKIFG) || (EUSCI_B0->IFG & EUSCI_B_IFG_CLTOIFG))
     {
+        EUSCI_B0->IFG &= ~(EUSCI_B_IFG_NACKIFG | EUSCI_B_IFG_CLTOIFG);
+        comErrorFlag = 1;
+        Relay_Off();
         LCD_Clear();
         LCD_Write_L1("I2C COM ERROR");
-        EUSCI_B0->IFG &= ~(EUSCI_B_IFG_NACKIFG | EUSCI_B_IFG_CLTOIFG);
+        delay_ms(1000, FREQ_24_MHZ);
+        LCD_Write_L1("RECONNECTING ");
+        delay_ms(1000, FREQ_24_MHZ);
+        LCD_Clear();
+        Keypad_ResetKey();
     }
 }
 

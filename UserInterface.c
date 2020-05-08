@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "UART.h"
+#include "I2C.h"
 #include "LCD.h"
 #include "UserInterface.h"
 #include "Relay.h"
@@ -22,16 +23,17 @@
 #define NEGATIVE_SIGN   '-'
 #define NO_INPUT        RESETKEY
 #define ENTER           '#'
+#define BACK            '*'
 #define MILLENNIUM      2000
 #define LCD_WRITE_COUNT 1000
-#define LCD_MONTH_LOC   0x4D
-#define LCD_DAY_LOC     0x50
-#define LCD_YEAR_LOC    0x53
-#define LCD_HOUR_LOC    0x24
-#define LCD_MINUTE_LOC  0x27
+#define LCD_MONTH_LOC   0x4C
+#define LCD_DAY_LOC     0x4F
+#define LCD_YEAR_LOC    0x52
+#define LCD_HOUR_LOC    0x23
+#define LCD_MINUTE_LOC  0x26
 
 // Variables for all modes
-static int8_t goalAngle;
+static double goalAngle;
 static mode_t currentMode;
 
 // Variables for Demo mode
@@ -51,20 +53,16 @@ static bool negativeFlag = false;
 // Helper functions
 void ui_goToGoal_manual(double inputGoal)
 {
-    uint16_t writeCount;
     UI_SetGoalAngle(inputGoal);
-    writeCount = 0;
 
     while(Relay_MoveToGoal())
     {
-        if(writeCount == LCD_WRITE_COUNT)
+        LCD_Write_L3(ACCEL_GetAngle_String());
+        Keypad_ResetKey();
+        if (I2C_GetComErrorFlag())
         {
-            writeCount = 0;
-            LCD_Write_L3(ACCEL_GetAngle_String());
-        }
-        else
-        {
-            writeCount = writeCount + 1;
+            I2C_ResetComErrorFlag();
+            break;
         }
     }
 }
@@ -73,7 +71,6 @@ void ui_reset_manual(void)
 {
     LCD_Clear();
     LCD_SetManualScreen();
-    LCD_Write_L3(ACCEL_GetAngle_String());
     currentState = ZERO_STATE;
     negativeFlag = false;
     currentInput = 0;
@@ -108,6 +105,8 @@ void UI_EnterDateTime(void)
 
     uint8_t hour;
     uint8_t minute;
+
+    Keypad_ResetKey();                                  //make sure hitflag starts as 0
 
     // Get first month input
     LCD_SetCursorLocation(LCD_MONTH_LOC);
@@ -182,13 +181,22 @@ void UI_EnterDateTime(void)
     minute = (inputKey-CHAR_TO_NUM) * 10;
     Keypad_ResetKey();
 
-    // Get second day input
+    // Get second minute input
     while(Keypad_GetKey() == RESETKEY);
     inputKey = Keypad_GetKey();
     LCD_Write_Char(inputKey);
     minute = minute + (inputKey-CHAR_TO_NUM);
     RTC_SetMinute(minute);
     Keypad_ResetKey();
+
+    while(Keypad_GetKey() == RESETKEY);
+    inputKey = Keypad_GetKey();
+    if (inputKey == BACK)
+    {
+        Keypad_ResetKey();
+        LCD_SetStartScreen();
+        UI_EnterDateTime();
+    }
 
     // Start RTC with all the input information
     RTC_Start();
