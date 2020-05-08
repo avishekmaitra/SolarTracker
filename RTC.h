@@ -16,6 +16,7 @@ uint8_t RTC_GetHour(void);
 void RTC_SetMinute(uint8_t inputMin);
 uint8_t RTC_GetMinute(void);
 uint16_t RTC_GetCurrentTime(void);
+uint16_t RTC_GetCurrentDay(void);
 void RTC_EnableInterrupt(void);
 void RTC_DisableInterrupt(void);
 void RTC_SetEventFlag(void);

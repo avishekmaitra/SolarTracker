@@ -1,4 +1,5 @@
 #include "ACCEL.h"
+#include "Algorithm.h"
 #include "Keypad.h"
 #include "delay.h"
 #include "msp.h"
@@ -31,6 +32,8 @@
 #define LCD_YEAR_LOC    0x52
 #define LCD_HOUR_LOC    0x23
 #define LCD_MINUTE_LOC  0x26
+#define START_TIME      299
+#define END_TIME        1199
 
 // Variables for all modes
 static double goalAngle;
@@ -57,6 +60,23 @@ void ui_goToGoal_manual(double inputGoal)
 
     while(Relay_MoveToGoal())
     {
+        LCD_Write_L3(ACCEL_GetAngle_String());
+        Keypad_ResetKey();
+        if (I2C_GetComErrorFlag())
+        {
+            I2C_ResetComErrorFlag();
+            break;
+        }
+    }
+}
+
+void ui_goToGoal_algo(double inputGoal)
+{
+    UI_SetGoalAngle(inputGoal);
+
+    while(Relay_MoveToGoal())
+    {
+        // TODO Customize for algo mode
         LCD_Write_L3(ACCEL_GetAngle_String());
         Keypad_ResetKey();
         if (I2C_GetComErrorFlag())
@@ -378,12 +398,13 @@ void UI_RunAlgoMode(void)
 {
     currentMode = ALGO;
 
-    if(RTC_HasEventOccured())
+    if(RTC_HasEventOccured() &&
+            (RTC_GetCurrentTime() > START_TIME) &&
+            (RTC_GetCurrentTime() <= END_TIME))
     {
         RTC_ResetEventFlag();
-        // TODO Using algorithm from Dolan, grab an angle depending on the day and time
-        // UI_SetGoalAngle(Dolan_Angle)
-        while(Relay_MoveToGoal());
+        // TODO Update the LCD
+        ui_goToGoal_algo(Algorithm_GetAngle(RTC_GetCurrentTime()));
     }
 
     if(Keypad_GetKey() == SET_HOME)
