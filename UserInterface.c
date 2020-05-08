@@ -57,7 +57,8 @@ void ui_goToGoal_manual(double inputGoal)
 
     while(Relay_MoveToGoal())
     {
-        LCD_Write_L3(ACCEL_GetAngle_String());
+        LCD_SetCursorLocation(0x21);            // set cursor to current angle spot on L3
+        LCD_Write_String(ACCEL_GetAngle_String());
         Keypad_ResetKey();
         if (I2C_GetComErrorFlag())
         {

@@ -158,6 +158,7 @@ void LCD_SetHomeScreen(void)                       //HOME MODE CHOICE SCREEN
     LCD_Write_L2("B: Algorithm Based  ");
     LCD_Write_L3("C: Demo Mode        ");
     LCD_Write_L4("                    ");
+    LCD_SetCursorLocation(0x54);            //set cursor to first space on L4
 }
 
 void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
@@ -166,6 +167,7 @@ void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT 
     LCD_Write_L2("                    ");
     LCD_Write_L3("Current Angle:___deg");
     LCD_Write_L4(".Home         #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
+    LCD_SetCursorLocation(0x0D);            //set cursor to first space on L1 degree blank
 }
 
 void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
@@ -174,6 +176,7 @@ void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
     LCD_Write_L2("Present Angle:___deg");
     LCD_Write_L3("                    ");   //only displayed when reach desired angle
     LCD_Write_L4(".Home               ");
+    LCD_SetCursorLocation(0x0D);            //set cursor to blank space after Present Time: on L1
 }
 
 void LCD_SetDemoScreen(void)                 //C_1: DEMO choice screen
@@ -182,4 +185,6 @@ void LCD_SetDemoScreen(void)                 //C_1: DEMO choice screen
     LCD_Write_L2("                    ");
     LCD_Write_L3("Angle:              ");
     LCD_Write_L4(".Home         #Enter");
+    LCD_SetCursorLocation(0x1B);            //set cursor to blank space after Angle: on L3
+
 }
