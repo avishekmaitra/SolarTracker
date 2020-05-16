@@ -87,6 +87,12 @@ double algo_getAltitude(void)
 // TODO Azimuth function
 double algo_getAzimuth(void)
 {
+    double azim;
+    double declination = algo_getDeclination();
+    double alt = algo_getAltitude();
+    double n = ((sind(alt)*sind(LATITUDE)) - sind(declination)) / (cosd(alt)*cosd(LATITUDE));
+    //confused about how to write the part where azm = -acosd(n)
+    azim = acosd(n);
     return 0.0;
 }
 
@@ -99,6 +105,7 @@ double algo_getBeta(void)
 
     // double complex exponent = csqrt()
     // double complex p_img = cpow(myGCR,)
+
     return 0.0;
 }
 
