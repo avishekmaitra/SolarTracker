@@ -10,7 +10,6 @@
 
 #include <stdint.h>
 
-double Algorithm_GetAngle(uint16_t currentTime);
-void populateAngleArray(uint16_t currentDay);
+double Algorithm_GetAngle(void);
 
 #endif /* ALGORITHM_H_ */

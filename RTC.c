@@ -104,18 +104,18 @@ uint8_t RTC_GetMinute(void)
     return myMinute;
 }
 
-uint16_t RTC_GetCurrentTime(void)
+double RTC_GetCurrentTime(void)
 {
-    uint16_t myTime = (RTC_GetHour()*60) + RTC_GetMinute();
+    double myTime = (double)RTC_GetHour() + ((double)RTC_GetMinute() / 60.0);
     return myTime;
 }
 
 uint16_t RTC_GetCurrentDay(void)
 {
-    uint16_t myDay = (RTC_GetMonth()*30) + RTC_GetDay();
+    // Month starts at 1, so the -1 corrects for that
+    uint16_t myDay = ((RTC_GetMonth() - 1) * 30) + RTC_GetDay();
     return myDay;
 }
-
 
 // RTC interrupt service routine
 void RTC_C_IRQHandler(void)

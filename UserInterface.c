@@ -404,7 +404,7 @@ void UI_RunAlgoMode(void)
     {
         RTC_ResetEventFlag();
         // TODO Update the LCD
-        ui_goToGoal_algo(Algorithm_GetAngle(RTC_GetCurrentTime()));
+        ui_goToGoal_algo(Algorithm_GetAngle());
     }
 
     if(Keypad_GetKey() == SET_HOME)
