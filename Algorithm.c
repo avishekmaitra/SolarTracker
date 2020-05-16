@@ -6,10 +6,11 @@
  */
 #include <math.h>
 #include "Algorithm.h"
+#include <complex.h>
 #include "RTC.h"
 
 #define LATITUDE 35.3
-#define GCR (2005 / 3350)
+#define GCR (2005.0 / 3350.0)
 
 double sind(double degrees)
 {
@@ -91,7 +92,13 @@ double algo_getAzimuth(void)
 
 double algo_getBeta(void)
 {
-    // TODO understand Dolan's code more
+    // Based off Prof. Dolan Algorithm
+    double p;
+    double b = (sind(algo_getAzimuth()) / tand(algo_getAltitude()));
+    double complex inverseGCR = (double complex)(1 / GCR);
+
+    // double complex exponent = csqrt()
+    // double complex p_img = cpow(myGCR,)
     return 0.0;
 }
 
