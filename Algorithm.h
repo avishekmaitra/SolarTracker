@@ -10,6 +10,7 @@
 
 #include <stdint.h>
 
-double Algorithm_GetAngle(void);
+double Algorithm_GetAngle_Double(void);
+char* Algorithm_GetAngle_String(double algoAngle);
 
 #endif /* ALGORITHM_H_ */

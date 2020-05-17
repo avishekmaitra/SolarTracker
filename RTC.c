@@ -1,7 +1,12 @@
 #include "RTC.h"
 #include "msp.h"
 
+#define TO_CHAR 0x30
+#define TIME_LENGTH 6
+
 static bool minuteEventFlag = false;
+static char time_str[TIME_LENGTH];
+
 // MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 void RTC_Init(void)
 {
@@ -115,6 +120,27 @@ uint16_t RTC_GetCurrentDay(void)
     // Month starts at 1, so the -1 corrects for that
     uint16_t myDay = ((RTC_GetMonth() - 1) * 30) + RTC_GetDay();
     return myDay;
+}
+
+char* RTC_GetTime_String(void)
+{
+    uint8_t curHour = RTC_GetHour();
+    uint8_t curMin = RTC_GetMinute();
+
+    // Clear previous input
+    time_str[0] = '\0';
+    time_str[1] = '\0';
+    time_str[2] = ':';
+    time_str[3] = '\0';
+    time_str[4] = '\0';
+    time_str[5] = '\0';
+
+    time_str[0] = (curHour/10) + TO_CHAR;
+    time_str[1] = (curHour%10) + TO_CHAR;
+    time_str[3] = (curMin/10) + TO_CHAR;
+    time_str[4] = (curMin%10) + TO_CHAR;
+
+    return time_str;
 }
 
 // RTC interrupt service routine

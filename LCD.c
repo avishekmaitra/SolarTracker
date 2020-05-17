@@ -170,9 +170,9 @@ void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT 
 
 void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
 {
-    LCD_Write_L1("Present Time:__:__  ");
-    LCD_Write_L2("Present Angle:___deg");
-    LCD_Write_L3("                    ");   //only displayed when reach desired angle
+    LCD_Write_L1("Present Time:       ");
+    LCD_Write_L2("Calc. Angle:     deg");
+    LCD_Write_L3("Actual Angle:    deg");   //only displayed when reach desired angle
     LCD_Write_L4(".Home               ");
 }
 

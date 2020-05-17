@@ -12,6 +12,10 @@
 #define LATITUDE 35.3
 #define GCR (2005.0 / 3350.0)
 #define NOON 12
+#define MAX_LENGTH 4
+#define TO_CHAR 0x30
+
+static char algoAngle_str[MAX_LENGTH];
 
 double sind(double degrees)
 {
@@ -115,15 +119,61 @@ double algo_getBeta(void)
     return realBeta;
 }
 
-
-
-double Algorithm_GetAngle(void)
+double Algorithm_GetAngle_Double(void)
 {
     double myRad;
 
     myRad = (RTC_GetHour() < 12) ? (-1 * algo_getBeta()) : (algo_getBeta());
     return myRad * (180.0 / M_PI);
 }
+
+char* Algorithm_GetAngle_String(double algoAngle)
+{
+    int8_t angleVal;
+    angleVal = (int8_t)round(algoAngle);
+
+    // Clear previous input
+    algoAngle_str[0] = '\0';
+    algoAngle_str[1] = '\0';
+    algoAngle_str[2] = '\0';
+    algoAngle_str[3] = '\0';
+
+    if(angleVal<=90 && angleVal >=10)
+    {
+        algoAngle_str[0] = ' ';
+        algoAngle_str[1] = (angleVal/10) + TO_CHAR;
+        algoAngle_str[2] = (angleVal%10) + TO_CHAR;
+    }
+    else if(angleVal<10 && angleVal>=0)
+    {
+        algoAngle_str[0] = ' ';
+        algoAngle_str[1] = ' ';
+        algoAngle_str[2] = (angleVal%10) + TO_CHAR;;
+    }
+    else if(angleVal<0 && angleVal>-10)
+    {
+        angleVal = angleVal*-1;
+        algoAngle_str[0] = '-';
+        algoAngle_str[1] = ' ';
+        algoAngle_str[2] = (angleVal%10) + TO_CHAR;
+    }
+    else if(angleVal>=-90)
+    {
+        angleVal = angleVal*-1;
+        algoAngle_str[0] = '-';
+        algoAngle_str[1] = (angleVal/10) + TO_CHAR;
+        algoAngle_str[2] = (angleVal%10) + TO_CHAR;
+    }
+    else
+    {
+        algoAngle_str[0] = 'I';
+        algoAngle_str[1] = 'N';
+        algoAngle_str[2] = 'V';
+    }
+
+    return algoAngle_str;
+}
+
 
 
 

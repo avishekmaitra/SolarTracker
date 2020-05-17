@@ -22,5 +22,6 @@ void RTC_DisableInterrupt(void);
 void RTC_SetEventFlag(void);
 void RTC_ResetEventFlag(void);
 bool RTC_HasEventOccured(void);
+char* RTC_GetTime_String(void);
 
 #endif /* RTC_H_ */

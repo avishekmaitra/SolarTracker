@@ -11,7 +11,7 @@
 #include "msp.h"
 #include <stdbool.h>
 
-#define THRESHOLD 0.5
+#define THRESHOLD 0.3
 
 enum state
 {
