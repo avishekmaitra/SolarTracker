@@ -32,8 +32,8 @@
 #define LCD_YEAR_LOC    0x52
 #define LCD_HOUR_LOC    0x23
 #define LCD_MINUTE_LOC  0x26
-#define START_TIME      299
-#define END_TIME        1199
+#define START_TIME      4.5
+#define END_TIME        19.5
 
 // Variables for all modes
 static double goalAngle;
@@ -76,8 +76,6 @@ void ui_goToGoal_algo(double inputGoal)
 
     while(Relay_MoveToGoal())
     {
-        // TODO Customize for algo mode
-        LCD_Write_L3(ACCEL_GetAngle_String());
         Keypad_ResetKey();
         if (I2C_GetComErrorFlag())
         {
@@ -241,6 +239,7 @@ void UI_RunHomeMode(void)
         LCD_SetAlgoScreen();
         RTC_EnableInterrupt();
         Keypad_ResetKey();
+        RTC_SetEventFlag();
         return;
     }
 
@@ -396,6 +395,7 @@ void UI_RunManualMode(void)
 
 void UI_RunAlgoMode(void)
 {
+    double algoAngle;
     currentMode = ALGO;
 
     if(RTC_HasEventOccured() &&
@@ -403,8 +403,9 @@ void UI_RunAlgoMode(void)
             (RTC_GetCurrentTime() <= END_TIME))
     {
         RTC_ResetEventFlag();
-        // TODO Update the LCD
-        ui_goToGoal_algo(Algorithm_GetAngle());
+        algoAngle = Algorithm_GetAngle();
+        ui_goToGoal_algo(algoAngle);
+        // TODO Update the LCD with current angle and time
     }
 
     if(Keypad_GetKey() == SET_HOME)
