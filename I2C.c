@@ -199,6 +199,8 @@ void EUSCIB0_IRQHandler(void)
         delay_ms(1000, FREQ_24_MHZ);
         LCD_Clear();
         Keypad_ResetKey();
+        UI_SetMode(HOME);
+        LCD_SetHomeScreen();
     }
 }
 

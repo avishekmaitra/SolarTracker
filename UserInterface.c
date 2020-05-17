@@ -406,9 +406,9 @@ void UI_RunAlgoMode(void)
         algoAngle = Algorithm_GetAngle_Double();
         ui_goToGoal_algo(algoAngle);
         // TODO Set the cursor locations at appropriate location
-        LCD_Write_String(RTC_GetTime_String());
-        LCD_Write_String(Algorithm_GetAngle_String(algoAngle));
-        LCD_Write_String(ACCEL_GetAngle_String());
+        LCD_Write_L1(RTC_GetTime_String());
+        LCD_Write_L2(Algorithm_GetAngle_String(algoAngle));
+        LCD_Write_L3(ACCEL_GetAngle_String());
     }
 
     if(Keypad_GetKey() == SET_HOME)
