@@ -409,6 +409,7 @@ void UI_RunAlgoMode(void)
         LCD_Write_L1(RTC_GetTime_String());
         LCD_Write_L2(Algorithm_GetAngle_String(algoAngle));
         LCD_Write_L3(ACCEL_GetAngle_String());
+        Keypad_ResetKey();
     }
 
     if(Keypad_GetKey() == SET_HOME)
