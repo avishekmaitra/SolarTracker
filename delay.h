@@ -10,6 +10,7 @@
 #define FREQ_24_MHZ  24000000
 #define FREQ_48_MHZ  48000000
 #define LINEAR_US 100
+
 void delay_ms(int count, int freq);
 void delay_us(int count, int freq);
 void delay_us_48_MHZ(int count);
