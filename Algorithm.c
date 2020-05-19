@@ -9,7 +9,11 @@
 #include <complex.h>
 #include "RTC.h"
 
+// Longitude and Latitude is based of city of SLO
 #define LATITUDE 35.3
+#define LONGITUDE 120.6596
+#define DAYLIGHT_START 69
+#define DAYLIGHT_END 309
 #define GCR (2005.0 / 3350.0)
 #define NOON 12
 #define MAX_LENGTH 4
@@ -59,6 +63,20 @@ double atand(double input)
     return degrees;
 }
 
+double algo_getSolarTime(void)
+{
+    // Based off Prof. Dolan Algorithm
+    double solarTime;
+    double realTime = RTC_GetCurrentTime();
+
+    solarTime  = realTime - (LONGITUDE/15.0) + floor(LONGITUDE/15.0);
+
+    if ((RTC_GetCurrentDay() > DAYLIGHT_START) && (RTC_GetCurrentDay() < DAYLIGHT_END))
+        solarTime = solarTime - 1.0;
+
+    return solarTime;
+}
+
 double algo_getDeclination(void)
 {
     // Based off Prof. Dolan Algorithm
@@ -69,7 +87,7 @@ double algo_getDeclination(void)
 double algo_getHourAngle(void)
 {
     // Based off Prof. Dolan Algorithm
-    return 15.0 * (12.0 - RTC_GetCurrentTime());
+    return 15.0 * (12.0 - algo_getSolarTime());
 }
 
 double algo_getAltitude(void)
@@ -95,7 +113,7 @@ double algo_getAzimuth(void)
     double declination = algo_getDeclination();
     double alt = algo_getAltitude();
     double n = (sind(alt) * sind(LATITUDE) - sind(declination)) / (cosd(alt) * cosd(LATITUDE));
-    azim = (RTC_GetHour() < NOON) ? (-1 * acosd(n)) : (acosd(n));
+    azim = (algo_getSolarTime() < NOON) ? (-1 * acosd(n)) : (acosd(n));
     return azim;
 }
 
@@ -123,7 +141,7 @@ double Algorithm_GetAngle_Double(void)
 {
     double myRad;
 
-    myRad = (RTC_GetHour() < 12) ? (-1 * algo_getBeta()) : (algo_getBeta());
+    myRad = (algo_getSolarTime() < NOON) ? (-1 * algo_getBeta()) : (algo_getBeta());
     return myRad * (180.0 / M_PI);
 }
 
