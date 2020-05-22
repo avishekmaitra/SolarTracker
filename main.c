@@ -47,9 +47,8 @@ void main(void)
 	LCD_SetStartScreen();
 	UI_EnterDateTime();
 
-	// TODO generate daily angles using Dolan algorithm
-    LCD_SetWelcomeScreen();
-    // Generate Angles based on Dolan algorithm
+	LCD_SetWelcomeScreen();
+	delay_ms(1000, FREQ_24_MHZ);
 
     // Prep for super loop
 	LCD_SetHomeScreen();

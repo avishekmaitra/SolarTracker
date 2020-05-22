@@ -135,7 +135,7 @@ void LCD_SetWelcomeScreen(void)
 {
     LCD_Write_L1("Welcome!            ");
     LCD_Write_L2("                    ");
-    LCD_Write_L3("Generating angles...");   //only displayed when reach desired angle
+    LCD_Write_L3("                    ");
     LCD_Write_L4("                    ");
 }
 

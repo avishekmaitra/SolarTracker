@@ -407,11 +407,11 @@ void UI_RunAlgoMode(void)
     {
         RTC_ResetEventFlag();
         algoAngle = Algorithm_GetAngle_Double();
-        ui_goToGoal_algo(algoAngle);
         LCD_SetCursorLocation(0x0E);
         LCD_Write_String(RTC_GetTime_String());
         LCD_SetCursorLocation(0x4D);
         LCD_Write_String(Algorithm_GetAngle_String(algoAngle));
+        ui_goToGoal_algo(algoAngle);
         LCD_SetCursorLocation(0x21);
         LCD_Write_String(ACCEL_GetAngle_String());
         Keypad_ResetKey();
