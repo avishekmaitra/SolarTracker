@@ -408,7 +408,6 @@ void UI_RunAlgoMode(void)
         RTC_ResetEventFlag();
         algoAngle = Algorithm_GetAngle_Double();
         ui_goToGoal_algo(algoAngle);
-        // TODO Set the cursor locations at appropriate location
         LCD_SetCursorLocation(0x0E);
         LCD_Write_String(RTC_GetTime_String());
         LCD_SetCursorLocation(0x4D);
