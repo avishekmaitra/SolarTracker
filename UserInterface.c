@@ -60,9 +60,9 @@ void ui_goToGoal_manual(double inputGoal)
 
     while(Relay_MoveToGoal())
     {
-        LCD_SetCursorLocation(0x21);
+        LCD_SetCursorLocation(0x22);
         LCD_Write_String(ACCEL_GetAngle_String());
-        LCD_SetCursorLocation(0x21);
+        LCD_SetCursorLocation(0x22);
         LCD_Write_String(ACCEL_GetAngle_String());
         Keypad_ResetKey();
         if (I2C_GetComErrorFlag())
@@ -286,7 +286,7 @@ void UI_RunManualMode(void)
     {
         if(currentState == ZERO_STATE)
         {
-            LCD_SetCursorLocation(0x0D);
+            LCD_SetCursorLocation(0x0E);
             if(Keypad_GetKey() == NEGATIVE_FLAG)
             {
                 LCD_Write_Char(NEGATIVE_SIGN);

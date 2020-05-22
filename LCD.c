@@ -167,7 +167,7 @@ void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT 
     LCD_Write_L2("                    ");
     LCD_Write_L3("Current Angle:___deg");
     LCD_Write_L4(".Home         #Enter");   //Back deletes input value, Home goes Home, Enter verifies angle desired
-    LCD_SetCursorLocation(0x0D);            //set cursor to first blank on L1
+    LCD_SetCursorLocation(0x0E);            //set cursor to first blank on L1
 }
 
 void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
