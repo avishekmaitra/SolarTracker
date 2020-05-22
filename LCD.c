@@ -185,5 +185,5 @@ void LCD_SetDemoScreen(void)                 //C_1: DEMO choice screen
     LCD_Write_L2("                    ");
     LCD_Write_L3("Angle:              ");
     LCD_Write_L4(".Home         #Enter");
-    LCD_SetCursorLocation(0x1B);            //set cursor to blank space after angle on L3
+    LCD_SetCursorLocation(0x1A);            //set cursor to blank space after angle on L3
 }
