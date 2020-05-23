@@ -5,9 +5,10 @@
  *      Author:
  */
 
-#ifndef LCD_H_
+#ifndef LCD_H
+#define LCD_H
 #include <stdint.h>
-#define LCD_H_
+
 
 // LCD Pinout
 // 1   2   3   4    5    6    7    8    9    10   11   12   13   14   15   16

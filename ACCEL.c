@@ -56,7 +56,6 @@
 #define ZERO_COEFF      1
 
 // Static variables
-static double offset_z = 0.0;
 static char angle_str[MAX_LENGTH];
 
 // Helper Functions
@@ -134,39 +133,6 @@ void ACCEL_Init(void)
         LCD_Clear();
         LCD_Write_L1("ACCEL_Init() error");
     }
-}
-
-// Assumes accelerometer is completely flat
-// Call only when first situating the accelerometer
-void ACCEL_Calibrate(void)
-{
-    // Calibrate with solar panel completely vertical (accelerometer flat)
-    int16_t preData;
-    int16_t accelData_Z[NUM_OF_SAMPLES];
-    int16_t medianData_mid;
-    int16_t medianData_right;
-    int16_t medianData_left;
-    double avgData;
-
-    uint8_t k;
-
-    // Populate Z data
-    for(k = 0; k < NUM_OF_SAMPLES; k=k+1)
-    {
-        preData = I2C_ReadMultiByte(OUT_Z_MSB);
-        accelData_Z[k] = (preData >> SHIFT_4);
-        // Wait until new data ready
-        while(!(I2C_ReadSingleByte(STATUS_ADDR)&OUT_Z_READY));
-    }
-
-    // Process data in list
-    sort(accelData_Z);
-    medianData_mid = accelData_Z[MEDIAN_INDEX];
-    medianData_right = accelData_Z[MEDIAN_RIGHT];
-    medianData_left = accelData_Z[MEDIAN_LEFT];
-    avgData = (double)(medianData_mid + medianData_right + medianData_left)/NUM_SUB_SAMPLES;
-
-    offset_z = MAX_VAL-avgData;
 }
 
 double ACCEL_GetAngle_Double(void)

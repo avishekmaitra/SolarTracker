@@ -168,6 +168,11 @@ void I2C_ResetComErrorFlag(void)
     comErrorFlag = 0;
 }
 
+void I2C_SetComErrorFlag(void)
+{
+    comErrorFlag = 1;
+}
+
 // I2C ISR
 void EUSCIB0_IRQHandler(void)
 {
@@ -190,15 +195,12 @@ void EUSCIB0_IRQHandler(void)
     if((EUSCI_B0->IFG & EUSCI_B_IFG_NACKIFG) || (EUSCI_B0->IFG & EUSCI_B_IFG_CLTOIFG))
     {
         EUSCI_B0->IFG &= ~(EUSCI_B_IFG_NACKIFG | EUSCI_B_IFG_CLTOIFG);
-        comErrorFlag = 1;
+        I2C_SetComErrorFlag();
         Relay_Off();
         LCD_Clear();
-        LCD_Write_L1("I2C COM ERROR");
-        delay_ms(1000, FREQ_24_MHZ);
-        LCD_Write_L1("RECONNECTING ");
-        delay_ms(1000, FREQ_24_MHZ);
-        LCD_Clear();
         Keypad_ResetKey();
+        UI_SetMode(HOME);
+        LCD_SetHomeScreen();
     }
 }
 

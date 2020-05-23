@@ -1,27 +1,34 @@
 #include "RTC.h"
 #include "msp.h"
 
+#define TO_CHAR 0x30
+#define TIME_LENGTH 6
+
 static bool minuteEventFlag = false;
+static char time_str[TIME_LENGTH];
+
 // MUST CALL THIS FUNCTION BEFORE MODIFYING YEAR, MONTH, DAY, ETC...
 void RTC_Init(void)
 {
     // Configure RTC
-    RTCCTL0_H = RTCKEY_H ;                  // Unlock RTC key protected registers
-    RTCCTL0_L |= RTCTEVIE ;                 // Enable interrupts based on RTC
-    RTCCTL0_L &= ~(RTCTEVIFG);
-    RTCCTL1 = RTCHOLD | RTCMODE;
     // RTC enable, Hexadecimal mode, RTC hold
     // enable RTC read ready interrupt
     // enable RTC time event interrupt every minute
-    RTCSEC = 0x2D;   // Hard-code in seconds
-    RTCDAY = 0x01;   // Hard-code in days
+    RTCCTL0_H = RTCKEY_H ;
+    RTCCTL0_L |= RTCTEVIE ;
+    RTCCTL0_L &= ~(RTCTEVIFG);
+    RTCCTL1 = RTCHOLD | RTCMODE;
+    // Hard-code in seconds
+    RTCSEC = 0x2D;
 }
 
 // MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
 void RTC_Start(void)
 {
-    RTCCTL1 &= ~(RTCHOLD);                    // Start RTC calendar mode
-    RTCCTL0_H = 0;                            // Lock the RTC registers
+    // Start RTC calendar mode
+    RTCCTL1 &= ~(RTCHOLD);
+    // Lock the RTC registers
+    RTCCTL0_H = 0;
 }
 
 void RTC_EnableInterrupt(void)
@@ -104,10 +111,38 @@ uint8_t RTC_GetMinute(void)
     return myMinute;
 }
 
-uint16_t RTC_GetCurrentTime(void)
+double RTC_GetCurrentTime(void)
 {
-    uint16_t myTime = (RTC_GetHour()*60) + RTC_GetMinute();
+    double myTime = (double)RTC_GetHour() + ((double)RTC_GetMinute() / 60.0);
     return myTime;
+}
+
+uint16_t RTC_GetCurrentDay(void)
+{
+    // Month starts at 1, so the -1 corrects for that
+    uint16_t myDay = ((RTC_GetMonth() - 1) * 30) + RTC_GetDay();
+    return myDay;
+}
+
+char* RTC_GetTime_String(void)
+{
+    uint8_t curHour = RTC_GetHour();
+    uint8_t curMin = RTC_GetMinute();
+
+    // Clear previous input
+    time_str[0] = '\0';
+    time_str[1] = '\0';
+    time_str[2] = ':';
+    time_str[3] = '\0';
+    time_str[4] = '\0';
+    time_str[5] = '\0';
+
+    time_str[0] = (curHour/10) + TO_CHAR;
+    time_str[1] = (curHour%10) + TO_CHAR;
+    time_str[3] = (curMin/10) + TO_CHAR;
+    time_str[4] = (curMin%10) + TO_CHAR;
+
+    return time_str;
 }
 
 // RTC interrupt service routine

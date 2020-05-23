@@ -1,10 +1,10 @@
 #include "ACCEL.h"
+#include "Algorithm.h"
 #include "Keypad.h"
 #include "delay.h"
 #include "msp.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "UART.h"
 #include "I2C.h"
 #include "LCD.h"
 #include "UserInterface.h"
@@ -31,6 +31,8 @@
 #define LCD_YEAR_LOC    0x52
 #define LCD_HOUR_LOC    0x23
 #define LCD_MINUTE_LOC  0x26
+#define START_TIME      4.5
+#define END_TIME        19.5
 
 // Variables for all modes
 static double goalAngle;
@@ -41,11 +43,13 @@ static bool finishFlag = false;
 
 // Variables for Manual Mode
 // The state also corresponds to the length of the input
-enum manualState{
+enum manualState
+{
     ZERO_STATE,
     FIRST_STATE,
     SECOND_STATE,
-    THIRD_STATE};
+    THIRD_STATE
+};
 static uint8_t currentState = ZERO_STATE;
 static int8_t currentInput = 0;
 static bool negativeFlag = false;
@@ -57,7 +61,25 @@ void ui_goToGoal_manual(double inputGoal)
 
     while(Relay_MoveToGoal())
     {
-        LCD_Write_L3(ACCEL_GetAngle_String());
+        LCD_SetCursorLocation(0x22);
+        LCD_Write_String(ACCEL_GetAngle_String());
+        LCD_SetCursorLocation(0x22);
+        LCD_Write_String(ACCEL_GetAngle_String());
+        Keypad_ResetKey();
+        if (I2C_GetComErrorFlag())
+        {
+            I2C_ResetComErrorFlag();
+            break;
+        }
+    }
+}
+
+void ui_goToGoal_algo(double inputGoal)
+{
+    UI_SetGoalAngle(inputGoal);
+
+    while(Relay_MoveToGoal())
+    {
         Keypad_ResetKey();
         if (I2C_GetComErrorFlag())
         {
@@ -106,7 +128,7 @@ void UI_EnterDateTime(void)
     uint8_t hour;
     uint8_t minute;
 
-    Keypad_ResetKey();                                  //make sure hitflag starts as 0
+    Keypad_ResetKey();
 
     // Get first month input
     LCD_SetCursorLocation(LCD_MONTH_LOC);
@@ -221,6 +243,7 @@ void UI_RunHomeMode(void)
         LCD_SetAlgoScreen();
         RTC_EnableInterrupt();
         Keypad_ResetKey();
+        RTC_SetEventFlag();
         return;
     }
 
@@ -264,7 +287,7 @@ void UI_RunManualMode(void)
     {
         if(currentState == ZERO_STATE)
         {
-            LCD_SetCursorLocation(0x0D);
+            LCD_SetCursorLocation(0x0E);
             if(Keypad_GetKey() == NEGATIVE_FLAG)
             {
                 LCD_Write_Char(NEGATIVE_SIGN);
@@ -376,14 +399,23 @@ void UI_RunManualMode(void)
 
 void UI_RunAlgoMode(void)
 {
+    double algoAngle;
     currentMode = ALGO;
 
-    if(RTC_HasEventOccured())
+    if(RTC_HasEventOccured() &&
+            (RTC_GetCurrentTime() > START_TIME) &&
+            (RTC_GetCurrentTime() <= END_TIME))
     {
         RTC_ResetEventFlag();
-        // TODO Using algorithm from Dolan, grab an angle depending on the day and time
-        // UI_SetGoalAngle(Dolan_Angle)
-        while(Relay_MoveToGoal());
+        algoAngle = Algorithm_GetAngle_Double();
+        LCD_SetCursorLocation(0x0E);
+        LCD_Write_String(RTC_GetTime_String());
+        LCD_SetCursorLocation(0x4D);
+        LCD_Write_String(Algorithm_GetAngle_String(algoAngle));
+        ui_goToGoal_algo(algoAngle);
+        LCD_SetCursorLocation(0x21);
+        LCD_Write_String(ACCEL_GetAngle_String());
+        Keypad_ResetKey();
     }
 
     if(Keypad_GetKey() == SET_HOME)
@@ -406,7 +438,8 @@ void UI_RunAlgoMode(void)
 void UI_RunDemoMode(void)
 {
     currentMode = DEMO;
-    LCD_Write_L3(ACCEL_GetAngle_String());
+    LCD_SetCursorLocation(0x1A);
+    LCD_Write_String(ACCEL_GetAngle_String());
 
     if(Keypad_GetKey() == START_DEMO)
     {

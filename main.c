@@ -22,17 +22,13 @@
 #include "Keypad.h"
 #include <stdint.h>
 #include "Relay.h"
-#include "UART.h"
 #include "UserInterface.h"
 
 void main(void)
 {
-    // stop watchdog timer
+    // MSP Configuration
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
-
-    // Set clock to 24 MHz
     set_DCO(FREQ_24_MHZ);
-
     __enable_irq();
 
 	// System Initialization
@@ -47,9 +43,8 @@ void main(void)
 	LCD_SetStartScreen();
 	UI_EnterDateTime();
 
-	// TODO generate daily angles using Dolan algorithm
-    LCD_SetWelcomeScreen();
-    // Generate Angles based on Dolan algorithm
+	LCD_SetWelcomeScreen();
+	delay_ms(1000, FREQ_24_MHZ);
 
     // Prep for super loop
 	LCD_SetHomeScreen();
