@@ -5,7 +5,6 @@
 #include "msp.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "UART.h"
 #include "I2C.h"
 #include "LCD.h"
 #include "UserInterface.h"
@@ -44,11 +43,13 @@ static bool finishFlag = false;
 
 // Variables for Manual Mode
 // The state also corresponds to the length of the input
-enum manualState{
+enum manualState
+{
     ZERO_STATE,
     FIRST_STATE,
     SECOND_STATE,
-    THIRD_STATE};
+    THIRD_STATE
+};
 static uint8_t currentState = ZERO_STATE;
 static int8_t currentInput = 0;
 static bool negativeFlag = false;
@@ -127,7 +128,7 @@ void UI_EnterDateTime(void)
     uint8_t hour;
     uint8_t minute;
 
-    Keypad_ResetKey();                                  //make sure hitflag starts as 0
+    Keypad_ResetKey();
 
     // Get first month input
     LCD_SetCursorLocation(LCD_MONTH_LOC);

@@ -1,10 +1,3 @@
-/*
- * Relay.c
- *
- *  Created on: Mar 8, 2020
- *      Author: AviMaitra
- */
-
 #include "ACCEL.h"
 #include "UserInterface.h"
 #include "delay.h"

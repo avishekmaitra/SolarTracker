@@ -22,17 +22,13 @@
 #include "Keypad.h"
 #include <stdint.h>
 #include "Relay.h"
-#include "UART.h"
 #include "UserInterface.h"
 
 void main(void)
 {
-    // stop watchdog timer
+    // MSP Configuration
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
-
-    // Set clock to 24 MHz
     set_DCO(FREQ_24_MHZ);
-
     __enable_irq();
 
 	// System Initialization

@@ -11,22 +11,24 @@ static char time_str[TIME_LENGTH];
 void RTC_Init(void)
 {
     // Configure RTC
-    RTCCTL0_H = RTCKEY_H ;                  // Unlock RTC key protected registers
-    RTCCTL0_L |= RTCTEVIE ;                 // Enable interrupts based on RTC
-    RTCCTL0_L &= ~(RTCTEVIFG);
-    RTCCTL1 = RTCHOLD | RTCMODE;
     // RTC enable, Hexadecimal mode, RTC hold
     // enable RTC read ready interrupt
     // enable RTC time event interrupt every minute
-    RTCSEC = 0x2D;   // Hard-code in seconds
-    RTCDAY = 0x01;   // Hard-code in days
+    RTCCTL0_H = RTCKEY_H ;
+    RTCCTL0_L |= RTCTEVIE ;
+    RTCCTL0_L &= ~(RTCTEVIFG);
+    RTCCTL1 = RTCHOLD | RTCMODE;
+    // Hard-code in seconds
+    RTCSEC = 0x2D;
 }
 
 // MAKE SURE TO CALL THIS FUNCTION AFTER INITIAL TIME INPUT
 void RTC_Start(void)
 {
-    RTCCTL1 &= ~(RTCHOLD);                    // Start RTC calendar mode
-    RTCCTL0_H = 0;                            // Lock the RTC registers
+    // Start RTC calendar mode
+    RTCCTL1 &= ~(RTCHOLD);
+    // Lock the RTC registers
+    RTCCTL0_H = 0;
 }
 
 void RTC_EnableInterrupt(void)

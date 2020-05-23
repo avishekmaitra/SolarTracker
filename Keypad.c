@@ -2,7 +2,7 @@
 #include "delay.h"
 #include "msp.h"
 #include <stdint.h>
-#include "UART.h"
+
 #define TO_CHAR 0x30
 
 static char key = RESETKEY;
@@ -22,7 +22,7 @@ void Keypad_Init(void)
    P2 -> DIR |= (R0|R1|R2|R3);                  //sets rows as outputs
    P2 -> SEL1 &= ~(R0|R1|R2|R3);
    P2 -> SEL0 &= ~(R0|R1|R2|R3);
-   P2 -> OUT |= (R0|R1|R2|R3);                  // sets it high
+   P2 -> OUT |= (R0|R1|R2|R3);                  //sets it high
 
    NVIC -> ISER[1] = 1 << ((PORT5_IRQn) & 31);
    Keypad_ResetKey();
@@ -70,7 +70,6 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 65;                           //ASCII "A"
         }
-        //hitFlag = 1;                          //commenting out because redundant
         return;                                 //ensures that no other digits are pressed
     }
     P2 -> OUT &= ~(R0);                         //clears row0
@@ -97,7 +96,6 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 66;                           //ASCII "B"
         }
-        //hitFlag = 1;                          //commenting out because redundant
         return;
     }
     P2 -> OUT &= ~(R1);                         //clears row1
@@ -124,7 +122,6 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 67;                           //ASCII "C"
         }
-        //hitFlag = 1;                          //commenting out because redundant
         return;
     }
     P2 -> OUT &= ~(R2);                         //clears row2
@@ -151,7 +148,6 @@ void keypad_setkey(void)                        //function that checks the rows 
         {
             key = 46;                           //ASCII "."
         }
-        //hitFlag = 1;                          //commenting out because redundant
         return;
     }
     P2 -> OUT &= ~(R3);                         //clears row3
@@ -165,131 +161,5 @@ char Keypad_GetKey(void)                        //function that returns the key 
 void Keypad_ResetKey(void)
 {
     key = RESETKEY;
-    hitFlag = 0;                                //not sure if we should reset here or in GetKey
+    hitFlag = 0;
 }
-
-void keypad_testkey(void)                       //test function to write key value to terminal
-{
-    switch(Keypad_GetKey())
-    {
-        case '1':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("1");
-        }
-        break;
-
-        case '2':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("2");
-        }
-        break;
-
-        case '3':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("3");
-        }
-        break;
-
-        case 65:
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("A");
-        }
-        break;
-
-        case '4':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("4");
-        }
-        break;
-
-        case '5':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("5");
-        }
-        break;
-
-        case '6':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("6");
-        }
-        break;
-
-        case 66:
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("B");
-        }
-        break;
-
-        case '7':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("7");
-        }
-        break;
-
-        case '8':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("8");
-        }
-        break;
-
-        case '9':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("9");
-        }
-        break;
-
-        case 67:
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("C");
-        }
-        break;
-
-        case 42:
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("*");
-        }
-        break;
-
-        case '0':
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("0");
-        }
-        break;
-
-        case 35:
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART("#");
-        }
-        break;
-
-        case 46:
-        {
-            delay_ms(TIMEUART, CLK);
-            write_UART(".");
-        }
-        break;
-
-        default:
-        {
-            break;
-        }
-     }
-}
-
-
-

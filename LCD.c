@@ -10,7 +10,7 @@
 #include "LCD.h"
 #define TO_CHAR 0x30
 
-void LCD_Init(void)                         //setup GPIO pins
+void LCD_Init(void)
 {
     P4-> SEL0 &= ~(DB4 | DB5 | DB6 | DB7);  //initialize P4 pins
     P4-> SEL1 &= ~(DB4 | DB5 | DB6 | DB7);  //GPIO setup
@@ -94,7 +94,7 @@ void LCD_Write_String(char* string)
     }
 }
 
-void LCD_SetCursorLocation(char place)        //set cursor to DDRAM location as defined
+void LCD_SetCursorLocation(char place)      //set cursor to DDRAM location as defined
 {                                           //by the STU data sheet for 2-line mode
     char myCommand = ENABLE_MOVE + place;
     LCD_Command(myCommand);
@@ -102,25 +102,25 @@ void LCD_SetCursorLocation(char place)        //set cursor to DDRAM location as 
 
 void LCD_Write_L1(char* string)
 {
-    LCD_SetCursorLocation(0x00);              //set cursor location to DDRAM address 0x00, line 1
+    LCD_SetCursorLocation(0x00);            //set cursor location to DDRAM address 0x00, line 1
     LCD_Write_String(string);               //string to be assigned to line 1
 }
 
 void LCD_Write_L2(char* string)
 {
-    LCD_SetCursorLocation(0x40);              //set cursor location to DDRAM address 0x40, line 2
+    LCD_SetCursorLocation(0x40);            //set cursor location to DDRAM address 0x40, line 2
     LCD_Write_String(string);               //string to be assigned to line 2
 }
 
 void LCD_Write_L3(char* string)
 {
-    LCD_SetCursorLocation(0x14);              //set cursor location to DDRAM address 0x14, line 3
+    LCD_SetCursorLocation(0x14);            //set cursor location to DDRAM address 0x14, line 3
     LCD_Write_String(string);               //string to be assigned to line 3
 }
 
 void LCD_Write_L4(char* string)
 {
-    LCD_SetCursorLocation(0x54);              //set cursor location to DDRAM address 0x54, line 4
+    LCD_SetCursorLocation(0x54);            //set cursor location to DDRAM address 0x54, line 4
     LCD_Write_String(string);               //string to be assigned to line 4
 }
 
@@ -139,29 +139,25 @@ void LCD_SetWelcomeScreen(void)
     LCD_Write_L4("                    ");
 }
 
-void LCD_SetStartScreen(void)                      //STARTING SCREEN
+void LCD_SetStartScreen(void)
 {
     LCD_Write_L1("Startup             ");
     LCD_Write_L2("Enter Date: __/__/__");   //remember: only have 20 char spaces
     LCD_Write_L3("Enter Time:    __:__");   //military time
     LCD_Write_L4("*Clear        #Enter");
-    LCD_SetCursorLocation(0x4C);              //set cursor to first input blank space
-    //getkeypress function
-    //replace "_" with keypress
-    //once key is pressed, will cursor automatically move right, or do we need to define next location?
-    //needs to wait for either Clear or Enter press before changing screens
+    LCD_SetCursorLocation(0x4C);            //set cursor to first input blank space
 }
 
-void LCD_SetHomeScreen(void)                       //HOME MODE CHOICE SCREEN
+void LCD_SetHomeScreen(void)
 {
-    LCD_Write_L1("A: Manual Entry     ");   //A, B, or C key press will decide next LCD screen
+    LCD_Write_L1("A: Manual Entry     ");
     LCD_Write_L2("B: Algorithm Based  ");
     LCD_Write_L3("C: Demo Mode        ");
     LCD_Write_L4("                    ");
-    LCD_SetCursorLocation(0x54);            //set cursor to first place on L4
+    LCD_SetCursorLocation(0x54);
 }
 
-void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT SCREEN
+void LCD_SetManualScreen(void)
 {
     LCD_Write_L1("Enter Angle:  ___deg");
     LCD_Write_L2("                    ");
@@ -170,7 +166,7 @@ void LCD_SetManualScreen(void)                        //A_1: MANUAL ENTRY INPUT 
     LCD_SetCursorLocation(0x0E);            //set cursor to first blank on L1
 }
 
-void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
+void LCD_SetAlgoScreen(void)
 {
     LCD_Write_L1("Present Time:       ");
     LCD_Write_L2("Calc. Angle:     deg");
@@ -179,7 +175,7 @@ void LCD_SetAlgoScreen(void)                //B_2: ALGORITHM ANGLE UPDATE SCREEN
     LCD_SetCursorLocation(0x0D);            //set cursor to first location on L1
 }
 
-void LCD_SetDemoScreen(void)                 //C_1: DEMO choice screen
+void LCD_SetDemoScreen(void)
 {
     LCD_Write_L1("Running Demo...     ");
     LCD_Write_L2("                    ");
