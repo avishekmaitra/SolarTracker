@@ -63,8 +63,6 @@ void ui_goToGoal_manual(double inputGoal)
     {
         LCD_SetCursorLocation(0x22);
         LCD_Write_String(ACCEL_GetAngle_String());
-        LCD_SetCursorLocation(0x22);
-        LCD_Write_String(ACCEL_GetAngle_String());
         Keypad_ResetKey();
         if (I2C_GetComErrorFlag())
         {
